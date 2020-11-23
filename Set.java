@@ -37,7 +37,7 @@ public class Set implements Comparable<Set> {
         return this.tournament;
     }
 
-    private Date getDate() {
+    Date getDate() {
         return this.date;
     }
 
