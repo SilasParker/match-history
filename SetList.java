@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 
 public class SetList {
     private ArrayList<Set> allSets = new ArrayList<Set>();
@@ -23,7 +22,7 @@ public class SetList {
                     }
                 }
             } else {
-                binarySearch(newSet, 0, allSets.size() - 1);
+                insertionSort(newSet, 0, allSets.size() - 1);
             }
         }
         // check if date is before the first position
@@ -39,7 +38,7 @@ public class SetList {
         allSets.remove(setToRemove);
     }
 
-    private void binarySearch(Set newSet, int low, int high) {
+    private void insertionSort(Set newSet, int low, int high) {
         int mid = (low + high) / 2;
         if (high <= low && allSets.size() > 1) {
             int insertionpoint = (newSet.getDate().after(allSets.get(low).getDate())) ? low : (low + 1);
@@ -48,16 +47,20 @@ public class SetList {
             // If the current pointer is at the end of the array, insert it at the end
             allSets.add(allSets.size(), newSet);
         } else if (newSet.getDate().after(allSets.get(mid).getDate())) { // If the newSet is in the left half
-            binarySearch(newSet, low, mid - 1);
+            insertionSort(newSet, low, mid - 1);
         } else if (newSet.getDate().before(allSets.get(mid).getDate())) { // If the newSet is in the right half
-            binarySearch(newSet, mid + 1, high);
+            insertionSort(newSet, mid + 1, high);
         } else { // covers if the date is the same
             allSets.add(mid, newSet);
         }
     }
 
-    public void toStringTest() {
-        allSets.forEach((n) -> System.out.println(n.getDate()));
+    public SetList applyFilters(Filter[] filters) {
+        for(int i = 0;i < allSets.size(); i++) {
+            //Use the new FilterList method 
+        }
     }
+
+    
 
 }

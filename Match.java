@@ -1,3 +1,5 @@
+import com.google.gson.Gson;
+
 class Match {
     private int[] playerChars;
     private int[] opponentChars;
@@ -25,5 +27,10 @@ class Match {
 
     private boolean isWin() {
         return this.win;
+    }
+
+    public String toJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }

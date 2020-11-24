@@ -23,7 +23,6 @@ class Main {
         newDate = "24/01/2019";
         date = new SimpleDateFormat("dd/MM/yyyy").parse(newDate);
         arr.addSet(new Set(null,null,null,null,null,date));
-        arr.toStringTest();
         
         newDate = "18/08/2006";
         date = new SimpleDateFormat("dd/MM/yyyy").parse(newDate);
