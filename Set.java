@@ -17,7 +17,7 @@ public class Set implements Comparable<Set> {
         this.date = date;
     }
 
-    private Match[] getMatches() {
+    public Match[] getMatches() {
         return this.matches;
     }
     

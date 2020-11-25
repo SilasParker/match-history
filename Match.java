@@ -13,7 +13,7 @@ class Match {
         this.win = win;
     }
 
-    private int[] getPlayerCharacters() {
+    public int[] getPlayerCharacters() {
         return this.playerChars;
     }
 

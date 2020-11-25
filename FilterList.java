@@ -1,11 +1,19 @@
 public class FilterList {
     private Filter[] allFilters;
+    private Object[] filterData;
 
-    public FilterList(Filter[] allFilters) {
+    public FilterList(Filter[] allFilters, Object[] filterData) {
         this.allFilters = allFilters;
+        this.filterData = filterData;
     }
 
-    public boolean isFiltered(Match match) {
-        //apply all filters until either it's true or all filters run out. in the latter case, add match to filteredmatchlist
+    public boolean isFiltered(Set set) {
+        for(int i = 0;i < allFilters.length; i++) {
+            if(allFilters[i].apply(set,filterData[i])) {
+                return true; 
+            }
+        }
+        return false;
+        
     }
 }

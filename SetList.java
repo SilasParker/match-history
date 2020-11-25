@@ -55,10 +55,15 @@ public class SetList {
         }
     }
 
-    public SetList applyFilters(Filter[] filters) {
+    public SetList applyFilters(Filter[] filters, Object[] filterData) {
+        FilterList allFilters = new FilterList(filters, filterData);
+        SetList tempSetList = new SetList();
         for(int i = 0;i < allSets.size(); i++) {
-            //Use the new FilterList method 
+             if(allFilters.isFiltered(allSets.get(i))) {
+                tempSetList.addSet(allSets.get(i));
+             }
         }
+        return tempSetList;
     }
 
     
