@@ -17,11 +17,11 @@ class Match {
         return this.playerChars;
     }
 
-    private int[] getOpponentCharacters() {
+    public int[] getOpponentCharacters() {
         return this.opponentChars;
     }
 
-    private int getMap() {
+    public int getMap() {
         return this.map;
     }
 

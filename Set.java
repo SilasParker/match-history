@@ -1,6 +1,6 @@
 import java.util.Date;
 
-public class Set implements Comparable<Set> {
+public class Set {
     private Match[] matches;
     private boolean[] scoreOrder;
     private String opponent;
@@ -21,28 +21,25 @@ public class Set implements Comparable<Set> {
         return this.matches;
     }
     
-    private boolean[] getScoreOrder() {
+    public boolean[] getScoreOrder() {
         return this.scoreOrder;
     }
 
-    private String getOpponent() {
+    public String getOpponent() {
         return this.opponent;
     }
 
-    private String getTeammate() {
+    public String getTeammate() {
         return this.teammate;
     }
 
-    private String getTournament() {
+    public String getTournament() {
         return this.tournament;
     }
 
-    Date getDate() {
+    public Date getDate() {
         return this.date;
     }
 
-    @Override
-    public int compareTo(Set o) {
-        return getDate().compareTo(o.getDate());
-    }
+
 }

@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+
 public class SetList {
     private ArrayList<Set> allSets = new ArrayList<Set>();
 
@@ -64,6 +68,20 @@ public class SetList {
              }
         }
         return tempSetList;
+    }
+
+    public JsonArray toJSON() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    
+        JsonArray json = gson.toJsonTree(this.allSets).getAsJsonArray();
+        System.out.println(gson.toJson(json));
+        return json;
+    }
+
+
+
+    public ArrayList<Set> getAllSets() {
+        return this.allSets;
     }
 
     
