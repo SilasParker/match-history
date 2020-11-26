@@ -20,7 +20,7 @@ public class Set {
     public Match[] getMatches() {
         return this.matches;
     }
-    
+
     public boolean[] getScoreOrder() {
         return this.scoreOrder;
     }
@@ -40,6 +40,5 @@ public class Set {
     public Date getDate() {
         return this.date;
     }
-
 
 }

@@ -39,10 +39,12 @@ class Main {
         Set set2 = new Set(matches2,winOrder2,"Under_Score","schmooblidon","Brighton Stock",date2);
         arr.addSet(set2);
         System.out.println("yo");
-        arr.toJSON();
+        //arr.toJSON();
 
-        Game melee = new Game("Super Smash Bros. Melee",1,false,true,"/melee.png",arr);
+        Game melee = new Game("lmzo****++++dddKKK¬!£$%^TYY",1,false,true,"/melee.png",arr);
         melee.toJSON();
+        System.out.println("--------");
+        melee.setListJsonToFile();
         
 
     }

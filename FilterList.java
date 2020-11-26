@@ -8,17 +8,17 @@ public class FilterList {
     }
 
     public boolean isFiltered(Set set) {
-        for(int i = 0;i < allFilters.length; i++) {
-            if(filterData[i] instanceof Integer) {
+        for (int i = 0; i < allFilters.length; i++) {
+            if (filterData[i] instanceof Integer) {
                 int intFilterData = ((Integer) filterData[i]).intValue();
-                if(!allFilters[i].apply(set, intFilterData)) {
+                if (!allFilters[i].apply(set, intFilterData)) {
                     return false;
-                } 
-            } else if(!allFilters[i].apply(set,filterData[i])) {
+                }
+            } else if (!allFilters[i].apply(set, filterData[i])) {
                 return false;
             }
         }
         return true;
-        
+
     }
 }

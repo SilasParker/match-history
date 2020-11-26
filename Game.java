@@ -1,8 +1,12 @@
 
-
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
 
 public class Game {
     private String name;
@@ -46,22 +50,59 @@ public class Game {
         return this.setList;
     }
 
-    public String toJSON() {
-        System.out.println(this.gson.toJson(this));
-        return this.gson.toJson(this);
+    public void toJSON() { // put this in GameList
+        String fileName = toDirectorySafeString(this.name);
+        try {
+            Writer writer = Files.newBufferedWriter(Paths.get("games", fileName));
+            gson.toJson(this, writer);
+            writer.close();
+        } catch (JsonIOException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private String toDirectorySafeString(String string) {
+        char[] unsuitableChars = { '#', '%', '&', '{', '}', '\\', '<', '>', '*', '?', '/', ' ', '$', '!', '\'', '"',
+                ':', '@', '+', '`', '|', '=' };
+        String fileName = "";
+        for (int i = 0; i < string.length(); i++) {
+            boolean charSafe = true;
+            for (int j = 0; j < unsuitableChars.length; j++) {
+                if (string.charAt(i) == unsuitableChars[j]) {
+                    charSafe = false;
+                }
+            }
+            if (charSafe) {
+                fileName += string.charAt(i);
+            }
+        }
+        return fileName.toLowerCase() + ".json";
+
     }
 
     public void setListJsonToFile() {
-        gson.toJson(this.setList,new FileWriter("./setLits/"+this.name+".json")); //I guess carry on here
+        String fileName = toDirectorySafeString(this.name);
+        try {
+            Writer writer = Files.newBufferedWriter(Paths.get("setLists", fileName));
+            gson.toJson(this.setList, writer);
+            writer.close();
+        } catch (JsonIOException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void importSetList(String json, boolean replace) {
         SetList tempSetList = gson.fromJson(json, SetList.class);
-        if(replace) {
+        if (replace) {
             this.setList = tempSetList;
         } else {
             tempSetList.getAllSets().forEach((set) -> this.setList.addSet(set));
         }
-        
+
     }
 }

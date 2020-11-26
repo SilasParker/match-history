@@ -62,28 +62,24 @@ public class SetList {
     public SetList applyFilters(Filter[] filters, Object[] filterData) {
         FilterList allFilters = new FilterList(filters, filterData);
         SetList tempSetList = new SetList();
-        for(int i = 0;i < allSets.size(); i++) {
-             if(allFilters.isFiltered(allSets.get(i))) {
+        for (int i = 0; i < allSets.size(); i++) {
+            if (allFilters.isFiltered(allSets.get(i))) {
                 tempSetList.addSet(allSets.get(i));
-             }
+            }
         }
         return tempSetList;
     }
 
     public JsonArray toJSON() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    
+
         JsonArray json = gson.toJsonTree(this.allSets).getAsJsonArray();
         System.out.println(gson.toJson(json));
         return json;
     }
 
-
-
     public ArrayList<Set> getAllSets() {
         return this.allSets;
     }
-
-    
 
 }
