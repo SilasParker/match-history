@@ -7,7 +7,7 @@ class Main {
     private static SetList arr = new SetList();
 
     public static void main(String[] args) throws ParseException {
-        int[] list1 = new int[1];
+        /*int[] list1 = new int[1];
         int[] list2 = new int[1];
         list1[0] = 1;
         list2[0] = 2;
@@ -44,7 +44,9 @@ class Main {
         Game melee = new Game("lmzo****++++dddKKK¬!£$%^TYY",1,false,true,"/melee.png",arr);
         melee.toJSON();
         System.out.println("--------");
-        melee.setListJsonToFile();
+        melee.setListJsonToFile();*/
+        GameList allgames = new GameList();
+        allgames.outputAllGames();
         
 
     }

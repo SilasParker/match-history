@@ -1,3 +1,4 @@
+//TODO Okay so basically you need to create a list of chars and maps before you carry on the JSON stuff
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -96,7 +97,7 @@ public class Game {
         }
     }
 
-    public void importSetList(String json, boolean replace) {
+    public void importSetList(String json, boolean replace) { //needs testing
         SetList tempSetList = gson.fromJson(json, SetList.class);
         if (replace) {
             this.setList = tempSetList;
