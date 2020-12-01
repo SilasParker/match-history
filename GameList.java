@@ -3,9 +3,10 @@ import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 
 public class GameList {
     private ArrayList<Game> allGames;
@@ -27,12 +28,12 @@ public class GameList {
         ArrayList<Game> loadedGames = new ArrayList<Game>();
         for (int i = 0; i < matchingFiles.length; i++) {
             // Go through, converting the files to Game objects and adding them to allGames
-            try(Reader fileReader = new FileReader(matchingFiles[i])) {
-                Game newGame = gson.fromJson(fileReader, Game.class);
-                System.out.println("success");
-                loadedGames.add(newGame);
+            //Create JSONs and manually add attributes 
+            try {
+                String jsonContent = Files.readString(matchingFiles[i].toPath());
+                JsonObject jsonObj = new JsonParser().parse(jsonContent).getAsJsonObject();
+                Game newGame = new Game(jsonObj.get("name").toString(),(int) jsonObj.get("characterNumPerSide"),(boolean) jsonObj.get("teammate"),jsonObj.get("maps"),jsonObj.get("image"));
             } catch (IOException e) {
-                System.out.println("lol");
                 e.printStackTrace();
             }
         }

@@ -1,31 +1,31 @@
 import com.google.gson.Gson;
 
 class Match {
-    private int[] playerChars;
-    private int[] opponentChars;
-    private int map;
+    private Character[] playerChars;
+    private Character[] opponentChars;
+    private Map map;
     private boolean win;
 
-    public Match(int[] playerChars, int[] opponentChars, int map, boolean win) {
+    public Match(Character[] playerChars, Character[] opponentChars, Map map, boolean win) {
         this.playerChars = playerChars;
         this.opponentChars = opponentChars;
         this.map = map;
         this.win = win;
     }
 
-    public int[] getPlayerCharacters() {
+    public Character[] getPlayerCharacters() {
         return this.playerChars;
     }
 
-    public int[] getOpponentCharacters() {
+    public Character[] getOpponentCharacters() {
         return this.opponentChars;
     }
 
-    public int getMap() {
+    public Map getMap() {
         return this.map;
     }
 
-    private boolean isWin() {
+    public boolean isWin() {
         return this.win;
     }
 

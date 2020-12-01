@@ -20,11 +20,11 @@ abstract class Filter {
 
 class PlayerCharacterFilter extends Filter {
     @Override
-    public boolean apply(Set set, int character) {
+    public boolean apply(Set set, Object character) {
         Match[] matches = set.getMatches();
         for (int i = 0; i < matches.length; i++) {
             for (int j = 0; j < matches[i].getPlayerCharacters().length; j++) {
-                if (matches[i].getPlayerCharacters()[j] == character) {
+                if ((Character) matches[i].getPlayerCharacters()[j] == character) {
                     return true;
                 }
             }
@@ -35,11 +35,11 @@ class PlayerCharacterFilter extends Filter {
 
 class OpponentCharacterFilter extends Filter {
     @Override
-    public boolean apply(Set set, int character) {
+    public boolean apply(Set set, Object character) {
         Match[] matches = set.getMatches();
         for (int i = 0; i < matches.length; i++) {
             for (int j = 0; j < matches[i].getOpponentCharacters().length; j++) {
-                if (matches[i].getOpponentCharacters()[j] == character) {
+                if ((Character) matches[i].getOpponentCharacters()[j] == character) {
                     return true;
                 }
             }
@@ -50,10 +50,10 @@ class OpponentCharacterFilter extends Filter {
 
 class MapFilter extends Filter {
     @Override
-    public boolean apply(Set set, int map) {
+    public boolean apply(Set set, Object map) {
         Match[] matches = set.getMatches();
         for (int i = 0; i < matches.length; i++) {
-            if (matches[i].getMap() == map) {
+            if ((Map) matches[i].getMap() == map) {
                 return true;
             }
         }

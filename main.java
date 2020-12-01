@@ -1,4 +1,5 @@
 import java.util.Date;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -6,13 +7,16 @@ class Main {
 
     private static SetList arr = new SetList();
 
-    public static void main(String[] args) throws ParseException {
-        /*int[] list1 = new int[1];
-        int[] list2 = new int[1];
-        list1[0] = 1;
-        list2[0] = 2;
-        Match match1 = new Match(list1,list2,3,true);
-        Match match2 = new Match(list2,list1,4,false);
+    public static void main(String[] args) throws ParseException { 
+        Character[] list1 = new Character[1];
+        Character[] list2 = new Character[1];
+        Character character = new Character("jeff",Paths.get("character"));
+        Map map = new Map("fountain");
+        list1[0] = character;
+        list2[0] = character;
+        
+        Match match1 = new Match(list1,list2,map,true);
+        Match match2 = new Match(list2,list1,map,false);
         Match[] matches = new Match[2];
         matches[0] = match1;
         matches[1] = match2;
@@ -22,8 +26,8 @@ class Main {
         Date date = new Date();
         Set set1 = new Set(matches,winOrder,"Boohbah","10QuidShoes","Long Live London",date);
         arr.addSet(set1);
-
-        int[] list3 = new int[1];
+        Character character2 = new Character("mememan",Paths.get("character"));
+        int[] list3 = new int[1]; //CARRY ON HERE FOR TESTING
         int[] list4 = new int[1];
         list3[0] = 3;
         list4[0] = 4;
@@ -44,9 +48,9 @@ class Main {
         Game melee = new Game("lmzo****++++dddKKK¬!£$%^TYY",1,false,true,"/melee.png",arr);
         melee.toJSON();
         System.out.println("--------");
-        melee.setListJsonToFile();*/
+        melee.setListJsonToFile();
         GameList allgames = new GameList();
-        allgames.outputAllGames();
+        //allgames.outputAllGames();
         
 
     }
