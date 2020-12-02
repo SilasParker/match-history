@@ -1,5 +1,8 @@
 import java.util.Date;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 public class Set {
     private Match[] matches;
     private boolean[] scoreOrder;
@@ -15,6 +18,23 @@ public class Set {
         this.teammate = teammate;
         this.tournament = tournament;
         this.date = date;
+    }
+
+    public JsonObject toJsonObject() {
+        JsonObject json = new JsonObject();
+        JsonArray matchesArray = new JsonArray();
+        JsonArray scoreOrderArray = new JsonArray();
+        for (int i = 0; i < this.matches.length; i++) {
+            matchesArray.add(this.matches[i].toJsonObject());
+            scoreOrderArray.add(this.scoreOrder[i]);
+        }
+        json.add("matches", matchesArray);
+        json.add("scoreOrder", scoreOrderArray);
+        json.addProperty("opponent", this.opponent);
+        json.addProperty("teammate", this.teammate);
+        json.addProperty("tournament", this.tournament);
+        json.addProperty("date", this.date.toString());
+        return json;
     }
 
     public Match[] getMatches() {

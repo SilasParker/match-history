@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 
@@ -22,7 +23,8 @@ public class Game {
     private Gson gson = new Gson();
     private Character[] characters;
 
-    public Game(String name, int characterNumPerSide, boolean teammate, Map[] maps, Path image, SetList setList, Character[] characters) {
+    public Game(String name, int characterNumPerSide, boolean teammate, Map[] maps, Path image, SetList setList,
+            Character[] characters) {
         this.name = name;
         this.characterNumPerSide = characterNumPerSide;
         this.teammate = teammate;
@@ -60,48 +62,34 @@ public class Game {
         return this.characters;
     }
 
-    public void toJSON() { // put this in GameList
-        /*String fileName = toDirectorySafeString(this.name);
-        try {
-            Writer writer = Files.newBufferedWriter(Paths.get("games", fileName));
-            gson.toJson(this, writer);
-            writer.close();
-        } catch (JsonIOException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+    public void toJSON() {
         JsonObject json = new JsonObject();
-        json.addProperty("name",this.name);
-        json.addProperty("characterNumPerSide",this.characterNumPerSide);
+        json.addProperty("name", this.name);
+        json.addProperty("characterNumPerSide", this.characterNumPerSide);
         json.addProperty("teammate", this.teammate);
-        ArrayList<String> allMaps = new ArrayList<>();
-        for(int i = 0;i < this.maps.length;i++) {
+        JsonArray allMaps = new JsonArray();
+        for (int i = 0; i < this.maps.length; i++) {
             allMaps.add(this.maps[i].getName());
         }
-        json.addProperty("maps",gson.toJson(allMaps));
+        json.add("maps", allMaps);
         json.addProperty("image", this.image.toString());
-        ArrayList<String> allChars = new ArrayList<>();
-        ArrayList<String> allCharsPath = new ArrayList<>();
-        for(int i = 0;i < this.characters.length;i++) {
+        JsonArray allChars = new JsonArray();
+        JsonArray allCharsPath = new JsonArray();
+        for (int i = 0; i < this.characters.length; i++) {
             allChars.add(this.characters[i].getName());
             allCharsPath.add(this.characters[i].getImagePath().toString());
         }
-        json.addProperty("characters",gson.toJson(allChars));
-        json.addProperty("charactersPaths",gson.toJson(allCharsPath));
+        json.add("characters", allChars);
+        json.add("charactersPaths", allCharsPath);
         String fileName = toDirectorySafeString(this.name);
         Writer writer;
         try {
             writer = Files.newBufferedWriter(Paths.get("games", fileName));
-            gson.toJson(json,writer);
+            gson.toJson(json, writer);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        
-
-
     }
 
     private String toDirectorySafeString(String string) {
@@ -124,19 +112,22 @@ public class Game {
     }
 
     public void setListJsonToFile() {
+        JsonObject json = new JsonObject();
+        JsonArray setListArray = this.setList.toJsonArray();
+        json.add("allSets", setListArray);
         String fileName = toDirectorySafeString(this.name);
+        Writer writer;
         try {
-            Writer writer = Files.newBufferedWriter(Paths.get("setLists", fileName));
-            gson.toJson(this.setList, writer);
+            writer = Files.newBufferedWriter(Paths.get("setLists", fileName));
+            gson.toJson(json, writer);
             writer.close();
-        } catch (JsonIOException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
-    public void importSetList(String json, boolean replace) { //needs testing
+    public void importSetList(String json, boolean replace) { // needs testing
         SetList tempSetList = gson.fromJson(json, SetList.class);
         if (replace) {
             this.setList = tempSetList;

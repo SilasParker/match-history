@@ -1,3 +1,5 @@
+import com.google.gson.JsonObject;
+
 public class Map {
     private String name;
 
@@ -7,5 +9,11 @@ public class Map {
 
     public String getName() {
         return this.name;
+    }
+
+    public JsonObject toJsonObject() {
+        JsonObject json = new JsonObject();
+        json.addProperty("name", this.name);
+        return json;
     }
 }

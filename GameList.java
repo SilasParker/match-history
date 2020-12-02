@@ -28,11 +28,13 @@ public class GameList {
         ArrayList<Game> loadedGames = new ArrayList<Game>();
         for (int i = 0; i < matchingFiles.length; i++) {
             // Go through, converting the files to Game objects and adding them to allGames
-            //Create JSONs and manually add attributes 
+            // Create JSONs and manually add attributes
             try {
                 String jsonContent = Files.readString(matchingFiles[i].toPath());
                 JsonObject jsonObj = new JsonParser().parse(jsonContent).getAsJsonObject();
-                Game newGame = new Game(jsonObj.get("name").toString(),(int) jsonObj.get("characterNumPerSide"),(boolean) jsonObj.get("teammate"),jsonObj.get("maps"),jsonObj.get("image"));
+                // Game newGame = new Game(jsonObj.get("name").toString(),(int)
+                // jsonObj.get("characterNumPerSide"),(boolean)
+                // jsonObj.get("teammate"),jsonObj.get("maps"),jsonObj.get("image"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -50,5 +52,5 @@ public class GameList {
             System.out.println(game.getName());
         });
     }
-    
+
 }

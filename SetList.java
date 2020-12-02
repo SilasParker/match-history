@@ -70,12 +70,12 @@ public class SetList {
         return tempSetList;
     }
 
-    public JsonArray toJSON() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        JsonArray json = gson.toJsonTree(this.allSets).getAsJsonArray();
-        System.out.println(gson.toJson(json));
-        return json;
+    public JsonArray toJsonArray() {
+        JsonArray jsonArray = new JsonArray();
+        this.allSets.forEach((set) -> {
+            jsonArray.add(set.toJsonObject());
+        });
+        return jsonArray;
     }
 
     public ArrayList<Set> getAllSets() {
