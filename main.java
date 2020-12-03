@@ -2,9 +2,13 @@ import java.util.Date;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.io.File;
+import java.io.IOException;
 
 class Main {
 
@@ -56,6 +60,13 @@ class Main {
         melee.toJSON();
         System.out.println("--------");
         melee.setListJsonToFile();
+
+        try {
+            String mk3SetList = new String(Files.readAllBytes(Paths.get("setLists", "mk3.json")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         // GameList allgames = new GameList();
         // allgames.outputAllGames();
 
