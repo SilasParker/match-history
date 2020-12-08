@@ -1,4 +1,4 @@
-//TODO Okay so basically you need to create a list of chars and maps before you carry on the JSON stuff
+//TODO Find something new to do! 8/12
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,7 +8,11 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -154,32 +158,49 @@ public class Game {
                     ArrayList<Character> allPlayerCharsArr = new ArrayList<>();
                     for (JsonElement currentPlayerChar : allPlayerChars) {
                         JsonObject currentPlayerCharJsonObj = currentPlayerChar.getAsJsonObject();
-                        String currentPlayerCharName = currentPlayerCharJsonObj.get("name").toString();
-                        Path currentPlayerImgPath = Paths.get(currentPlayerCharJsonObj.get("imagePath").toString());
+                        String currentPlayerCharName = currentPlayerCharJsonObj.get("name").getAsString();
+                        System.out.println(currentPlayerCharName);
+                        System.out.println(currentPlayerCharJsonObj.get("imagePath").getAsString());
+                        Path currentPlayerImgPath = Paths.get(currentPlayerCharJsonObj.get("imagePath").getAsString());
                         allPlayerCharsArr.add(new Character(currentPlayerCharName, currentPlayerImgPath));
                     }
                     JsonArray allOpponentChars = currentMatchJsonObject.getAsJsonArray("opponentChars");
                     ArrayList<Character> allOpponentCharsArr = new ArrayList<>();
                     for (JsonElement currentOpponentChar : allOpponentChars) {
                         JsonObject currentOpponentCharJsonObj = currentOpponentChar.getAsJsonObject();
-                        String currentOpponentCharName = currentOpponentCharJsonObj.get("name").toString();
-                        Path currentOpponentImgPath = Paths.get(currentOpponentCharJsonObj.get("imagePath").toString());
+                        String currentOpponentCharName = currentOpponentCharJsonObj.get("name").getAsString();
+                        Path currentOpponentImgPath = Paths
+                                .get(currentOpponentCharJsonObj.get("imagePath").getAsString());
                         allOpponentCharsArr.add(new Character(currentOpponentCharName, currentOpponentImgPath));
                     }
                     JsonObject mapObject = currentMatchJsonObject.get("map").getAsJsonObject();
-                    Map map = new Map(mapObject.get("name").toString());
+                    Map map = new Map(mapObject.get("name").getAsString());
                     boolean win = currentMatchJsonObject.get("win").getAsBoolean();
-                    allMatchesArr.add(new Match((Character[]) allPlayerCharsArr.toArray(),
-                            (Character[]) allOpponentCharsArr.toArray(), map, win));
+                    Character[] allPlayerCharsArrFinal = allPlayerCharsArr
+                            .toArray(new Character[allPlayerCharsArr.size()]);
+                    Character[] allOpponentCharsArrFinal = allOpponentCharsArr
+                            .toArray(new Character[allOpponentCharsArr.size()]);
+                    allMatchesArr.add(new Match(allPlayerCharsArrFinal, allOpponentCharsArrFinal, map, win));
                 }
                 JsonArray scoreOrder = currentSetJsonObject.getAsJsonArray("scoreOrder");
-                ArrayList<Boolean> scoreOrderArr = new ArrayList<>();
-                for (JsonElement currentScore : scoreOrder) {
-                    scoreOrderArr.add(currentScore.getAsBoolean());
+                boolean[] scoreOrderArr = new boolean[scoreOrder.size()];
+                for (int i = 0; i < scoreOrder.size(); i++) {
+                    scoreOrderArr[i] = Boolean.TRUE.equals(scoreOrder.get(i));
                 }
-                String opponent = currentSetJsonObject.get("opponent").toString();
-                String teammate = currentSetJsonObject.get("teammate").toString();
-                // CARRY ON HERE FOR TOURNAMENT+DATE
+                String opponent = currentSetJsonObject.get("opponent").getAsString();
+                String teammate = currentSetJsonObject.get("teammate").getAsString();
+                String tournament = currentSetJsonObject.get("tournament").getAsString();
+                String dateString = currentSetJsonObject.get("date").getAsString();
+                SimpleDateFormat dateFormatter = new SimpleDateFormat("DD-MM-yyyy", Locale.ENGLISH);
+                Date date = null;
+                try {
+                    date = dateFormatter.parse(dateString);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                tempSetList.addSet(new Set((Match[]) allMatchesArr.toArray(new Match[allMatchesArr.size()]),
+                        scoreOrderArr, opponent, teammate, tournament, date));
+
             }
 
             if (replace) {

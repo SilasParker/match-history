@@ -54,18 +54,21 @@ class Main {
         Map[] maps = new Map[1];
         maps[0] = map;
         Path path = FileSystems.getDefault().getPath("games");
-        Game melee = new Game("mk3", 1, false, maps, path, new SetList(), list3);
+        Game melee = new Game("mk4", 1, false, maps, path, new SetList(), list3);
         melee.getSetList().addSet(set1);
         melee.getSetList().addSet(set2);
         melee.toJSON();
         System.out.println("--------");
-        melee.setListJsonToFile();
+        // melee.setListJsonToFile();
 
         try {
             String mk3SetList = new String(Files.readAllBytes(Paths.get("setLists", "mk3.json")));
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        melee.importSetList("setLists/mk3.json", true);
+        melee.setListJsonToFile();
 
         // GameList allgames = new GameList();
         // allgames.outputAllGames();

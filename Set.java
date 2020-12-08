@@ -1,3 +1,4 @@
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.google.gson.JsonArray;
@@ -33,7 +34,8 @@ public class Set {
         json.addProperty("opponent", this.opponent);
         json.addProperty("teammate", this.teammate);
         json.addProperty("tournament", this.tournament);
-        json.addProperty("date", this.date.toString());
+        SimpleDateFormat sDataFormat = new SimpleDateFormat("DD-MM-yyyy");
+        json.addProperty("date", sDataFormat.format(this.date));
         return json;
     }
 
