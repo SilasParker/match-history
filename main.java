@@ -12,6 +12,8 @@ import java.io.IOException;
 
 class Main {
 
+    // TODO Run this and figure out the problem
+
     private static SetList arr = new SetList();
 
     public static void main(String[] args) throws ParseException {
@@ -67,11 +69,11 @@ class Main {
             e.printStackTrace();
         }
 
-        melee.importSetList("setLists/mk3.json", true);
-        melee.setListJsonToFile();
+        // melee.importSetList("setLists/mk3.json", true);
+        // melee.setListJsonToFile();
 
-        // GameList allgames = new GameList();
-        // allgames.outputAllGames();
+        GameList allgames = new GameList();
+        System.out.println(allgames.toString());
 
     }
 

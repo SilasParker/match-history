@@ -11,6 +11,12 @@ public class Character {
         this.imagePath = imagePath;
     }
 
+    public String toString() {
+        String toPrint = "Character: ";
+        toPrint += this.name + " " + this.imagePath.toString();
+        return toPrint;
+    }
+
     public String getName() {
         return this.name;
     }

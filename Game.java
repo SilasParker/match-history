@@ -43,6 +43,22 @@ public class Game {
         this.characters = characters;
     }
 
+    public String toString() {
+        String toPrint = "Game: ";
+        toPrint += name + " ";
+        toPrint += characterNumPerSide + " ";
+        toPrint += teammate + " ";
+        for (Map map : maps) {
+            toPrint += map.toString() + " ";
+        }
+        toPrint += image.toString() + " ";
+        toPrint += setList.toString() + " ";
+        for (Character character : characters) {
+            toPrint += character.toString() + " ";
+        }
+        return toPrint;
+    }
+
     public String getName() {
         return this.name;
     }

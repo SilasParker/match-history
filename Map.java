@@ -16,4 +16,8 @@ public class Map {
         json.addProperty("name", this.name);
         return json;
     }
+
+    public String toString() {
+        return "Map: " + this.name;
+    }
 }

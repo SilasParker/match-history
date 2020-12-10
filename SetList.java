@@ -8,6 +8,14 @@ import com.google.gson.JsonArray;
 public class SetList {
     private ArrayList<Set> allSets = new ArrayList<Set>();
 
+    public String toString() {
+        String toPrint = "SetList: ";
+        for (Set set : allSets) {
+            toPrint += set.toString() + " ";
+        }
+        return toPrint;
+    }
+
     public void addSet(Set newSet) {
         if (allSets.size() == 0) {
             allSets.add(0, newSet);

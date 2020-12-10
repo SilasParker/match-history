@@ -15,6 +15,19 @@ class Match {
         this.win = win;
     }
 
+    public String toString() {
+        String toPrint = "Match: ";
+        for (Character playerChar : playerChars) {
+            toPrint += playerChar.toString() + " ";
+        }
+        for (Character opponentChar : opponentChars) {
+            toPrint += opponentChar.toString() + " ";
+        }
+        toPrint += this.map.toString() + " ";
+        toPrint += this.win + " ";
+        return toPrint;
+    }
+
     public JsonObject toJsonObject() {
         JsonObject json = new JsonObject();
         JsonArray playerCharsArray = new JsonArray();

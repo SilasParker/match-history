@@ -21,6 +21,21 @@ public class Set {
         this.date = date;
     }
 
+    public String toString() {
+        String toPrint = "Set: ";
+        for (Match match : matches) {
+            toPrint += match.toString() + " ";
+        }
+        for (boolean score : scoreOrder) {
+            toPrint += score + " ";
+        }
+        toPrint += opponent + " ";
+        toPrint += teammate + " ";
+        toPrint += tournament + " ";
+        toPrint += date.toString() + " ";
+        return toPrint;
+    }
+
     public JsonObject toJsonObject() {
         JsonObject json = new JsonObject();
         JsonArray matchesArray = new JsonArray();
