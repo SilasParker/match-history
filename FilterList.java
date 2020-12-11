@@ -19,6 +19,6 @@ public class FilterList {
             }
         }
         return true;
-
     }
+
 }

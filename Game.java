@@ -1,8 +1,5 @@
-//TODO Find something new to do! 8/12
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -51,7 +48,7 @@ public class Game {
         for (Map map : maps) {
             toPrint += map.toString() + " ";
         }
-        toPrint += image.toString() + " ";
+        toPrint += "ImagePath: " + image.toString() + " ";
         toPrint += setList.toString() + " ";
         for (Character character : characters) {
             toPrint += character.toString() + " ";
@@ -87,25 +84,23 @@ public class Game {
         return this.characters;
     }
 
-    public void toJSON() {
+    public void toJson() {
         JsonObject json = new JsonObject();
         json.addProperty("name", this.name);
         json.addProperty("characterNumPerSide", this.characterNumPerSide);
         json.addProperty("teammate", this.teammate);
         JsonArray allMaps = new JsonArray();
         for (int i = 0; i < this.maps.length; i++) {
-            allMaps.add(this.maps[i].getName());
+            allMaps.add(this.maps[i].toJsonObject());
         }
         json.add("maps", allMaps);
         json.addProperty("image", this.image.toString());
         JsonArray allChars = new JsonArray();
-        JsonArray allCharsPath = new JsonArray();
         for (int i = 0; i < this.characters.length; i++) {
-            allChars.add(this.characters[i].getName());
-            allCharsPath.add(this.characters[i].getImagePath().toString());
+            allChars.add(this.characters[i].toJsonObject());
         }
         json.add("characters", allChars);
-        json.add("charactersPaths", allCharsPath);
+
         String fileName = toDirectorySafeString(this.name);
         Writer writer;
         try {
@@ -152,7 +147,7 @@ public class Game {
 
     }
 
-    public void importSetList(String jsonPath, boolean replace) { // needs testing
+    public void importSetList(String jsonPath, boolean replace) {
         JsonParser parser = new JsonParser();
         JsonObject json = null;
         try {

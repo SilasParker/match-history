@@ -1,8 +1,6 @@
 import java.io.File;
-import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,16 +27,11 @@ public class GameList {
         File[] matchingFiles = folder.listFiles(filter);
         ArrayList<Game> loadedGames = new ArrayList<Game>();
         for (int i = 0; i < matchingFiles.length; i++) {
-            // Go through, converting the files to Game objects and adding them to allGames
-            // Create JSONs and manually add attributes
             JsonObject jsonObj = null;
 
             try {
                 String jsonContent = Files.readString(matchingFiles[i].toPath());
                 jsonObj = new JsonParser().parse(jsonContent).getAsJsonObject();
-                // Game newGame = new Game(jsonObj.get("name").toString(),(int)
-                // jsonObj.get("characterNumPerSide"),(boolean)
-                // jsonObj.get("teammate"),jsonObj.get("maps"),jsonObj.get("image"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -49,7 +42,7 @@ public class GameList {
                 JsonArray gameMaps = jsonObj.getAsJsonArray("maps");
                 ArrayList<Map> allGameMapsArr = new ArrayList<>();
                 for (JsonElement currentMap : gameMaps) {
-                    JsonObject currentMapJsonObj = currentMap.getAsJsonObject(); // WHY DONT YOU WORK
+                    JsonObject currentMapJsonObj = currentMap.getAsJsonObject();
                     String currentMapName = currentMapJsonObj.get("name").getAsString();
                     allGameMapsArr.add(new Map(currentMapName));
                 }
@@ -60,12 +53,19 @@ public class GameList {
                 for (JsonElement currentChar : gameChars) {
                     JsonObject currentCharJsonObj = currentChar.getAsJsonObject();
                     String currentCharName = currentCharJsonObj.get("name").getAsString();
-                    Path currentCharPath = Paths.get(currentCharJsonObj.get("image").getAsString());
+                    Path currentCharPath = Paths.get(currentCharJsonObj.get("imagePath").getAsString());
                     allGameCharsArr.add(new Character(currentCharName, currentCharPath));
                 }
                 Character[] allGameCharsFinal = allGameCharsArr.toArray(new Character[allGameCharsArr.size()]);
-                loadedGames.add(new Game(gameName, gameCharacterNumPerSide, gameTeammate, allGameMapsFinal, gameImgPath,
-                        new SetList(), allGameCharsFinal));
+                File tempFile = new File("setLists/" + matchingFiles[i].getName());
+
+                Game gameToAdd = new Game(gameName, gameCharacterNumPerSide, gameTeammate, allGameMapsFinal,
+                        gameImgPath, new SetList(), allGameCharsFinal);
+                if (tempFile.exists()) {
+                    gameToAdd.importSetList("setLists/" + matchingFiles[i].getName(), true);
+                }
+                loadedGames.add(gameToAdd);
+
             }
         }
         return loadedGames;
