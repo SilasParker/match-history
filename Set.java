@@ -12,13 +12,21 @@ public class Set {
     private String tournament;
     private Date date;
 
-    public Set(Match[] matches, boolean[] scoreOrder, String opponent, String teammate, String tournament, Date date) {
+    public Set(Match[] matches, String opponent, String teammate, String tournament, Date date) {
         this.matches = matches;
-        this.scoreOrder = scoreOrder;
+        this.scoreOrder = calculateScoreOrder(matches);
         this.opponent = opponent;
         this.teammate = teammate;
         this.tournament = tournament;
         this.date = date;
+    }
+
+    private boolean[] calculateScoreOrder(Match[] givenMatches) {
+        boolean[] calculatedScoreOrder = new boolean[givenMatches.length];
+        for(int i = 0;i < givenMatches.length;i++) {
+            calculatedScoreOrder[i] = givenMatches[i].isWin();
+        }
+        return calculatedScoreOrder;
     }
 
     public String toString() {

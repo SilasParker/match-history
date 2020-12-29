@@ -8,7 +8,8 @@ public class SetList {
     public String toString() {
         String toPrint = "SetList: ";
         for (Set set : allSets) {
-            toPrint += set.toString() + " ";
+            System.out.println(allSets.size());
+            toPrint += set.toString() + "\n";
         }
         return toPrint;
     }
@@ -16,7 +17,7 @@ public class SetList {
     public void addSet(Set newSet) {
         if (allSets.size() == 0) {
             allSets.add(0, newSet);
-        } else if (newSet.getDate().after(allSets.get(0).getDate())) {
+        } else if (newSet.getDate().after(allSets.get(0).getDate()) || newSet.getDate().equals(allSets.get(0).getDate())) {
             allSets.add(0, newSet);
         } else {
             Calendar cal1 = Calendar.getInstance();
@@ -25,7 +26,10 @@ public class SetList {
             cal2.setTime(allSets.get(0).getDate());
             if (cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
                     && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)) {
-                for (int i = 1; i < allSets.size() - 1; i++) {
+                for (int i = 0; i <= allSets.size() - 1; i++) {
+                    System.out.println(newSet.getDate().after(allSets.get(i).getDate()));
+                    System.out.println(newSet.getDate().before(allSets.get(i).getDate()));
+                    System.out.println(newSet.getDate().equals(allSets.get(i).getDate()));
                     if (newSet.getDate().after(allSets.get(i).getDate())) {
                         allSets.add(i, newSet);
                     }
@@ -64,11 +68,12 @@ public class SetList {
         }
     }
 
-    public SetList applyFilters(Filter[] filters, Object[] filterData) {
-        FilterList allFilters = new FilterList(filters, filterData);
+    public SetList applyFilters(FilterList allFilters) {
         SetList tempSetList = new SetList();
         for (int i = 0; i < allSets.size(); i++) {
+            System.out.println("Checking set "+(i+1));
             if (allFilters.isFiltered(allSets.get(i))) {
+                System.out.println("Adding set");
                 tempSetList.addSet(allSets.get(i));
             }
         }

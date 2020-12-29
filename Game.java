@@ -193,11 +193,6 @@ public class Game {
                             .toArray(new Character[allOpponentCharsArr.size()]);
                     allMatchesArr.add(new Match(allPlayerCharsArrFinal, allOpponentCharsArrFinal, map, win));
                 }
-                JsonArray scoreOrder = currentSetJsonObject.getAsJsonArray("scoreOrder");
-                boolean[] scoreOrderArr = new boolean[scoreOrder.size()];
-                for (int i = 0; i < scoreOrder.size(); i++) {
-                    scoreOrderArr[i] = Boolean.TRUE.equals(scoreOrder.get(i));
-                }
                 String opponent = currentSetJsonObject.get("opponent").getAsString();
                 String teammate = currentSetJsonObject.get("teammate").getAsString();
                 String tournament = currentSetJsonObject.get("tournament").getAsString();
@@ -209,8 +204,7 @@ public class Game {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                tempSetList.addSet(new Set((Match[]) allMatchesArr.toArray(new Match[allMatchesArr.size()]),
-                        scoreOrderArr, opponent, teammate, tournament, date));
+                tempSetList.addSet(new Set((Match[]) allMatchesArr.toArray(new Match[allMatchesArr.size()]), opponent, teammate, tournament, date));
 
             }
 
