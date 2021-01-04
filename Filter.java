@@ -103,9 +103,6 @@ class OpponentScoreFilter extends Filter {
 class OpponentFilter extends Filter {
     @Override
     public boolean apply(Set set, String opponent) {
-        System.out.println(set.getOpponent());
-        System.out.println(opponent);
-        System.out.println(set.getOpponent().equals(opponent));
         if (set.getOpponent().equals(opponent)) {
             return true;
         }
@@ -116,7 +113,7 @@ class OpponentFilter extends Filter {
 class TeammateFilter extends Filter {
     @Override
     public boolean apply(Set set, String teammate) {
-        if (set.getTeammate() == teammate) {
+        if (set.getTeammate().equals(teammate)) {
             return true;
         }
         return false;
@@ -126,7 +123,7 @@ class TeammateFilter extends Filter {
 class TournamentFilter extends Filter {
     @Override
     public boolean apply(Set set, String tournament) {
-        if (set.getTournament() == tournament) {
+        if (set.getTournament().equals(tournament)) {
             return true;
         }
         return false;

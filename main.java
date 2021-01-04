@@ -61,18 +61,18 @@ class Main {
         PlayerScoreFilter psf = new PlayerScoreFilter();
         OpponentScoreFilter osf = new OpponentScoreFilter();
         OpponentFilter of = new OpponentFilter();
-        TeammateFilter tf = new TeammateFilter();
+        TeammateFilter tef = new TeammateFilter();
         TournamentFilter tof = new TournamentFilter();
         DateFilter df = new DateFilter();
 
-        FilterList fl1 = new FilterList(new Filter[]{of},new String[]{"Goose"}); //y u no work
+        FilterList fl1 = new FilterList(new Filter[]{df},new Object[]{date}); 
         
         SetList filteredSetList = tSetList.applyFilters(fl1);
         System.out.println(filteredSetList.toString());
 
     }
 
-    public static Date parseDate(String date) {
+    public static Date parseDate(String date) { //Next is to start on the statistics!
         try {
             return new SimpleDateFormat("DD-MM-yyyy").parse(date);
         } catch (ParseException e) {

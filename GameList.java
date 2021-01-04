@@ -16,7 +16,6 @@ public class GameList {
     }
 
     private ArrayList<Game> loadGamesFromFile() {
-        Gson gson = new Gson();
         File folder = new File("games");
         FilenameFilter filter = new FilenameFilter() {
             public boolean accept(File directory, String name) {
