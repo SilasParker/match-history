@@ -72,7 +72,7 @@ class Main {
 
     }
 
-    public static Date parseDate(String date) { //Next is to start on the statistics!
+    public static Date parseDate(String date) { //Next is to start on the statistics! make new branch tho
         try {
             return new SimpleDateFormat("DD-MM-yyyy").parse(date);
         } catch (ParseException e) {
