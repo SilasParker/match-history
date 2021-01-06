@@ -11,6 +11,7 @@ public class Set {
     private String teammate;
     private String tournament;
     private Date date;
+    private boolean win;
 
     public Set(Match[] matches, String opponent, String teammate, String tournament, Date date) {
         this.matches = matches;
@@ -21,7 +22,7 @@ public class Set {
         this.date = date;
     }
 
-    private boolean[] calculateScoreOrder(Match[] givenMatches) {
+    private boolean[] calculateScoreOrder(Match[] givenMatches) { //make this calculate the winner (boolean win)
         boolean[] calculatedScoreOrder = new boolean[givenMatches.length];
         for(int i = 0;i < givenMatches.length;i++) {
             calculatedScoreOrder[i] = givenMatches[i].isWin();

@@ -14,6 +14,14 @@ public class SetList {
         return toPrint;
     }
 
+    public int getLength() {
+        return this.allSets.size();
+    }
+
+    public Set getSet(int index) {
+        return this.allSets.get(index);
+    }
+
     public void addSet(Set newSet) {
         if (allSets.size() == 0) {
             allSets.add(0, newSet);

@@ -66,13 +66,12 @@ class Main {
         DateFilter df = new DateFilter();
 
         FilterList fl1 = new FilterList(new Filter[]{ocf,mf,of},new Object[]{falcon,yoshisStory,"Goose"}); 
-        
-        SetList filteredSetList = tSetList.applyFilters(fl1);
-        System.out.println(filteredSetList.toString());
+
+        Statistics stats = new Statistics(tSetList); //test after adding calc win to Set
 
     }
 
-    public static Date parseDate(String date) { //Next is to start on the statistics! make new branch tho
+    public static Date parseDate(String date) {
         try {
             return new SimpleDateFormat("DD-MM-yyyy").parse(date);
         } catch (ParseException e) {
