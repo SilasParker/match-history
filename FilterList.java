@@ -32,11 +32,23 @@ public class FilterList {
                 if(!allFilters[i].apply(set,dateFilterData)) {
                     return false;
                 }
+            } else if(filterData[i] instanceof Character) {
+                Character charFilterData = ((Character) filterData[i]);
+                if(!allFilters[i].apply(set,charFilterData)) {
+                    return false;
+                }
+            } else if(filterData[i] instanceof Map) {
+                Map mapFilterData = ((Map) filterData[i]);
+                if(!allFilters[i].apply(set,mapFilterData)) {
+                    return false;
+                }
             }
-            
+
         }
         return true;
+        
     }
+
 
 
 }

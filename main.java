@@ -65,7 +65,7 @@ class Main {
         TournamentFilter tof = new TournamentFilter();
         DateFilter df = new DateFilter();
 
-        FilterList fl1 = new FilterList(new Filter[]{df},new Object[]{date}); 
+        FilterList fl1 = new FilterList(new Filter[]{ocf,mf,of},new Object[]{falcon,yoshisStory,"Goose"}); 
         
         SetList filteredSetList = tSetList.applyFilters(fl1);
         System.out.println(filteredSetList.toString());
