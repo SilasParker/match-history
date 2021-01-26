@@ -22,13 +22,25 @@ public class Set {
         this.date = date;
     }
 
-    private boolean[] calculateScoreOrder(Match[] givenMatches) { //make this calculate the winner (boolean win)
+    private boolean[] calculateScoreOrder(Match[] givenMatches) {
         boolean[] calculatedScoreOrder = new boolean[givenMatches.length];
+        int score = 0;
         for(int i = 0;i < givenMatches.length;i++) {
             calculatedScoreOrder[i] = givenMatches[i].isWin();
+            if(givenMatches[i].isWin()) {
+                score++;
+            } else {
+                score--;
+            }
+        }
+        if(score > 0) {
+            this.win = true;
+        } else {
+            this.win = false;
         }
         return calculatedScoreOrder;
     }
+
 
     public String toString() {
         String toPrint = "Set: ";
@@ -85,6 +97,10 @@ public class Set {
 
     public Date getDate() {
         return this.date;
+    }
+
+    public boolean getWin() {
+        return this.win;
     }
 
 }

@@ -65,9 +65,27 @@ class Main {
         TournamentFilter tof = new TournamentFilter();
         DateFilter df = new DateFilter();
 
-        FilterList fl1 = new FilterList(new Filter[]{ocf,mf,of},new Object[]{falcon,yoshisStory,"Goose"}); 
+        FilterList fl1 = new FilterList(new Filter[]{ocf},new Object[]{falcon}); 
 
-        Statistics stats = new Statistics(tSetList); //test after adding calc win to Set
+        Statistics stats = new Statistics(tSetList); 
+        System.out.println(stats.calculateSetWinRate()+"%");
+        System.out.println(stats.calculateGameWinRate()+"%");
+        System.out.println(stats.calculateTotalSetWinsLosses(true));
+        System.out.println(stats.calculateTotalSetWinsLosses(false));
+        System.out.println(stats.calculateTotalGameWinsLosses(true));
+        System.out.println(stats.calculateTotalGameWinsLosses(false));
+        
+        SetList filteredList = tSetList.applyFilters(fl1);
+        Statistics stats2 = new Statistics(filteredList);
+        System.out.println(stats2.calculateSetWinRate()+"%");
+        System.out.println(stats2.calculateGameWinRate()+"%");
+        System.out.println(stats2.calculateTotalSetWinsLosses(true));
+        System.out.println(stats2.calculateTotalSetWinsLosses(false));
+        System.out.println(stats2.calculateTotalGameWinsLosses(true));
+        System.out.println(stats2.calculateTotalGameWinsLosses(false));
+        
+        //have a look at the word doc
+        //The stats thing needs to go through the match history and dynamically create a list of each characters stats
 
     }
 
