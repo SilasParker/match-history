@@ -54,6 +54,10 @@ class Main {
         tSetList.addSet(slom);
         tSetList.addSet(raph);
         tSetList.addSet(danubi);
+
+        Map[] allMaps = {dreamland64,yoshisStory,battlefield,finalDestination,pokemonStadium,fountainOfDreams};
+        Character[] allChars = {peach,falcon,falco,sheik,marth};
+        Game melee = new Game("Melee",1,false,allMaps,null,tSetList,allChars);
     
         PlayerCharacterFilter pcf = new PlayerCharacterFilter();
         OpponentCharacterFilter ocf = new OpponentCharacterFilter();
@@ -66,23 +70,13 @@ class Main {
         DateFilter df = new DateFilter();
 
         FilterList fl1 = new FilterList(new Filter[]{ocf},new Object[]{falcon}); 
-
-        Statistics stats = new Statistics(tSetList); 
-        System.out.println(stats.calculateSetWinRate()+"%");
-        System.out.println(stats.calculateGameWinRate()+"%");
-        System.out.println(stats.calculateTotalSetWinsLosses(true));
-        System.out.println(stats.calculateTotalSetWinsLosses(false));
-        System.out.println(stats.calculateTotalGameWinsLosses(true));
-        System.out.println(stats.calculateTotalGameWinsLosses(false));
         
         SetList filteredList = tSetList.applyFilters(fl1);
-        Statistics stats2 = new Statistics(filteredList);
-        System.out.println(stats2.calculateSetWinRate()+"%");
-        System.out.println(stats2.calculateGameWinRate()+"%");
-        System.out.println(stats2.calculateTotalSetWinsLosses(true));
-        System.out.println(stats2.calculateTotalSetWinsLosses(false));
-        System.out.println(stats2.calculateTotalGameWinsLosses(true));
-        System.out.println(stats2.calculateTotalGameWinsLosses(false));
+        
+        Statistics stats = new Statistics(tSetList,melee);
+        stats.fillCharacterStats();
+        System.out.println(stats.toString());
+
         
         //have a look at the word doc
         //The stats thing needs to go through the match history and dynamically create a list of each characters stats
