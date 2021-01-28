@@ -25,22 +25,21 @@ public class Set {
     private boolean[] calculateScoreOrder(Match[] givenMatches) {
         boolean[] calculatedScoreOrder = new boolean[givenMatches.length];
         int score = 0;
-        for(int i = 0;i < givenMatches.length;i++) {
+        for (int i = 0; i < givenMatches.length; i++) {
             calculatedScoreOrder[i] = givenMatches[i].isWin();
-            if(givenMatches[i].isWin()) {
+            if (givenMatches[i].isWin()) {
                 score++;
             } else {
                 score--;
             }
         }
-        if(score > 0) {
+        if (score > 0) {
             this.win = true;
         } else {
             this.win = false;
         }
         return calculatedScoreOrder;
     }
-
 
     public String toString() {
         String toPrint = "Set: ";

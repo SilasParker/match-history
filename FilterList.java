@@ -10,7 +10,7 @@ public class FilterList {
         this.filterData = filterData;
     }
 
-    public FilterList(Filter[] allFilters,String[] filterData) {
+    public FilterList(Filter[] allFilters, String[] filterData) {
         this.allFilters = allFilters;
         this.filterData = filterData;
     }
@@ -24,31 +24,29 @@ public class FilterList {
                 }
             } else if (filterData[i] instanceof String) {
                 String strFilterData = ((String) filterData[i]);
-                if(!allFilters[i].apply(set,strFilterData)) {
+                if (!allFilters[i].apply(set, strFilterData)) {
                     return false;
                 }
-            } else if(filterData[i] instanceof Date) {
+            } else if (filterData[i] instanceof Date) {
                 Date dateFilterData = ((Date) filterData[i]);
-                if(!allFilters[i].apply(set,dateFilterData)) {
+                if (!allFilters[i].apply(set, dateFilterData)) {
                     return false;
                 }
-            } else if(filterData[i] instanceof Character) {
+            } else if (filterData[i] instanceof Character) {
                 Character charFilterData = ((Character) filterData[i]);
-                if(!allFilters[i].apply(set,charFilterData)) {
+                if (!allFilters[i].apply(set, charFilterData)) {
                     return false;
                 }
-            } else if(filterData[i] instanceof Map) {
+            } else if (filterData[i] instanceof Map) {
                 Map mapFilterData = ((Map) filterData[i]);
-                if(!allFilters[i].apply(set,mapFilterData)) {
+                if (!allFilters[i].apply(set, mapFilterData)) {
                     return false;
                 }
             }
 
         }
         return true;
-        
+
     }
-
-
 
 }

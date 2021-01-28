@@ -204,7 +204,8 @@ public class Game {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                tempSetList.addSet(new Set((Match[]) allMatchesArr.toArray(new Match[allMatchesArr.size()]), opponent, teammate, tournament, date));
+                tempSetList.addSet(new Set((Match[]) allMatchesArr.toArray(new Match[allMatchesArr.size()]), opponent,
+                        teammate, tournament, date));
 
             }
 

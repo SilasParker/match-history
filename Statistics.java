@@ -13,7 +13,7 @@ class Statistics {
 
     public String toString() {
         String output = "All Characters and Stats:\n";
-        for(CharacterStat charStat : characterStats) {
+        for (CharacterStat charStat : characterStats) {
             output += charStat.toString();
         }
         return output;
@@ -128,8 +128,5 @@ class Statistics {
         }
         return -1;
     }
-    
-
-    
 
 }

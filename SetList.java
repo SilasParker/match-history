@@ -18,8 +18,6 @@ public class SetList {
         return this.allSets.size();
     }
 
-    
-
     public Set getSet(int index) {
         return this.allSets.get(index);
     }
@@ -27,7 +25,8 @@ public class SetList {
     public void addSet(Set newSet) {
         if (allSets.size() == 0) {
             allSets.add(0, newSet);
-        } else if (newSet.getDate().after(allSets.get(0).getDate()) || newSet.getDate().equals(allSets.get(0).getDate())) {
+        } else if (newSet.getDate().after(allSets.get(0).getDate())
+                || newSet.getDate().equals(allSets.get(0).getDate())) {
             allSets.add(0, newSet);
         } else {
             Calendar cal1 = Calendar.getInstance();
@@ -81,7 +80,7 @@ public class SetList {
     public SetList applyFilters(FilterList allFilters) {
         SetList tempSetList = new SetList();
         for (int i = 0; i < allSets.size(); i++) {
-            System.out.println("Checking set "+(i+1));
+            System.out.println("Checking set " + (i + 1));
             if (allFilters.isFiltered(allSets.get(i))) {
                 System.out.println("Adding set");
                 tempSetList.addSet(allSets.get(i));
