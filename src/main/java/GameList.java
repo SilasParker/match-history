@@ -1,3 +1,5 @@
+package src.main.java;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -16,7 +18,7 @@ public class GameList {
     }
 
     private ArrayList<Game> loadGamesFromFile() {
-        File folder = new File("games");
+        File folder = new File("../local/games");
         FilenameFilter filter = new FilenameFilter() {
             public boolean accept(File directory, String name) {
                 return name.endsWith("json");

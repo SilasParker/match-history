@@ -1,3 +1,5 @@
+package src.main.java;
+
 public class CharacterStat {
     private Character character;
     private Game gameRef; // reference to the game at hand

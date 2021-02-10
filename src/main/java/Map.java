@@ -1,3 +1,5 @@
+package src.main.java;
+
 import com.google.gson.JsonObject;
 
 public class Map {

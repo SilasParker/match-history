@@ -1,3 +1,5 @@
+package src.main.java;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -104,7 +106,7 @@ public class Game {
         String fileName = toDirectorySafeString(this.name);
         Writer writer;
         try {
-            writer = Files.newBufferedWriter(Paths.get("games", fileName));
+            writer = Files.newBufferedWriter(Paths.get("../local/games", fileName));
             gson.toJson(json, writer);
             writer.close();
         } catch (IOException e) {
@@ -138,7 +140,7 @@ public class Game {
         String fileName = toDirectorySafeString(this.name);
         Writer writer;
         try {
-            writer = Files.newBufferedWriter(Paths.get("setLists", fileName));
+            writer = Files.newBufferedWriter(Paths.get("../local/setLists", fileName));
             gson.toJson(json, writer);
             writer.close();
         } catch (IOException e) {
