@@ -18,7 +18,7 @@ public class GameList {
     }
 
     private ArrayList<Game> loadGamesFromFile() {
-        File folder = new File("../local/games");
+        File folder = new File("src/local/games");
         FilenameFilter filter = new FilenameFilter() {
             public boolean accept(File directory, String name) {
                 return name.endsWith("json");
@@ -58,12 +58,12 @@ public class GameList {
                     allGameCharsArr.add(new Character(currentCharName, currentCharPath));
                 }
                 Character[] allGameCharsFinal = allGameCharsArr.toArray(new Character[allGameCharsArr.size()]);
-                File tempFile = new File("setLists/" + matchingFiles[i].getName());
+                File tempFile = new File("../../../setLists/" + matchingFiles[i].getName());
 
                 Game gameToAdd = new Game(gameName, gameCharacterNumPerSide, gameTeammate, allGameMapsFinal,
                         gameImgPath, new SetList(), allGameCharsFinal);
                 if (tempFile.exists()) {
-                    gameToAdd.importSetList("setLists/" + matchingFiles[i].getName(), true);
+                    gameToAdd.importSetList("../../../setLists/" + matchingFiles[i].getName(), true);
                 }
                 loadedGames.add(gameToAdd);
 

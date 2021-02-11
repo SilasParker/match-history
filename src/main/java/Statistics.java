@@ -2,7 +2,7 @@ package src.main.java;
 
 import java.util.ArrayList;
 
-class Statistics {
+public class Statistics {
     private SetList setList;
     private CharacterStat[] characterStats;
     private Game gameRef;

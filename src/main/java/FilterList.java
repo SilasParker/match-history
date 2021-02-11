@@ -2,6 +2,8 @@ package src.main.java;
 
 import java.util.Date;
 
+import src.main.java.filters.Filter;
+
 public class FilterList {
     private Filter[] allFilters;
     private Object[] filterData;

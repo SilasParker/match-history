@@ -3,7 +3,7 @@ package src.main.java;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-class Match {
+public class Match {
     private Character[] playerChars;
     private Character[] opponentChars;
     private Map map;
