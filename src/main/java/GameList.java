@@ -25,7 +25,7 @@ public class GameList {
             }
 
         };
-        File[] matchingFiles = folder.listFiles(filter);
+        File[] matchingFiles = folder.listFiles(filter); //might not search all folders recursively
         ArrayList<Game> loadedGames = new ArrayList<Game>();
         for (int i = 0; i < matchingFiles.length; i++) {
             JsonObject jsonObj = null;
