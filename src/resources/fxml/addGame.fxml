@@ -39,7 +39,7 @@
             <Insets left="50.0" />
          </GridPane.margin>
       </TextField>
-      <Button fx:id="gameImage" mnemonicParsing="false" text="Add Image" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+      <Button fx:id="gameImage" mnemonicParsing="false" onAction="#editGameImagePath" text="Add Image" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets right="50.0" />
          </GridPane.margin>
@@ -219,6 +219,11 @@
       <Label fx:id="mapNameLabel" prefWidth="160.0" textAlignment="CENTER" textFill="#e40808" GridPane.halignment="CENTER" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets bottom="90.0" left="215.0" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="gameImgPathLabel" textFill="#d7d4d4" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets right="85.0" top="50.0" />
          </GridPane.margin>
       </Label>
    </children>
