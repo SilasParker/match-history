@@ -106,7 +106,7 @@ public class Game {
         String fileName = toDirectorySafeString(this.name);
         Writer writer;
         try {
-            writer = Files.newBufferedWriter(Paths.get("../../../local/games/"+fileName, fileName+".json"));
+            writer = Files.newBufferedWriter(Paths.get("/src/local/games/"+fileName, fileName+".json")); //figure out why this doesnt work
             gson.toJson(json, writer);
             writer.close();
         } catch (IOException e) {

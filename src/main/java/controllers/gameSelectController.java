@@ -19,10 +19,12 @@ import src.main.java.GameList;
 public class gameSelectController implements Initializable {
 
     @FXML private Button addGameButton;
+    
+    private GameList gameList;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        GameList gameList = new GameList();
+        gameList = new GameList();
 
     }
 
@@ -36,6 +38,10 @@ public class gameSelectController implements Initializable {
         addGameStage.show();
 
 
+    }
+
+    public GameList getGameList() {
+        return this.gameList;
     }
     
 

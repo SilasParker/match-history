@@ -195,7 +195,7 @@
             <Insets left="215.0" />
          </GridPane.margin>
       </ListView>
-      <Button fx:id="submit" mnemonicParsing="false" text="Submit" GridPane.halignment="CENTER" GridPane.rowIndex="5">
+      <Button fx:id="submit" mnemonicParsing="false" onAction="#preSubmit" text="Submit" GridPane.halignment="CENTER" GridPane.rowIndex="5">
          <font>
             <Font size="28.0" />
          </font>
