@@ -261,4 +261,6 @@ public class addGameController implements Initializable {
         gameName.getScene().getWindow().hide(); //exits
     }
 
+    //TODO Look at thisworks.json, the image path needs to be copied over for the game! how did u forget?
+
 }

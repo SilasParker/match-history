@@ -1,7 +1,9 @@
 package src.main.java;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -104,9 +106,10 @@ public class Game {
         json.add("characters", allChars);
 
         String fileName = toDirectorySafeString(this.name);
+
         Writer writer;
         try {
-            writer = Files.newBufferedWriter(Paths.get("/src/local/games/"+fileName, fileName+".json")); //figure out why this doesnt work
+            writer = Files.newBufferedWriter(Paths.get("src/local/games/" + fileName, fileName + ".json")); 
             gson.toJson(json, writer);
             writer.close();
         } catch (IOException e) {
