@@ -17,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,6 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
+import javafx.stage.WindowEvent;
 import javafx.stage.FileChooser.ExtensionFilter;
 import src.main.java.Character;
 import src.main.java.Game;
@@ -45,9 +47,10 @@ public class addGameController implements Initializable {
     @FXML
     private Label charNameLabel, mapNameLabel, gameImgPathLabel;
 
+    private File defaultWindowPath;
+
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-
     }
 
     public void addCharName(ActionEvent event) {
@@ -81,22 +84,30 @@ public class addGameController implements Initializable {
 
     public void editGameImagePath(ActionEvent event) {
         FileChooser fc = new FileChooser();
-        fc.getExtensionFilters().addAll(new ExtensionFilter("JPG Files", "*.jpg"));
+        if(defaultWindowPath.exists()) {
+            fc.setInitialDirectory(defaultWindowPath);
+        }
+        fc.getExtensionFilters().addAll(new ExtensionFilter("PNG Files", "*.png"));
         File selectedFile = fc.showOpenDialog(null);
         if (!Objects.isNull(selectedFile)) {
             gameImgPathLabel.setText(selectedFile.getAbsolutePath());
         }
+        defaultWindowPath = selectedFile;
 
     }
 
     public void editCharMapImagePath(String name, ListView<HBox> listView) {
         FileChooser fc = new FileChooser();
-        fc.getExtensionFilters().addAll(new ExtensionFilter("JPG Files", "*.jpg"));
+        if(defaultWindowPath.exists()) {
+            fc.setInitialDirectory(defaultWindowPath);
+        }
+        fc.getExtensionFilters().addAll(new ExtensionFilter("PNG Files", "*.png"));
         File selectedFile = fc.showOpenDialog(null);
         if (!Objects.isNull(selectedFile)) {
             Label label = (Label) getHBoxFromLV(name, listView).getChildren().get(3);
             label.setText(selectedFile.getAbsolutePath());
         }
+        defaultWindowPath = selectedFile;
     }
 
     private String toDirectorySafeString(String string) {
@@ -168,13 +179,21 @@ public class addGameController implements Initializable {
     public void preSubmit(ActionEvent event) throws IOException { // attempts to copy over images
         String dirSafeGameName = toDirectorySafeString(gameName.getText());
         Path gamePath = Paths.get("src/local/games/" + dirSafeGameName);
-        if (Files.exists(gamePath)) {
+        if (gameName.getText().equals("")) {
+            Alert missingFieldAlert = new Alert(AlertType.WARNING, "Please Complete Missing Fields");
+            missingFieldAlert.show();
+        } else if (Files.exists(gamePath)) {
             System.out.println("Game Directory Already Exists");
             Alert dirExistsAlert = new Alert(AlertType.ERROR,
                     "This Game Already Exists. If not, the name is potentially too similar to another");
             dirExistsAlert.show();
+        } else if (charListView.getItems().size() == 0
+                || (mapListView.getItems().size() == 0 && mapRadio1.isSelected())) {
+            Alert noCharOrMapAlert = new Alert(AlertType.ERROR,
+                    "Please add at least 1 character or map (if applicable)");
+            noCharOrMapAlert.show();
         } else {
-            System.out.println("Directory not found, makign new one");
+            System.out.println("Directory not found, making new one");
             Files.createDirectories(gamePath);
             Path charsPath = Paths.get("src/local/games/" + dirSafeGameName + "/chars");
             Files.createDirectories(charsPath);
@@ -184,41 +203,66 @@ public class addGameController implements Initializable {
                 System.out.println("Looping through characters");
                 Label nameLabel = (Label) hbox.getChildren().get(0);
                 Label pathLabel = (Label) hbox.getChildren().get(3);
-                File source = new File(pathLabel.getText());
-                Path namePath = Paths.get("src/local/games/" + dirSafeGameName + "/chars/"
-                        + toDirectorySafeString(nameLabel.getText()) + ".jpg");
+                if (!pathLabel.getText().equals("")) {
+                    File source = new File(pathLabel.getText());
+                    Path namePath = Paths.get("src/local/games/" + dirSafeGameName + "/chars/"
+                            + toDirectorySafeString(nameLabel.getText()) + ".png");
+                    if (Files.exists(namePath)) {
+                        System.out.println("Files for this character already exist");
+                        characterNameErrorList += nameLabel.getText() + ", ";
+                        charFileCopySuccess = false;
+                    } else {
+                        System.out.println("Copying image");
+                        File dest = new File(namePath.toString());
+                        try {
+                            Files.copy(source.toPath(), dest.toPath());
+                        } catch (IOException e) {
+                            characterNameErrorList += nameLabel.getText() + ", ";
+                            charFileCopySuccess = false;
+                        }
+                    }
+                }
+
+            }
+            boolean gameFileCopySuccess = true;
+            String gameImageError = "";
+            if (!gameImgPathLabel.getText().equals("")) {
+                File source = new File(gameImgPathLabel.getText());
+                Path namePath = Paths.get("src/local/games/" + dirSafeGameName + "/" + dirSafeGameName + ".png");
                 if (Files.exists(namePath)) {
-                    System.out.println("Files for this character already exist");
-                    characterNameErrorList += nameLabel.getText() + ", ";
-                    charFileCopySuccess = false;
+                    System.out.println("File for this game already exists");
+                    gameImageError = "An image for this game has already been set";
+                    gameFileCopySuccess = false;
                 } else {
-                    System.out.println("Copying image");
                     File dest = new File(namePath.toString());
                     try {
                         Files.copy(source.toPath(), dest.toPath());
                     } catch (IOException e) {
-                        characterNameErrorList += nameLabel.getText() + ", ";
-                        charFileCopySuccess = false;
+                        gameImageError = "Could not copy Game image file";
+                        gameFileCopySuccess = false;
                     }
                 }
             }
 
-            if (!charFileCopySuccess) {
-                String error = "There was an error copying these characters\n";
+            if (!charFileCopySuccess || !gameFileCopySuccess) {
+                String error = "There was an error copying these images:\n";
                 if (!charFileCopySuccess) {
                     error += characterNameErrorList + "\n";
+                }
+                if (!gameFileCopySuccess) {
+                    error += gameImageError;
                 }
                 Alert fileCopyError = new Alert(AlertType.ERROR, error);
                 fileCopyError.show();
             } else {
                 System.out.println("niceone");
-                submit();
+                submit(event);
             }
         }
 
     }
 
-    public void submit() {
+    public void submit(ActionEvent event) {
         String subGameName = gameName.getText();
         Path gameImagePath = Paths.get(gameImgPathLabel.getText());
         int subCharNumPerSide = 1;
@@ -241,7 +285,7 @@ public class addGameController implements Initializable {
             Label tempCharNameLabel = (Label) hbox.getChildren().get(0);
             String tempCharName = tempCharNameLabel.getText();
             Path tempCharPath = Paths.get("/src/local/games/" + toDirectorySafeString(subGameName) + "/"
-                    + toDirectorySafeString(tempCharName) + ".jpg");
+                    + toDirectorySafeString(tempCharName) + ".png");
             Character tempChar = new Character(tempCharName, tempCharPath);
             subCharacters[charCounter] = tempChar;
             charCounter++;
@@ -255,12 +299,11 @@ public class addGameController implements Initializable {
             subMaps[mapCounter] = tempMap;
             mapCounter++;
         }
-        Game newGame = new Game(subGameName, subCharNumPerSide, subTeammate, subMaps, gameImagePath, new SetList(),
-                subCharacters);
-        newGame.toJson();
-        gameName.getScene().getWindow().hide(); //exits
-    }
 
-    //TODO Look at thisworks.json, the image path needs to be copied over for the game! how did u forget?
+        Game newGame = new Game(subGameName, subCharNumPerSide, subTeammate, subMaps, new SetList(), subCharacters);
+        newGame.toJson();
+        gameName.getScene().getWindow().hide(); // exits
+
+    }
 
 }

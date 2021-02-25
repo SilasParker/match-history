@@ -59,7 +59,7 @@ class Main {
 
         Map[] allMaps = {dreamland64,yoshisStory,battlefield,finalDestination,pokemonStadium,fountainOfDreams};
         Character[] allChars = {peach,falcon,falco,sheik,marth};
-        Game melee = new Game("Melee",1,false,allMaps,null,tSetList,allChars);
+        Game melee = new Game("Melee",1,false,allMaps,tSetList,allChars);
     
         PlayerCharacterFilter pcf = new PlayerCharacterFilter();
         OpponentCharacterFilter ocf = new OpponentCharacterFilter();

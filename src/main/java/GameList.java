@@ -17,15 +17,38 @@ public class GameList {
         this.allGames = loadGamesFromFile();
     }
 
-    private ArrayList<Game> loadGamesFromFile() {
+    private File[] getAllMatchingGames() {
+        ArrayList<File> allJsonFiles = new ArrayList<>();
         File folder = new File("src/local/games");
-        FilenameFilter filter = new FilenameFilter() {
-            public boolean accept(File directory, String name) {
-                return name.endsWith("json");
+        FilenameFilter filter = new FilenameFilter(){
+            @Override
+            public boolean accept(File dir, String name) {
+                return new File(dir,name).isDirectory();
             }
+        };
+        File[] allFolders = folder.listFiles(filter);
+        FilenameFilter jsonFilter = new FilenameFilter() {
+
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith("json");
+			}
 
         };
-        File[] matchingFiles = folder.listFiles(filter); //might not search all folders recursively
+        for(File currentFolder : allFolders) {
+            File[] matchFiles = currentFolder.listFiles(jsonFilter);
+            allJsonFiles.add(matchFiles[0]);
+        }
+        File[] filesToReturn = new File[allJsonFiles.size()];
+        for(int i = 0; i < allJsonFiles.size();i++) {
+            filesToReturn[i] = allJsonFiles.get(i);
+        }
+        return filesToReturn;
+        
+    }
+
+    private ArrayList<Game> loadGamesFromFile() {
+        File[] matchingFiles = getAllMatchingGames();
         ArrayList<Game> loadedGames = new ArrayList<Game>();
         for (int i = 0; i < matchingFiles.length; i++) {
             JsonObject jsonObj = null;
@@ -48,7 +71,6 @@ public class GameList {
                     allGameMapsArr.add(new Map(currentMapName));
                 }
                 Map[] allGameMapsFinal = allGameMapsArr.toArray(new Map[allGameMapsArr.size()]);
-                Path gameImgPath = Paths.get(jsonObj.get("image").getAsString());
                 JsonArray gameChars = jsonObj.get("characters").getAsJsonArray();
                 ArrayList<Character> allGameCharsArr = new ArrayList<>();
                 for (JsonElement currentChar : gameChars) {
@@ -60,8 +82,8 @@ public class GameList {
                 Character[] allGameCharsFinal = allGameCharsArr.toArray(new Character[allGameCharsArr.size()]);
                 File tempFile = new File("../../../setLists/" + matchingFiles[i].getName());
 
-                Game gameToAdd = new Game(gameName, gameCharacterNumPerSide, gameTeammate, allGameMapsFinal,
-                        gameImgPath, new SetList(), allGameCharsFinal);
+                Game gameToAdd = new Game(gameName, gameCharacterNumPerSide, gameTeammate, allGameMapsFinal
+                        , new SetList(), allGameCharsFinal);
                 if (tempFile.exists()) {
                     gameToAdd.importSetList("../../../setLists/" + matchingFiles[i].getName(), true);
                 }
@@ -78,7 +100,7 @@ public class GameList {
         for (Game game : allGames) {
             toPrint += game.toString() + " ";
         }
-        return toPrint + "/n";
+        return toPrint + "\n";
     }
 
     public void addGame(Game newGame) {
@@ -89,6 +111,10 @@ public class GameList {
         allGames.forEach((game) -> {
             System.out.println(game.getName());
         });
+    }
+
+    public ArrayList<Game> getAllGames() {
+        return this.allGames;
     }
 
 }

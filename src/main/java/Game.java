@@ -1,9 +1,7 @@
 package src.main.java;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -28,18 +26,16 @@ public class Game {
     private int characterNumPerSide;
     private boolean teammate;
     private Map[] maps;
-    private Path image;
     private transient SetList setList;
     private Gson gson = new Gson();
     private Character[] characters;
 
-    public Game(String name, int characterNumPerSide, boolean teammate, Map[] maps, Path image, SetList setList,
+    public Game(String name, int characterNumPerSide, boolean teammate, Map[] maps, SetList setList,
             Character[] characters) {
         this.name = name;
         this.characterNumPerSide = characterNumPerSide;
         this.teammate = teammate;
         this.maps = maps;
-        this.image = image;
         this.setList = setList;
         this.characters = characters;
     }
@@ -52,7 +48,6 @@ public class Game {
         for (Map map : maps) {
             toPrint += map.toString() + " ";
         }
-        toPrint += "ImagePath: " + image.toString() + " ";
         toPrint += setList.toString() + " ";
         for (Character character : characters) {
             toPrint += character.toString() + " ";
@@ -76,10 +71,6 @@ public class Game {
         return this.maps;
     }
 
-    public Path getImage() {
-        return this.image;
-    }
-
     public SetList getSetList() {
         return this.setList;
     }
@@ -98,7 +89,6 @@ public class Game {
             allMaps.add(this.maps[i].toJsonObject());
         }
         json.add("maps", allMaps);
-        json.addProperty("image", this.image.toString());
         JsonArray allChars = new JsonArray();
         for (int i = 0; i < this.characters.length; i++) {
             allChars.add(this.characters[i].toJsonObject());
@@ -117,7 +107,7 @@ public class Game {
         }
     }
 
-    private String toDirectorySafeString(String string) {
+    public String toDirectorySafeString(String string) {
         char[] unsuitableChars = { '#', '%', '&', '{', '}', '\\', '<', '>', '*', '?', '/', ' ', '$', '!', '\'', '"',
                 ':', '@', '+', '`', '|', '=' };
         String fileName = "";
