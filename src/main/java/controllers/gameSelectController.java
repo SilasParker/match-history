@@ -1,20 +1,28 @@
 package src.main.java.controllers;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.channels.GatheringByteChannel;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import javax.swing.Action;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -57,7 +65,50 @@ public class gameSelectController implements Initializable {
             gameImg.setFitHeight(150.0);
             GridPane.setHalignment(gameImg, HPos.CENTER);
             gameGrid.add(gameImg,x,y);
+
+            Button deleteButton = new Button("X");
+            deleteButton.setPrefWidth(10);
+            deleteButton.setPrefHeight(10);
+            GridPane.setHalignment(deleteButton,HPos.RIGHT);
+            GridPane.setValignment(deleteButton, VPos.TOP);
+            deleteButton.setOnAction(new EventHandler<ActionEvent>(){
+
+                @Override
+                public void handle(ActionEvent arg0) {
+                    deleteGame(arg0);
+
+                }
+                
+            });
+            gameGrid.add(deleteButton,x,y);
+
             x++;
+        }
+    }
+
+    public void deleteGame(ActionEvent event) {
+        Button btnClicked = (Button) event.getSource();
+        int x = GridPane.getColumnIndex(btnClicked);
+        int y = GridPane.getRowIndex(btnClicked);
+        int arrayPos = (y*4)+x;
+        Game gameToDelete = gameList.getAllGames().get(arrayPos);
+        Alert alert = new Alert(AlertType.CONFIRMATION,"Delete "+gameToDelete.getName()+" permanently?",ButtonType.YES,ButtonType.CANCEL);
+        alert.showAndWait();
+        if(alert.getResult() == ButtonType.YES) {
+            File directoryToDelete = new File("src/local/games/"+gameToDelete.toDirectorySafeString(gameToDelete.getName()));
+            File[] allContents = directoryToDelete.listFiles();
+            if(allContents.length != 0) {
+                for(File file : allContents) {
+                    if(file.isDirectory()) {
+                        for(File subFile : file.listFiles()) {
+                            subFile.delete();
+                        }
+                    }
+                    file.delete();
+                }
+                directoryToDelete.delete();
+            } 
+            generateGameDisplays(null);
         }
     }
 
@@ -68,8 +119,7 @@ public class gameSelectController implements Initializable {
         addGameStage.setResizable(false);
         addGameStage.setTitle("Add New Game");
         addGameStage.initModality(Modality.APPLICATION_MODAL);
-        addGameStage.show();
-
+        addGameStage.showAndWait();
     }
 
 

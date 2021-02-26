@@ -84,7 +84,7 @@ public class addGameController implements Initializable {
 
     public void editGameImagePath(ActionEvent event) {
         FileChooser fc = new FileChooser();
-        if(defaultWindowPath.exists()) {
+        if(defaultWindowPath != null) {
             fc.setInitialDirectory(defaultWindowPath);
         }
         fc.getExtensionFilters().addAll(new ExtensionFilter("PNG Files", "*.png"));
@@ -92,7 +92,7 @@ public class addGameController implements Initializable {
         if (!Objects.isNull(selectedFile)) {
             gameImgPathLabel.setText(selectedFile.getAbsolutePath());
         }
-        defaultWindowPath = selectedFile;
+        defaultWindowPath = selectedFile.getParentFile();
 
     }
 

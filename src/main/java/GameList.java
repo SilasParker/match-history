@@ -20,31 +20,33 @@ public class GameList {
     private File[] getAllMatchingGames() {
         ArrayList<File> allJsonFiles = new ArrayList<>();
         File folder = new File("src/local/games");
-        FilenameFilter filter = new FilenameFilter(){
+        FilenameFilter filter = new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return new File(dir,name).isDirectory();
+                return new File(dir, name).isDirectory();
             }
         };
         File[] allFolders = folder.listFiles(filter);
         FilenameFilter jsonFilter = new FilenameFilter() {
 
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.endsWith("json");
-			}
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith("json");
+            }
 
         };
-        for(File currentFolder : allFolders) {
+        for (File currentFolder : allFolders) {
             File[] matchFiles = currentFolder.listFiles(jsonFilter);
-            allJsonFiles.add(matchFiles[0]);
+            if (matchFiles[0].exists()) {
+                allJsonFiles.add(matchFiles[0]);
+            }
         }
         File[] filesToReturn = new File[allJsonFiles.size()];
-        for(int i = 0; i < allJsonFiles.size();i++) {
+        for (int i = 0; i < allJsonFiles.size(); i++) {
             filesToReturn[i] = allJsonFiles.get(i);
         }
         return filesToReturn;
-        
+
     }
 
     private ArrayList<Game> loadGamesFromFile() {
@@ -82,8 +84,8 @@ public class GameList {
                 Character[] allGameCharsFinal = allGameCharsArr.toArray(new Character[allGameCharsArr.size()]);
                 File tempFile = new File("../../../setLists/" + matchingFiles[i].getName());
 
-                Game gameToAdd = new Game(gameName, gameCharacterNumPerSide, gameTeammate, allGameMapsFinal
-                        , new SetList(), allGameCharsFinal);
+                Game gameToAdd = new Game(gameName, gameCharacterNumPerSide, gameTeammate, allGameMapsFinal,
+                        new SetList(), allGameCharsFinal);
                 if (tempFile.exists()) {
                     gameToAdd.importSetList("../../../setLists/" + matchingFiles[i].getName(), true);
                 }
