@@ -25,10 +25,12 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import src.main.java.Game;
 import src.main.java.GameList;
 
@@ -63,6 +65,19 @@ public class gameSelectController implements Initializable {
             gameImg.setPreserveRatio(true);
             gameImg.setFitWidth(150.0);
             gameImg.setFitHeight(150.0);
+            gameImg.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent arg0) {
+                    try {
+                        openMainWindow(event);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                
+            });
             GridPane.setHalignment(gameImg, HPos.CENTER);
             gameGrid.add(gameImg,x,y);
 
@@ -125,6 +140,16 @@ public class gameSelectController implements Initializable {
 
     public GameList getGameList() {
         return this.gameList;
+    }
+
+    public void openMainWindow(ActionEvent event) throws IOException { //TODO WHY DOESNT WORK
+        Scene thisScene = gameGrid.getScene();
+        Stage thisStage = (Stage) thisScene.getWindow();
+        
+
+        Parent mainParent = FXMLLoader.load(getClass().getResource("../../../resources/fxml/main.fxml"));
+        Scene newScene = new Scene(mainParent);
+        thisStage.setScene(newScene);
     }
 
 }
