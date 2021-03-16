@@ -20,9 +20,9 @@ public class main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("../../../resources/fxml/gameSelect.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/src/resources/fxml/gameSelect.fxml"));
             Scene scene = new Scene(root,1200,750);
-            scene.getStylesheets().add(getClass().getResource("../../../resources/css/application.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/src/resources/css/application.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch(Exception e) {

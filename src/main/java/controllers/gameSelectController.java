@@ -30,6 +30,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import src.main.java.Game;
 import src.main.java.GameList;
@@ -65,12 +66,14 @@ public class gameSelectController implements Initializable {
             gameImg.setPreserveRatio(true);
             gameImg.setFitWidth(150.0);
             gameImg.setFitHeight(150.0);
+            
             gameImg.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
 
                 @Override
                 public void handle(MouseEvent arg0) {
                     try {
-                        openMainWindow(event);
+                        openMainWindow(arg0);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -142,14 +145,23 @@ public class gameSelectController implements Initializable {
         return this.gameList;
     }
 
-    public void openMainWindow(ActionEvent event) throws IOException { //TODO WHY DOESNT WORK
-        Scene thisScene = gameGrid.getScene();
-        Stage thisStage = (Stage) thisScene.getWindow();
-        
-
-        Parent mainParent = FXMLLoader.load(getClass().getResource("../../../resources/fxml/main.fxml"));
-        Scene newScene = new Scene(mainParent);
-        thisStage.setScene(newScene);
+    public void openMainWindow(MouseEvent event) throws IOException {
+ 
+        ImageView imageClicked = (ImageView) event.getSource();
+        int x = GridPane.getColumnIndex(imageClicked);
+        int y = GridPane.getRowIndex(imageClicked);
+        int arrayPos = (y*4)+x;
+        Game gameToOpen = gameList.getAllGames().get(arrayPos);
+        FXMLLoader loader = new FXMLLoader();
+        URL fxmlURL = getClass().getResource("/src/resources/fxml/main.fxml");
+        loader.setLocation(fxmlURL);
+        Parent mainViewParent = loader.load();
+        Scene mainViewScene = new Scene(mainViewParent);
+        mainController controller = loader.getController();
+        controller.initData(gameToOpen);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(mainViewScene);
+        window.show();
     }
 
 }
