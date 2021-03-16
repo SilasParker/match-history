@@ -31,7 +31,7 @@
             <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0">
               <buttons>
                 <Button mnemonicParsing="false" text="IMPORT" translateX="10.0" ButtonBar.buttonData="LEFT" />
-                <Button mnemonicParsing="false" text="BACK" translateX="-10.0" ButtonBar.buttonData="RIGHT" />
+                <Button mnemonicParsing="false" onAction="#backToGameSelect" text="BACK" translateX="-10.0" ButtonBar.buttonData="RIGHT" />
               </buttons>
                <HBox.margin>
                   <Insets left="165.0" />
