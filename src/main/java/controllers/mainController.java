@@ -43,6 +43,8 @@ public class mainController implements Initializable {
         gameNameLabel.setText(game.getName());
     }
 
+
+
     private void centerImageInImageView(ImageView imgView) {
         Image img = imgView.getImage();
         double w = 0;
