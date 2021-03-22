@@ -6,11 +6,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -48,7 +50,218 @@
                <children>
                   <VBox prefHeight="550.0" prefWidth="900.0">
                      <children>
-                        <HBox prefHeight="125.0" prefWidth="200.0" />
+                        <HBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="125.0" prefWidth="200.0">
+                           <children>
+                              <VBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="150.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="90.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../../../../Pictures/2021/109543156_3281365781907074_3820516317265522548_n.jpg" />
+                                       </image>
+                                    </ImageView>
+                                    <Label text="Teammate" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="600.0">
+                                 <children>
+                                    <Label text="Tournament Name - Winners Round 1">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <HBox prefHeight="100.0" prefWidth="200.0">
+                                       <children>
+                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="120.0">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                                   <children>
+                                                      <Label text="Character 2">
+                                                         <font>
+                                                            <Font size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label text="Character 1">
+                                                         <font>
+                                                            <Font size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                                         <children>
+                                                            <Circle fill="#1fff35" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
+                                                            <Label text="MAP NAME" underline="true" />
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </VBox>
+                                                <VBox prefHeight="200.0" prefWidth="100.0" />
+                                                <Label text="Character 3">
+                                                   <font>
+                                                      <Font size="10.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Character 4">
+                                                   <font>
+                                                      <Font size="10.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="120.0">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                                   <children>
+                                                      <Label text="Character 2">
+                                                         <font>
+                                                            <Font size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label text="Character 1">
+                                                         <font>
+                                                            <Font size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                                         <children>
+                                                            <Circle fill="#ff2121" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
+                                                            <Label text="MAP NAME" underline="true" />
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </VBox>
+                                                <VBox prefHeight="200.0" prefWidth="100.0" />
+                                                <Label text="Character 3">
+                                                   <font>
+                                                      <Font size="10.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Character 4">
+                                                   <font>
+                                                      <Font size="10.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="120.0">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                                   <children>
+                                                      <Label text="Character 2">
+                                                         <font>
+                                                            <Font size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label text="Character 1">
+                                                         <font>
+                                                            <Font size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                                         <children>
+                                                            <Circle fill="#1fff35" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
+                                                            <Label text="MAP NAME" underline="true" />
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </VBox>
+                                                <VBox prefHeight="200.0" prefWidth="100.0" />
+                                                <Label text="Character 3">
+                                                   <font>
+                                                      <Font size="10.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Character 4">
+                                                   <font>
+                                                      <Font size="10.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="120.0">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                                   <children>
+                                                      <Label text="Character 2">
+                                                         <font>
+                                                            <Font size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label text="Character 1">
+                                                         <font>
+                                                            <Font size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                                         <children>
+                                                            <Circle fill="#1fff35" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
+                                                            <Label text="MAP NAME" underline="true" />
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </VBox>
+                                                <VBox prefHeight="200.0" prefWidth="100.0" />
+                                                <Label text="Character 3">
+                                                   <font>
+                                                      <Font size="10.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Character 4">
+                                                   <font>
+                                                      <Font size="10.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="120.0">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                                   <children>
+                                                      <Label>
+                                                         <font>
+                                                            <Font size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <Label>
+                                                         <font>
+                                                            <Font size="10.0" />
+                                                         </font>
+                                                      </Label>
+                                                      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                                         <children>
+                                                            <Circle fill="#21ff3400" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
+                                                            <Label underline="true" />
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </VBox>
+                                                <VBox prefHeight="200.0" prefWidth="100.0" />
+                                                <Label>
+                                                   <font>
+                                                      <Font size="10.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label>
+                                                   <font>
+                                                      <Font size="10.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="150.0" spacing="10.0">
+                                 <children>
+                                    <ImageView fitHeight="90.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../../../../Pictures/Melee/screen_shot_2013-03-08_at_3.10.56_pm.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Label text="Opp Team Name" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
                      </children></VBox>
                </children>
             </AnchorPane>
