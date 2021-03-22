@@ -1,6 +1,7 @@
 package src.main.java;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.gson.JsonArray;
@@ -22,6 +23,35 @@ public class Set {
         this.teammate = teammate;
         this.tournament = tournament;
         this.date = date;
+    }
+
+    private ArrayList<Character> getMostPlayedCharacters(boolean opponent) {
+        ArrayList<Character> allChars = new ArrayList<>();
+        ArrayList<Integer> charCount = new ArrayList<>();
+        for(Match match : matches) {
+            if(!opponent) {
+                for(Character characters : match.getPlayerCharacters()) {
+                    if(!allChars.contains(characters)) {
+                        allChars.add(characters);
+                        charCount.add(1);
+                    } else {
+                        int indexOfCharacter = allChars.indexOf(characters);
+                        charCount.set(indexOfCharacter,charCount.get(indexOfCharacter)+1);
+                    }
+                }
+            } else {
+                for(Character characters : match.getOpponentCharacters()) {
+                    if(!allChars.contains(characters)) {
+                        allChars.add(characters);
+                        charCount.add(1);
+                    } else {
+                        int indexOfCharacter = allChars.indexOf(characters);
+                        charCount.set(indexOfCharacter,charCount.get(indexOfCharacter)+1);
+                    }
+                }
+            }
+        }
+        //TODO FINISH THIS FUNCTION. NEED TO ORDER ARRAY BY CHARCOUNT
     }
 
     private boolean[] calculateScoreOrder(Match[] givenMatches) {

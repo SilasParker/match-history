@@ -9,14 +9,18 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import src.main.java.Game;
+import src.main.java.Set;
 
 public class mainController implements Initializable {
 
@@ -75,6 +79,21 @@ public class mainController implements Initializable {
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(gameSelectViewScene);
         window.show();
+    }
+
+    public void generateMatchHistoryDisplay() {
+        for(Set set : game.getSetList().getAllSets()) {
+            HBox setContainerHBox = new HBox();
+            setContainerHBox.setPrefHeight(125);
+            setContainerHBox.setMaxHeight(125);
+
+            VBox playerContainerVBox = new VBox();
+            playerContainerVBox.setAlignment(Pos.CENTER);
+            playerContainerVBox.setPrefWidth(150);
+            playerContainerVBox.setMaxWidth(150);
+            //TODO CONTINUE getMostPlayeCharacters(boolean) function in Set class 
+            ImageView playerImage = new ImageView();
+        }
     }
     
 }

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.gluonhq.charm.glisten.control.ToggleButtonGroup?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
@@ -47,7 +46,10 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="900.0">
                <children>
-                  <VBox prefHeight="550.0" prefWidth="900.0" />
+                  <VBox prefHeight="550.0" prefWidth="900.0">
+                     <children>
+                        <HBox prefHeight="125.0" prefWidth="200.0" />
+                     </children></VBox>
                </children>
             </AnchorPane>
         </content>
@@ -60,13 +62,25 @@
                      <font>
                         <Font size="25.0" />
                      </font>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
                   </Text>
-                  <ToggleButtonGroup maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="75.0" selectionType="SINGLE">
-                      <toggles>
-                          <ToggleButton text="Bo3" />
-                          <ToggleButton text="Bo5" />
-                      </toggles>
-                  </ToggleButtonGroup>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <RadioButton mnemonicParsing="false" />
+                        <Label text="Bo3" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <RadioButton mnemonicParsing="false" />
+                        <Label text="Bo5" />
+                     </children>
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </VBox>
                </children>
             </HBox>
          </children>
