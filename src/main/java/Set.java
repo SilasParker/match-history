@@ -25,7 +25,7 @@ public class Set {
         this.date = date;
     }
 
-    private ArrayList<Character> getMostPlayedCharacters(boolean opponent) {
+    public ArrayList<Character> getMostPlayedCharacters(boolean opponent) {
         ArrayList<Character> allChars = new ArrayList<>();
         ArrayList<Integer> charCount = new ArrayList<>();
         for(Match match : matches) {
@@ -51,7 +51,21 @@ public class Set {
                 }
             }
         }
-        //TODO FINISH THIS FUNCTION. NEED TO ORDER ARRAY BY CHARCOUNT
+        ArrayList<Character> allCharsOrdered = new ArrayList<>();
+        for(int i = 0; i < allChars.size(); i++) {
+            int highNum = 0;
+            int highIndex = 0;
+            for(int j = 0;i < allChars.size();i++) {
+                if(charCount.get(j) > highNum) {
+                    highNum = charCount.get(j);
+                    highIndex = j;
+                }
+            }
+            allCharsOrdered.add(allChars.get(highIndex));
+            allChars.remove(highIndex);
+            charCount.remove(highIndex);
+        }
+        return allCharsOrdered;       
     }
 
     private boolean[] calculateScoreOrder(Match[] givenMatches) {

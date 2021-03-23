@@ -3,12 +3,14 @@ package src.main.java.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,9 +18,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import src.main.java.Character;
 import src.main.java.Game;
 import src.main.java.Set;
 
@@ -81,7 +86,7 @@ public class mainController implements Initializable {
         window.show();
     }
 
-    public void generateMatchHistoryDisplay() {
+    private void generateMatchHistoryDisplay() {
         for(Set set : game.getSetList().getAllSets()) {
             HBox setContainerHBox = new HBox();
             setContainerHBox.setPrefHeight(125);
@@ -91,9 +96,56 @@ public class mainController implements Initializable {
             playerContainerVBox.setAlignment(Pos.CENTER);
             playerContainerVBox.setPrefWidth(150);
             playerContainerVBox.setMaxWidth(150);
-            //TODO CONTINUE getMostPlayeCharacters(boolean) function in Set class 
-            ImageView playerImage = new ImageView();
+            setContainerHBox.getChildren().add(playerContainerVBox);
+            
+            ArrayList<Character> playerMostPlayed = set.getMostPlayedCharacters(false);
+            ImageView playerImageView, teammateImageView;
+            if(!game.isTeammate()) {
+                Character mostPlayed = playerMostPlayed.get(0);
+                playerImageView = new ImageView(mostPlayed.getImagePath().toString());
+                playerImageView.setFitHeight(90.0);
+                playerImageView.setFitWidth(90.0);
+                playerContainerVBox.getChildren().add(playerImageView);
+            } else {
+                GridPane imageViewGridPaneContainer = new GridPane();
+                Character mostPlayed = playerMostPlayed.get(0);
+                Character secondMostPlayed = playerMostPlayed.get(1);
+                playerImageView = new ImageView(mostPlayed.getImagePath().toString());
+                playerImageView.setFitHeight(60.0);
+                playerImageView.setFitWidth(60.0);
+                teammateImageView = new ImageView(secondMostPlayed.getImagePath().toString());
+                teammateImageView.setFitHeight(60.0);
+                teammateImageView.setFitWidth(60.0);
+                imageViewGridPaneContainer.add(playerImageView,0,0);
+                imageViewGridPaneContainer.add(teammateImageView,1,1);
+                GridPane.setHalignment(playerImageView, HPos.RIGHT);
+                GridPane.setHalignment(teammateImageView, HPos.LEFT);
+                playerContainerVBox.getChildren().add(imageViewGridPaneContainer);
+            }
+
+            if(game.isTeammate()) {
+                Label teammateLabel = new Label(set.getTeammate());
+                playerContainerVBox.getChildren().add(teammateLabel);
+            }
+            
+            VBox mainInfoVBox = new VBox();
+            mainInfoVBox.setAlignment(Pos.CENTER);
+            mainInfoVBox.setPrefWidth(600);
+            mainInfoVBox.setMaxWidth(600);
+            setContainerHBox.getChildren().add(mainInfoVBox);
+
+            Label tournamentAndDateLabel = new Label(set.getTournament()+" - "+set.getDate().toString());
+            tournamentAndDateLabel.setStyle("-fx-font-weight: bold");
+            tournamentAndDateLabel.setFont(new Font(12.0));
+            mainInfoVBox.getChildren().add(tournamentAndDateLabel);
+
+            HBox gameInfoHBox = new HBox();
+            gameInfoHBox.setAlignment(Pos.CENTER);
+            mainInfoVBox.getChildren().add(gameInfoHBox);
+            
         }
     }
+
+    
     
 }
