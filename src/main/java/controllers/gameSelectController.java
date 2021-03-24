@@ -37,8 +37,10 @@ import src.main.java.GameList;
 
 public class gameSelectController implements Initializable {
 
-    @FXML private Button addGameButton, refreshButton;
-    @FXML private GridPane gameGrid;
+    @FXML
+    private Button addGameButton, refreshButton;
+    @FXML
+    private GridPane gameGrid;
 
     private GameList gameList;
 
@@ -56,7 +58,7 @@ public class gameSelectController implements Initializable {
         int x = 0;
         int y = 0;
         for (Game currentGame : gameList.getAllGames()) {
-            if(x > 7) {
+            if (x > 7) {
                 y++;
                 x = 0;
             }
@@ -66,9 +68,8 @@ public class gameSelectController implements Initializable {
             gameImg.setPreserveRatio(true);
             gameImg.setFitWidth(150.0);
             gameImg.setFitHeight(150.0);
-            
-            gameImg.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
+            gameImg.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
                 @Override
                 public void handle(MouseEvent arg0) {
@@ -79,26 +80,26 @@ public class gameSelectController implements Initializable {
                     }
 
                 }
-                
+
             });
             GridPane.setHalignment(gameImg, HPos.CENTER);
-            gameGrid.add(gameImg,x,y);
+            gameGrid.add(gameImg, x, y);
 
             Button deleteButton = new Button("X");
             deleteButton.setPrefWidth(10);
             deleteButton.setPrefHeight(10);
-            GridPane.setHalignment(deleteButton,HPos.RIGHT);
+            GridPane.setHalignment(deleteButton, HPos.RIGHT);
             GridPane.setValignment(deleteButton, VPos.TOP);
-            deleteButton.setOnAction(new EventHandler<ActionEvent>(){
+            deleteButton.setOnAction(new EventHandler<ActionEvent>() {
 
                 @Override
                 public void handle(ActionEvent arg0) {
                     deleteGame(arg0);
 
                 }
-                
+
             });
-            gameGrid.add(deleteButton,x,y);
+            gameGrid.add(deleteButton, x, y);
 
             x++;
         }
@@ -108,24 +109,26 @@ public class gameSelectController implements Initializable {
         Button btnClicked = (Button) event.getSource();
         int x = GridPane.getColumnIndex(btnClicked);
         int y = GridPane.getRowIndex(btnClicked);
-        int arrayPos = (y*4)+x;
+        int arrayPos = (y * 4) + x;
         Game gameToDelete = gameList.getAllGames().get(arrayPos);
-        Alert alert = new Alert(AlertType.CONFIRMATION,"Delete "+gameToDelete.getName()+" permanently?",ButtonType.YES,ButtonType.CANCEL);
+        Alert alert = new Alert(AlertType.CONFIRMATION, "Delete " + gameToDelete.getName() + " permanently?",
+                ButtonType.YES, ButtonType.CANCEL);
         alert.showAndWait();
-        if(alert.getResult() == ButtonType.YES) {
-            File directoryToDelete = new File("src/local/games/"+gameToDelete.toDirectorySafeString(gameToDelete.getName()));
+        if (alert.getResult() == ButtonType.YES) {
+            File directoryToDelete = new File(
+                    "src/local/games/" + gameToDelete.toDirectorySafeString(gameToDelete.getName()));
             File[] allContents = directoryToDelete.listFiles();
-            if(allContents.length != 0) {
-                for(File file : allContents) {
-                    if(file.isDirectory()) {
-                        for(File subFile : file.listFiles()) {
+            if (allContents.length != 0) {
+                for (File file : allContents) {
+                    if (file.isDirectory()) {
+                        for (File subFile : file.listFiles()) {
                             subFile.delete();
                         }
                     }
                     file.delete();
                 }
                 directoryToDelete.delete();
-            } 
+            }
             generateGameDisplays(null);
         }
     }
@@ -140,17 +143,16 @@ public class gameSelectController implements Initializable {
         addGameStage.showAndWait();
     }
 
-
     public GameList getGameList() {
         return this.gameList;
     }
 
     public void openMainWindow(MouseEvent event) throws IOException {
- 
+
         ImageView imageClicked = (ImageView) event.getSource();
         int x = GridPane.getColumnIndex(imageClicked);
         int y = GridPane.getRowIndex(imageClicked);
-        int arrayPos = (y*4)+x;
+        int arrayPos = (y * 4) + x;
         Game gameToOpen = gameList.getAllGames().get(arrayPos);
         FXMLLoader loader = new FXMLLoader();
         URL fxmlURL = getClass().getResource("/src/resources/fxml/main.fxml");

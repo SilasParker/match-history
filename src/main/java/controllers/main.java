@@ -21,11 +21,11 @@ public class main extends Application {
     public void start(Stage primaryStage) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/src/resources/fxml/gameSelect.fxml"));
-            Scene scene = new Scene(root,1200,750);
+            Scene scene = new Scene(root, 1200, 750);
             scene.getStylesheets().add(getClass().getResource("/src/resources/css/application.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.show();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -33,8 +33,6 @@ public class main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
-
 
     public static Date parseDate(String date) {
         try {
@@ -45,5 +43,4 @@ public class main extends Application {
         }
     }
 
-    
 }

@@ -48,7 +48,7 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="900.0">
                <children>
-                  <VBox prefHeight="550.0" prefWidth="900.0">
+                  <VBox fx:id="matchHistoryVBox" prefHeight="550.0" prefWidth="900.0">
                      <children>
                         <HBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="125.0" prefWidth="200.0">
                            <children>
@@ -93,7 +93,6 @@
                                                       </VBox>
                                                    </children>
                                                 </VBox>
-                                                <VBox prefHeight="200.0" prefWidth="100.0" />
                                                 <Label text="Character 3">
                                                    <font>
                                                       <Font size="10.0" />
@@ -128,7 +127,6 @@
                                                       </VBox>
                                                    </children>
                                                 </VBox>
-                                                <VBox prefHeight="200.0" prefWidth="100.0" />
                                                 <Label text="Character 3">
                                                    <font>
                                                       <Font size="10.0" />
@@ -163,7 +161,6 @@
                                                       </VBox>
                                                    </children>
                                                 </VBox>
-                                                <VBox prefHeight="200.0" prefWidth="100.0" />
                                                 <Label text="Character 3">
                                                    <font>
                                                       <Font size="10.0" />
@@ -198,7 +195,6 @@
                                                       </VBox>
                                                    </children>
                                                 </VBox>
-                                                <VBox prefHeight="200.0" prefWidth="100.0" />
                                                 <Label text="Character 3">
                                                    <font>
                                                       <Font size="10.0" />
@@ -233,7 +229,6 @@
                                                       </VBox>
                                                    </children>
                                                 </VBox>
-                                                <VBox prefHeight="200.0" prefWidth="100.0" />
                                                 <Label>
                                                    <font>
                                                       <Font size="10.0" />
@@ -267,36 +262,45 @@
             </AnchorPane>
         </content>
       </ScrollPane>
-      <VBox alignment="TOP_CENTER" prefHeight="550.0" prefWidth="300.0" spacing="10.0">
-         <children>
-            <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="200.0" spacing="25.0">
+      <ScrollPane hbarPolicy="NEVER" prefHeight="500.0" prefWidth="300.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="300.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Report Match">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </Text>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                  <VBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="300.0" spacing="10.0">
                      <children>
-                        <RadioButton mnemonicParsing="false" />
-                        <Label text="Bo3" />
+                        <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="200.0" spacing="25.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Report Match">
+                                 <font>
+                                    <Font size="25.0" />
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Text>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <RadioButton mnemonicParsing="false" />
+                                    <Label text="Bo3" />
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <RadioButton mnemonicParsing="false" />
+                                    <Label text="Bo5" />
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                              </VBox>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                     <children>
-                        <RadioButton mnemonicParsing="false" />
-                        <Label text="Bo5" />
-                     </children>
-                     <HBox.margin>
-                        <Insets right="10.0" />
-                     </HBox.margin>
-                  </VBox>
+                  <VBox fx:id="reportMatchVBox" layoutY="50.0" prefHeight="500.0" prefWidth="300.0" />
                </children>
-            </HBox>
-         </children>
-      </VBox>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
    </children>
 </FlowPane>

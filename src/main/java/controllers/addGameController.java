@@ -84,7 +84,7 @@ public class addGameController implements Initializable {
 
     public void editGameImagePath(ActionEvent event) {
         FileChooser fc = new FileChooser();
-        if(defaultWindowPath != null) {
+        if (defaultWindowPath != null) {
             fc.setInitialDirectory(defaultWindowPath);
         }
         fc.getExtensionFilters().addAll(new ExtensionFilter("PNG Files", "*.png"));
@@ -98,7 +98,7 @@ public class addGameController implements Initializable {
 
     public void editCharMapImagePath(String name, ListView<HBox> listView) {
         FileChooser fc = new FileChooser();
-        if(defaultWindowPath.exists()) {
+        if (defaultWindowPath.exists()) {
             fc.setInitialDirectory(defaultWindowPath);
         }
         fc.getExtensionFilters().addAll(new ExtensionFilter("PNG Files", "*.png"));
@@ -284,7 +284,7 @@ public class addGameController implements Initializable {
         for (HBox hbox : charListView.getItems()) {
             Label tempCharNameLabel = (Label) hbox.getChildren().get(0);
             String tempCharName = tempCharNameLabel.getText();
-            Path tempCharPath = Paths.get("/src/local/games/" + toDirectorySafeString(subGameName) + "/"
+            Path tempCharPath = Paths.get("/src/local/games/" + toDirectorySafeString(subGameName) + "/chars/"
                     + toDirectorySafeString(tempCharName) + ".png");
             Character tempChar = new Character(tempCharName, tempCharPath);
             subCharacters[charCounter] = tempChar;

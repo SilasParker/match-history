@@ -82,12 +82,12 @@ public class GameList {
                     allGameCharsArr.add(new Character(currentCharName, currentCharPath));
                 }
                 Character[] allGameCharsFinal = allGameCharsArr.toArray(new Character[allGameCharsArr.size()]);
-                File tempFile = new File("../../../setLists/" + matchingFiles[i].getName());
+                File tempFile = new File("src/local/setLists/" + matchingFiles[i].getName());
 
                 Game gameToAdd = new Game(gameName, gameCharacterNumPerSide, gameTeammate, allGameMapsFinal,
                         new SetList(), allGameCharsFinal);
                 if (tempFile.exists()) {
-                    gameToAdd.importSetList("../../../setLists/" + matchingFiles[i].getName(), true);
+                    gameToAdd.importSetList("src/local/setLists/" + matchingFiles[i].getName(), true);
                 }
                 loadedGames.add(gameToAdd);
 
