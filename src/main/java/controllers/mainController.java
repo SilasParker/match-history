@@ -32,6 +32,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import src.main.java.Character;
 import src.main.java.Game;
+import src.main.java.Map;
 import src.main.java.Match;
 import src.main.java.Set;
 
@@ -212,11 +213,8 @@ public class mainController implements Initializable {
                 imageViewGridPaneContainer.add(oppTeammateImageView, 1, 1);
                 opponentContainerBox.getChildren().add(imageViewGridPaneContainer);
             }
-
-            if (game.isTeammate()) {
-                Label oppTeamLabel = new Label(set.getOpponent());
-                opponentContainerBox.getChildren().add(oppTeamLabel);
-            }
+            Label oppTeamLabel = new Label(set.getOpponent());
+            opponentContainerBox.getChildren().add(oppTeamLabel);
 
             matchHistoryVBox.getChildren().add(setContainerHBox);
 
@@ -252,11 +250,11 @@ public class mainController implements Initializable {
                 matchCircle.setFill(javafx.scene.paint.Color.rgb(220, 20, 60));
             }
             middleVBoxContainer.getChildren().add(matchCircle);
-
-            Label mapLabel = new Label(match.getMap().getName());
-            mapLabel.setUnderline(true);
-            middleVBoxContainer.getChildren().add(mapLabel);
-
+            if (game.isMap()) {
+                Label mapLabel = new Label(match.getMap().getName());
+                mapLabel.setUnderline(true);
+                middleVBoxContainer.getChildren().add(mapLabel);
+            }
             for (int i = 0; i < game.getCharactersPerSide(); i++) {
                 Label opponentCharacterNameLabel = new Label(match.getOpponentCharacters()[i].getName());
                 opponentCharacterNameLabel.setFont(new Font(10.0));
@@ -271,51 +269,39 @@ public class mainController implements Initializable {
         return matchInfoVBoxContainer;
     }
 
-    public void generateReportSetForm(ActionEvent event) { // rushed to test match history generation, redo
+    private void generateReportSetForm() {
+        HBox gameInfoInputHBox = new HBox();
+        gameInfoInputHBox.setAlignment(Pos.CENTER);
+        gameInfoInputHBox.setMaxHeight((game.getCharactersPerSide() * 50.0) + 25.0);
+        gameInfoInputHBox.setPrefHeight((game.getCharactersPerSide() * 50.0) + 25.0);
+        reportSetVBox.getChildren().add(2, gameInfoInputHBox);
 
-        RadioButton sourceButton = (RadioButton) event.getSource();
-        int bestOfNum;
-        if (sourceButton.getText().equals("Bo3")) {
-            bestOfNum = 3;
-        } else {
-            bestOfNum = 5;
+        VBox playerCharactersVBox = new VBox();
+        playerCharactersVBox.setAlignment(Pos.CENTER);
+        playerCharactersVBox.setPrefHeight(gameInfoInputHBox.getHeight());
+        gameInfoInputHBox.getChildren().add(playerCharactersVBox);
+
+        Label playerLabel = new Label("Player");
+        playerCharactersVBox.getChildren().add(playerLabel);
+
+        ArrayList<String> allCharacterStrings = new ArrayList<>();
+        for (Character character : game.getCharacters()) {
+            allCharacterStrings.add(character.getName());
         }
 
-        HBox scoreOrderHBox = new HBox();
-        scoreOrderHBox.setAlignment(Pos.CENTER);
-        scoreOrderHBox.setPrefHeight(30);
-        scoreOrderHBox.setMaxHeight(30);
-        reportSetVBox.getChildren().add(scoreOrderHBox);
-
-        for (int i = 1; i <= bestOfNum; i++) {
-            ChoiceBox<String> scoreOrderChoiceBox = new ChoiceBox<String>();
-            scoreOrderChoiceBox.getItems().add("Player");
-            scoreOrderChoiceBox.getItems().add("Opponent");
-            scoreOrderChoiceBox.getItems().add("Unplayed");
-            scoreOrderChoiceBox.setValue("Game " + i);
-            scoreOrderHBox.getChildren().add(scoreOrderChoiceBox);
+        for (int i = 1; i <= game.getCharactersPerSide(); i++) {
+            ChoiceBox<String> playerChoiceBox = new ChoiceBox<String>();
+            playerChoiceBox.getItems().setAll(allCharacterStrings);
+            playerChoiceBox.setValue("Character " + i);
+            playerCharactersVBox.getChildren().add(playerChoiceBox);
         }
 
-        HBox playerCharacterHBox = new HBox();
-        playerCharacterHBox.setAlignment(Pos.CENTER);
-        playerCharacterHBox.setPrefHeight(30);
-        playerCharacterHBox.setMaxHeight(30);
-        reportSetVBox.getChildren().add(playerCharacterHBox);
-
-        HBox opponentCharacterHBox = new HBox();
-        opponentCharacterHBox.setAlignment(Pos.CENTER);
-        opponentCharacterHBox.setPrefHeight(30);
-        opponentCharacterHBox.setMaxHeight(30);
-        reportSetVBox.getChildren().add(opponentCharacterHBox);
-
-        for (int i = 1; i <= bestOfNum; i++) {
-            ChoiceBox<String> characterChoiceBox = new ChoiceBox<String>();
-            for (Character character : game.getCharacters()) {
-                characterChoiceBox.getItems().add(character.getName());
+        if (game.isMap()) {
+            ArrayList<String> allMapsStrings = new ArrayList<>();
+            for (Map map : game.getMaps()) {
+                allMapsStrings.add(map.getName());
             }
-            characterChoiceBox.setValue("Game " + i);
-            playerCharacterHBox.getChildren().add(characterChoiceBox);
-            opponentCharacterHBox.getChildren().add(characterChoiceBox);
+            //CARRY ON HERE
         }
 
     }

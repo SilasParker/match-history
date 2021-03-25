@@ -40,6 +40,14 @@ public class Game {
         this.characters = characters;
     }
 
+    public boolean isMap() {
+        if(this.maps == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public String toString() {
         String toPrint = "Game: ";
         toPrint += name + " ";
