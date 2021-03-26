@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,6 +23,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -44,8 +47,12 @@ public class mainController implements Initializable {
     private Label gameNameLabel;
     @FXML
     private VBox matchHistoryVBox, reportSetVBox;
+    @FXML
+    private ToggleGroup reportWinner;
 
     private Game game;
+    private ArrayList<Match> tempMatches = new ArrayList<>();
+    private HBox matchEntryHBox;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -65,6 +72,7 @@ public class mainController implements Initializable {
         System.out.println(gameImageView.getX() + "," + gameImageView.getY());
         gameNameLabel.setText(game.getName());
         generateMatchHistoryDisplay();
+        generateReportSetForm();
     }
 
     private void centerImageInImageView(ImageView imgView) {
@@ -271,9 +279,12 @@ public class mainController implements Initializable {
 
     private void generateReportSetForm() {
         HBox gameInfoInputHBox = new HBox();
+        this.matchEntryHBox = gameInfoInputHBox;
         gameInfoInputHBox.setAlignment(Pos.CENTER);
         gameInfoInputHBox.setMaxHeight((game.getCharactersPerSide() * 50.0) + 25.0);
         gameInfoInputHBox.setPrefHeight((game.getCharactersPerSide() * 50.0) + 25.0);
+        gameInfoInputHBox.setSpacing(10.0);
+
         reportSetVBox.getChildren().add(2, gameInfoInputHBox);
 
         VBox playerCharactersVBox = new VBox();
@@ -292,18 +303,112 @@ public class mainController implements Initializable {
         for (int i = 1; i <= game.getCharactersPerSide(); i++) {
             ChoiceBox<String> playerChoiceBox = new ChoiceBox<String>();
             playerChoiceBox.getItems().setAll(allCharacterStrings);
-            playerChoiceBox.setValue("Character " + i);
             playerCharactersVBox.getChildren().add(playerChoiceBox);
         }
 
         if (game.isMap()) {
+            VBox mapVBox = new VBox();
+            mapVBox.setAlignment(Pos.CENTER);
+            gameInfoInputHBox.getChildren().add(mapVBox);
+
+            Label mapLabel = new Label("Map");
+            mapVBox.getChildren().add(mapLabel);
+
             ArrayList<String> allMapsStrings = new ArrayList<>();
             for (Map map : game.getMaps()) {
                 allMapsStrings.add(map.getName());
             }
-            //CARRY ON HERE
+            ChoiceBox<String> mapChoiceBox = new ChoiceBox<String>();
+            mapChoiceBox.getItems().setAll(allMapsStrings);
+            mapVBox.getChildren().add(mapChoiceBox);
         }
 
+        VBox opponentCharactersVBox = new VBox();
+        opponentCharactersVBox.setAlignment(Pos.CENTER);
+        opponentCharactersVBox.setPrefHeight(gameInfoInputHBox.getHeight());
+        gameInfoInputHBox.getChildren().add(opponentCharactersVBox);
+
+        Label opponentLabel = new Label("Opponent");
+        opponentCharactersVBox.getChildren().add(opponentLabel);
+
+        for (int i = 1; i <= game.getCharactersPerSide(); i++) {
+            ChoiceBox<String> opponentChoiceBox = new ChoiceBox<String>();
+            opponentChoiceBox.getItems().setAll(allCharacterStrings);
+            opponentCharactersVBox.getChildren().add(opponentChoiceBox);
+        }
+
+    }
+
+    public void addMatchToTempSet(ActionEvent event) {
+        boolean matchValid = true;
+        if (this.matchEntryHBox != null) {
+            VBox playerCharactersVBox = (VBox) matchEntryHBox.getChildren().get(0);
+            ArrayList<Character> playerChars = new ArrayList<>();
+            for (Node node : playerCharactersVBox.getChildren()) {
+                if (node instanceof ChoiceBox<?>) {
+                    ChoiceBox<String> choiceBox = (ChoiceBox<String>) node;
+                    String charStr = choiceBox.getValue();
+                    for (Character character : game.getCharacters()) {
+                        if (character.getName().equals(charStr)) {
+                            playerChars.add(character);
+                        }
+                    }
+                }
+            }
+            if (playerChars.size() != game.getCharactersPerSide()) {
+                matchValid = false;
+            }
+            Map mapSelected = null;
+            if (game.isMap() && matchValid) {
+                VBox mapVBox = (VBox) matchEntryHBox.getChildren().get(1);
+                ChoiceBox<String> mapChoiceBox = (ChoiceBox<String>) mapVBox.getChildren().get(1);
+                for (Map map : game.getMaps()) {
+                    if (map.getName().equals(mapChoiceBox.getValue())) {
+                        mapSelected = map;
+                    }
+                }
+                if (mapSelected == null) {
+                    matchValid = false;
+                }
+            }
+            ArrayList<Character> opponentChars = new ArrayList<>();
+            if (matchValid) {
+                VBox opponentCharactersVBox;
+                opponentCharactersVBox = (VBox) matchEntryHBox.getChildren().get(1);
+                if (game.isMap()) {
+                    opponentCharactersVBox = (VBox) matchEntryHBox.getChildren().get(2);
+                }
+                for (Node node : opponentCharactersVBox.getChildren()) {
+                    if (node instanceof ChoiceBox<?>) {
+                        ChoiceBox<String> choiceBox = (ChoiceBox<String>) node;
+                        String charStr = choiceBox.getValue();
+                        for (Character character : game.getCharacters()) {
+                            if (character.getName().equals(charStr)) {
+                                opponentChars.add(character);
+                            }
+                        }
+                    }
+                    if (opponentChars.size() != game.getCharactersPerSide()) {
+                        matchValid = false;
+                    }
+                }
+            }
+            boolean playerWin = false;
+            if(matchValid) {
+                RadioButton selected = (RadioButton) reportWinner.getSelectedToggle();
+                if(selected != null) {
+                    if(selected.getText().equals("Me")) {
+                        playerWin = true;
+                    }
+                } else {
+                    matchValid = false;
+                }
+            }
+            if(matchValid) {
+                Match match = new Match((Character[]) playerChars.toArray(),(Character[]) opponentChars.toArray(),mapSelected,playerWin);
+                tempMatches.add(match);
+            } //TODO have a message pop up if invalid and then make the list show the match
+        }
     }
 
 }

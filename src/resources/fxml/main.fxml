@@ -298,6 +298,9 @@
                            <VBox.margin>
                               <Insets left="10.0" right="20.0" />
                            </VBox.margin>
+                           <padding>
+                              <Insets bottom="75.0" />
+                           </padding>
                         </HBox>
                         <VBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="300.0">
                            <children>
