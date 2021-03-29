@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import javax.swing.event.MenuDragMouseEvent;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,12 +20,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -49,6 +53,8 @@ public class mainController implements Initializable {
     private VBox matchHistoryVBox, reportSetVBox;
     @FXML
     private ToggleGroup reportWinner;
+    @FXML 
+    private ListView<HBox> reportListView;
 
     private Game game;
     private ArrayList<Match> tempMatches = new ArrayList<>();
@@ -357,6 +363,7 @@ public class mainController implements Initializable {
             }
             if (playerChars.size() != game.getCharactersPerSide()) {
                 matchValid = false;
+                System.out.println("Broke at 1");
             }
             Map mapSelected = null;
             if (game.isMap() && matchValid) {
@@ -369,6 +376,7 @@ public class mainController implements Initializable {
                 }
                 if (mapSelected == null) {
                     matchValid = false;
+                    System.out.println("Broke at 2");
                 }
             }
             ArrayList<Character> opponentChars = new ArrayList<>();
@@ -380,17 +388,24 @@ public class mainController implements Initializable {
                 }
                 for (Node node : opponentCharactersVBox.getChildren()) {
                     if (node instanceof ChoiceBox<?>) {
+                        System.out.println("Choicebox found correctly");
                         ChoiceBox<String> choiceBox = (ChoiceBox<String>) node;
                         String charStr = choiceBox.getValue();
+                        System.out.println("charStr: "+choiceBox.getValue());
                         for (Character character : game.getCharacters()) {
+                            System.out.println(character.getName()+" != "+charStr);
                             if (character.getName().equals(charStr)) {
+                                System.out.println("but char is added?");
                                 opponentChars.add(character);
+                                System.out.println(opponentChars.toString());
                             }
                         }
                     }
-                    if (opponentChars.size() != game.getCharactersPerSide()) {
-                        matchValid = false;
-                    }
+                }
+                if (opponentChars.size() != game.getCharactersPerSide()) {
+                    System.out.println(opponentChars.toString()+" ???");
+                    matchValid = false;
+                    System.out.println("Broke at 3 "+opponentChars.size()+" "+game.getCharactersPerSide());
                 }
             }
             boolean playerWin = false;
@@ -402,13 +417,60 @@ public class mainController implements Initializable {
                     }
                 } else {
                     matchValid = false;
+                    System.out.println("Broke at 4");
                 }
             }
             if(matchValid) {
-                Match match = new Match((Character[]) playerChars.toArray(),(Character[]) opponentChars.toArray(),mapSelected,playerWin);
+                Character[] playerCharsArray = playerChars.toArray(new Character[0]);
+                Character[] opponentCharsArray = opponentChars.toArray(new Character[0]);
+                Match match = new Match(playerCharsArray,opponentCharsArray,mapSelected,playerWin);
                 tempMatches.add(match);
-            } //TODO have a message pop up if invalid and then make the list show the match
+                reportListView.getItems().add(getHBoxFromMatch(match));
+            } else {
+                Alert invalidMatchError = new Alert(AlertType.ERROR,"Please ensure all match details are filled in");
+                invalidMatchError.show();
+            }
         }
+    }
+
+    private HBox getHBoxFromMatch(Match match) {
+        HBox matchHbox = new HBox();
+        
+        String playerCharsString = match.getPlayerCharacters()[0].getName();
+        String opponentCharsString = match.getOpponentCharacters()[0].getName();
+        for(int i = 1; i < game.getCharactersPerSide();i++) {
+            playerCharsString += ", "+match.getPlayerCharacters()[i].getName();
+            opponentCharsString += ", "+match.getOpponentCharacters()[i].getName();
+        }
+        String finalString = playerCharsString+" vs "+opponentCharsString;
+        if(game.isMap()) {
+            finalString += " on "+match.getMap().getName();
+        }
+        Label matchLabel = new Label(finalString);
+        matchHbox.getChildren().add(matchLabel);
+
+        Button removeButton = new Button();
+        removeButton.setText("Remove");
+        removeButton.setOnAction((EventHandler<ActionEvent>) new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                removeMatch(matchHbox);
+            }
+        });
+        matchHbox.getChildren().add(removeButton);
+        if(match.isWin()) {
+            matchHbox.setStyle("-fx-background-colour: #90EE90;"); // TODO fix this lol
+        } else {
+            matchHbox.setStyle("-fx-background-colour: #0000FF;");
+        }
+
+        return matchHbox;
+    }
+
+    private void removeMatch(HBox hbox) {
+        int index = reportListView.getItems().indexOf(hbox);
+        tempMatches.remove(index);
+        reportListView.getItems().remove(hbox);
     }
 
 }

@@ -321,7 +321,7 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <Button fx:id="reportAddGameButton" mnemonicParsing="false" text="Add Game">
+                        <Button fx:id="reportAddGameButton" mnemonicParsing="false" onAction="#addMatchToTempSet" text="Add Game">
                            <VBox.margin>
                               <Insets top="10.0" />
                            </VBox.margin>
