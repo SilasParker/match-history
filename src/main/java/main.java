@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.io.File;
 import java.io.IOException;
 import src.main.java.filters.*;
+import java.time.LocalDate;
 
 class Main {
 
@@ -31,7 +32,7 @@ class Main {
         Match gooseMatch1 = new Match(new Character[] { peach }, new Character[] { marth }, dreamland64, true);
         Match gooseMatch2 = new Match(new Character[] { peach }, new Character[] { marth }, yoshisStory, true);
         Match gooseMatch3 = new Match(new Character[] { peach }, new Character[] { falcon }, yoshisStory, true);
-        Date date = parseDate("10-12-2020");
+        LocalDate date = LocalDate.of(2020,12,10);
         Set goose = new Set(new Match[] { gooseMatch1, gooseMatch2, gooseMatch3 }, "Goose", "", "4Qs #24", date);
         Match mobyMatch3 = new Match(new Character[] { peach }, new Character[] { falcon }, dreamland64, true);
         Set moby = new Set(new Match[] { gooseMatch3, gooseMatch3, mobyMatch3 }, "Moby", "", "4Qs #24", date);

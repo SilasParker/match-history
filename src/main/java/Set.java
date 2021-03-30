@@ -1,6 +1,9 @@
 package src.main.java;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -13,10 +16,10 @@ public class Set {
     private String opponent;
     private String teammate;
     private String tournament;
-    private Date date;
+    private LocalDate date;
     private boolean win;
 
-    public Set(Match[] matches, String opponent, String teammate, String tournament, Date date) {
+    public Set(Match[] matches, String opponent, String teammate, String tournament, LocalDate date) {
         this.matches = matches;
         this.scoreOrder = calculateScoreOrder(matches);
         this.opponent = opponent;
@@ -24,6 +27,8 @@ public class Set {
         this.tournament = tournament;
         this.date = date;
     }
+
+    
 
     public ArrayList<Character> getMostPlayedCharacters(boolean opponent) {
         ArrayList<Character> allChars = new ArrayList<>();
@@ -115,8 +120,8 @@ public class Set {
         json.addProperty("opponent", this.opponent);
         json.addProperty("teammate", this.teammate);
         json.addProperty("tournament", this.tournament);
-        SimpleDateFormat sDataFormat = new SimpleDateFormat("DD-MM-yyyy");
-        json.addProperty("date", sDataFormat.format(this.date));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("DD-MM-yyyy");
+        json.addProperty("date", date.format(formatter));
         return json;
     }
 
@@ -140,12 +145,17 @@ public class Set {
         return this.tournament;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return this.date;
     }
 
     public boolean getWin() {
         return this.win;
+    }
+
+    public Date getLocalDateAsDate() {
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        return Date.from(date.atStartOfDay(defaultZoneId).toInstant());
     }
 
 }

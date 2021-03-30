@@ -1,5 +1,6 @@
 package src.main.java.filters;
 
+import java.time.LocalDate;
 import java.util.Date;
 import src.main.java.*;
 
@@ -12,7 +13,7 @@ public abstract class Filter {
         return false;
     }
 
-    public boolean apply(Set set, Date date) {
+    public boolean apply(Set set, LocalDate date) {
         return false;
     }
 

@@ -3,3 +3,4 @@
 *.jpg
 *.png
 src/main/java/controllers/main.java
+src/main/java/main.java

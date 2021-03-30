@@ -9,6 +9,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -141,7 +143,7 @@ public class Game {
         String fileName = toDirectorySafeString(this.name);
         Writer writer;
         try {
-            writer = Files.newBufferedWriter(Paths.get("../../../local/setLists", fileName));
+            writer = Files.newBufferedWriter(Paths.get("src/local/setLists", fileName+".json"));
             gson.toJson(json, writer);
             writer.close();
         } catch (IOException e) {
@@ -200,15 +202,10 @@ public class Game {
                 String teammate = currentSetJsonObject.get("teammate").getAsString();
                 String tournament = currentSetJsonObject.get("tournament").getAsString();
                 String dateString = currentSetJsonObject.get("date").getAsString();
-                SimpleDateFormat dateFormatter = new SimpleDateFormat("DD-MM-yyyy", Locale.ENGLISH);
-                Date date = null;
-                try {
-                    date = dateFormatter.parse(dateString);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                LocalDate localDate = LocalDate.parse(dateString,DateTimeFormatter.ofPattern("DD-MM-yyyy"));
+
                 tempSetList.addSet(new Set((Match[]) allMatchesArr.toArray(new Match[allMatchesArr.size()]), opponent,
-                        teammate, tournament, date));
+                        teammate, tournament, localDate));
 
             }
 

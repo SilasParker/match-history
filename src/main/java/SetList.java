@@ -27,21 +27,21 @@ public class SetList {
     public void addSet(Set newSet) {
         if (allSets.size() == 0) {
             allSets.add(0, newSet);
-        } else if (newSet.getDate().after(allSets.get(0).getDate())
+        } else if (newSet.getDate().isAfter(allSets.get(0).getDate())
                 || newSet.getDate().equals(allSets.get(0).getDate())) {
             allSets.add(0, newSet);
         } else {
             Calendar cal1 = Calendar.getInstance();
             Calendar cal2 = Calendar.getInstance();
-            cal1.setTime(newSet.getDate());
-            cal2.setTime(allSets.get(0).getDate());
+            cal1.setTime(newSet.getLocalDateAsDate());
+            cal2.setTime(allSets.get(0).getLocalDateAsDate());
             if (cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
                     && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)) {
                 for (int i = 0; i <= allSets.size() - 1; i++) {
-                    System.out.println(newSet.getDate().after(allSets.get(i).getDate()));
-                    System.out.println(newSet.getDate().before(allSets.get(i).getDate()));
+                    System.out.println(newSet.getDate().isAfter(allSets.get(i).getDate()));
+                    System.out.println(newSet.getDate().isBefore(allSets.get(i).getDate()));
                     System.out.println(newSet.getDate().equals(allSets.get(i).getDate()));
-                    if (newSet.getDate().after(allSets.get(i).getDate())) {
+                    if (newSet.getDate().isAfter(allSets.get(i).getDate())) {
                         allSets.add(i, newSet);
                     }
                 }
@@ -65,14 +65,14 @@ public class SetList {
     private void insertionSort(Set newSet, int low, int high) {
         int mid = (low + high) / 2;
         if (high <= low && allSets.size() > 1) {
-            int insertionpoint = (newSet.getDate().after(allSets.get(low).getDate())) ? low : (low + 1);
+            int insertionpoint = (newSet.getDate().isAfter(allSets.get(low).getDate())) ? low : (low + 1);
             allSets.add(insertionpoint, newSet);
-        } else if (mid == allSets.size() - 1 && allSets.get(mid).getDate().after(newSet.getDate())) {
+        } else if (mid == allSets.size() - 1 && allSets.get(mid).getDate().isAfter(newSet.getDate())) {
             // If the current pointer is at the end of the array, insert it at the end
             allSets.add(allSets.size(), newSet);
-        } else if (newSet.getDate().after(allSets.get(mid).getDate())) { // If the newSet is in the left half
+        } else if (newSet.getDate().isAfter(allSets.get(mid).getDate())) { // If the newSet is in the left half
             insertionSort(newSet, low, mid - 1);
-        } else if (newSet.getDate().before(allSets.get(mid).getDate())) { // If the newSet is in the right half
+        } else if (newSet.getDate().isBefore(allSets.get(mid).getDate())) { // If the newSet is in the right half
             insertionSort(newSet, mid + 1, high);
         } else { // covers if the date is the same
             allSets.add(mid, newSet);

@@ -3,6 +3,7 @@ package src.main.java.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -23,9 +24,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
@@ -55,6 +58,12 @@ public class mainController implements Initializable {
     private ToggleGroup reportWinner;
     @FXML 
     private ListView<HBox> reportListView;
+    @FXML
+    private TextField reportOpponentInput, reportTournamentInput, reportTeammateInput;
+    @FXML
+    private DatePicker reportDatePicker;
+    @FXML
+    private HBox dateTeammateHBox;
 
     private Game game;
     private ArrayList<Match> tempMatches = new ArrayList<>();
@@ -113,20 +122,7 @@ public class mainController implements Initializable {
     }
 
     private void generateMatchHistoryDisplay() {
-        // FOR TESTING PURPOSES
-
-        Match match1 = new Match(new Character[] { game.getCharacters()[0] },
-                new Character[] { game.getCharacters()[1] }, game.getMaps()[0], true);
-        Match match2 = new Match(new Character[] { game.getCharacters()[0] },
-                new Character[] { game.getCharacters()[1] }, game.getMaps()[1], false);
-        Match match3 = new Match(new Character[] { game.getCharacters()[2] },
-                new Character[] { game.getCharacters()[1] }, game.getMaps()[2], true);
-        Date date = new Date(2021, 6, 21);
-        Set setTest = new Set(new Match[] { match1, match2, match3 }, "Boohbah", "10QuidShoes", "King of the Hill 4",
-                date);
-        this.game.getSetList().addSet(setTest);
-        // FOR TESTING PURPOSES
-
+        matchHistoryVBox.getChildren().clear();
         for (Set set : game.getSetList().getAllSets()) {
             HBox setContainerHBox = new HBox();
             setContainerHBox.setPrefHeight(125);
@@ -284,19 +280,19 @@ public class mainController implements Initializable {
     }
 
     private void generateReportSetForm() {
-        HBox gameInfoInputHBox = new HBox();
-        this.matchEntryHBox = gameInfoInputHBox;
-        gameInfoInputHBox.setAlignment(Pos.CENTER);
-        gameInfoInputHBox.setMaxHeight((game.getCharactersPerSide() * 50.0) + 25.0);
-        gameInfoInputHBox.setPrefHeight((game.getCharactersPerSide() * 50.0) + 25.0);
-        gameInfoInputHBox.setSpacing(10.0);
+        HBox matchInfoInputHBox = new HBox();
+        this.matchEntryHBox = matchInfoInputHBox;
+        matchInfoInputHBox.setAlignment(Pos.CENTER);
+        matchInfoInputHBox.setMaxHeight((game.getCharactersPerSide() * 50.0) + 25.0);
+        matchInfoInputHBox.setPrefHeight((game.getCharactersPerSide() * 50.0) + 25.0);
+        matchInfoInputHBox.setSpacing(10.0);
 
-        reportSetVBox.getChildren().add(2, gameInfoInputHBox);
+        reportSetVBox.getChildren().add(2, matchInfoInputHBox);
 
         VBox playerCharactersVBox = new VBox();
         playerCharactersVBox.setAlignment(Pos.CENTER);
-        playerCharactersVBox.setPrefHeight(gameInfoInputHBox.getHeight());
-        gameInfoInputHBox.getChildren().add(playerCharactersVBox);
+        playerCharactersVBox.setPrefHeight(matchInfoInputHBox.getHeight());
+        matchInfoInputHBox.getChildren().add(playerCharactersVBox);
 
         Label playerLabel = new Label("Player");
         playerCharactersVBox.getChildren().add(playerLabel);
@@ -315,7 +311,7 @@ public class mainController implements Initializable {
         if (game.isMap()) {
             VBox mapVBox = new VBox();
             mapVBox.setAlignment(Pos.CENTER);
-            gameInfoInputHBox.getChildren().add(mapVBox);
+            matchInfoInputHBox.getChildren().add(mapVBox);
 
             Label mapLabel = new Label("Map");
             mapVBox.getChildren().add(mapLabel);
@@ -331,8 +327,8 @@ public class mainController implements Initializable {
 
         VBox opponentCharactersVBox = new VBox();
         opponentCharactersVBox.setAlignment(Pos.CENTER);
-        opponentCharactersVBox.setPrefHeight(gameInfoInputHBox.getHeight());
-        gameInfoInputHBox.getChildren().add(opponentCharactersVBox);
+        opponentCharactersVBox.setPrefHeight(matchInfoInputHBox.getHeight());
+        matchInfoInputHBox.getChildren().add(opponentCharactersVBox);
 
         Label opponentLabel = new Label("Opponent");
         opponentCharactersVBox.getChildren().add(opponentLabel);
@@ -341,6 +337,10 @@ public class mainController implements Initializable {
             ChoiceBox<String> opponentChoiceBox = new ChoiceBox<String>();
             opponentChoiceBox.getItems().setAll(allCharacterStrings);
             opponentCharactersVBox.getChildren().add(opponentChoiceBox);
+        }
+
+        if(!game.isTeammate()) {
+            dateTeammateHBox.getChildren().remove(reportTeammateInput);
         }
 
     }
@@ -433,8 +433,12 @@ public class mainController implements Initializable {
         }
     }
 
+    
+
     private HBox getHBoxFromMatch(Match match) {
         HBox matchHbox = new HBox();
+        matchHbox.setAlignment(Pos.CENTER);
+        matchHbox.setSpacing(10.0);
         
         String playerCharsString = match.getPlayerCharacters()[0].getName();
         String opponentCharsString = match.getOpponentCharacters()[0].getName();
@@ -459,9 +463,9 @@ public class mainController implements Initializable {
         });
         matchHbox.getChildren().add(removeButton);
         if(match.isWin()) {
-            matchHbox.setStyle("-fx-background-colour: #90EE90;"); // TODO fix this lol
+            matchHbox.setStyle("-fx-background-color: #90EE90;");
         } else {
-            matchHbox.setStyle("-fx-background-colour: #0000FF;");
+            matchHbox.setStyle("-fx-background-color: #FF0000;");
         }
 
         return matchHbox;
@@ -471,6 +475,69 @@ public class mainController implements Initializable {
         int index = reportListView.getItems().indexOf(hbox);
         tempMatches.remove(index);
         reportListView.getItems().remove(hbox);
+    }
+
+    public void submitSet(ActionEvent event) {
+        String error = "";
+        if(reportOpponentInput.getText().equals("")) {
+            error += "Opponent Name is empty\n";
+        } else if(reportOpponentInput.getText().length() > 20) {
+            error += "Opponent Name is too long (max 20 chars)\n";
+        }
+
+        if(reportTournamentInput.getText().equals("")) {
+            error += "Tournament Name is empty\n";
+        } else if(reportTournamentInput.getText().length() > 30) {
+            error += "Tournament Name is too long (max 30 chars)\n";
+        }
+
+        if(reportDatePicker.getValue() == null) {
+            error += "No Date Selected\n";
+        } else if(reportDatePicker.getValue().isAfter(LocalDate.now())) {
+            error += "Cannot select date in the future\n";
+        }
+
+        if(game.isTeammate()) {
+            if(reportTeammateInput.getText().equals("")) {
+                error += "Teammate Name is empty\n";
+            } else if(reportTeammateInput.getText().length() > 20) {
+                error += "Teammate Name is too long (max 20 chars)\n";
+            }
+        }
+
+        if(tempMatches.size() == 0) {
+            error += "No Matches Entered\n";
+        } else {
+            int pointCount = 0;
+            for(Match match : tempMatches) {
+                if(match.isWin()) {
+                    pointCount++;
+                } else {
+                    pointCount--;
+                }
+            }
+            if(pointCount == 0) {
+                error += "Match wins and losses can't be equal (there must be a set winner)";
+            }
+        }
+
+        if(error.equals("")) {
+            Match[] matches = tempMatches.toArray(new Match[0]);
+            String opponent = reportOpponentInput.getText();
+            String teammate = "";
+            if(game.isTeammate()) {
+                teammate = reportTeammateInput.getText();
+            }
+            String tournament = reportTournamentInput.getText();
+            LocalDate date = reportDatePicker.getValue();
+            Set newSet = new Set(matches,opponent,teammate,tournament,date);
+            game.getSetList().addSet(newSet);
+            game.setListJsonToFile();
+            generateMatchHistoryDisplay();
+        } else {
+            Alert setReportAlert = new Alert(AlertType.ERROR,error);
+            setReportAlert.show();
+        }
     }
 
 }
