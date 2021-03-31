@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -22,9 +23,9 @@
 
 <FlowPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.main.java.controllers.mainController">
    <children>
-      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="1200.0">
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="90.0" prefWidth="1200.0">
          <children>
-            <ImageView fx:id="gameImageView" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="gameImageView" fitHeight="90.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
                <HBox.margin>
                   <Insets left="25.0" />
                </HBox.margin>
@@ -47,7 +48,50 @@
                </HBox.margin>
             </ButtonBar>
          </children></HBox>
-      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="1200.0" />
+      <HBox fx:id="filterHBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="110.0" prefWidth="900.0">
+         <children>
+            <VBox fx:id="filterPlayerVBox" alignment="CENTER" prefHeight="200.0" prefWidth="125.0" />
+            <VBox fx:id="filterMainVBox" alignment="CENTER" prefHeight="200.0" prefWidth="650.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
+                     <children>
+                        <TextField fx:id="filterOpponentTextField" promptText="Opponent Name" />
+                        <TextField fx:id="filterTournamentTextField" promptText="Tournament Name" />
+                        <Button mnemonicParsing="false" onAction="#processFilter" text="FILTER" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0">
+                           <children>
+                              <Label text="Player Score" />
+                              <ChoiceBox fx:id="filterPlayerScoreChoiceBox" prefWidth="150.0" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0">
+                           <children>
+                              <Label text="Map" />
+                              <ChoiceBox fx:id="filterMapChoiceBox" prefWidth="150.0" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0">
+                           <children>
+                              <Label text="Opponent Score" />
+                              <ChoiceBox fx:id="filterOpponentScoreChoiceBox" prefWidth="150.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="filterBottomHBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
+                     <children>
+                        <DatePicker fx:id="filterDatePicker" promptText="Tournament Date" />
+                        <TextField fx:id="filterTeammateTextField" promptText="Teammate Name" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox fx:id="filterOpponentVBox" alignment="CENTER" prefHeight="200.0" prefWidth="125.0" />
+         </children></HBox>
       <ScrollPane hbarPolicy="NEVER" prefHeight="550.0" prefWidth="900.0">
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="900.0">

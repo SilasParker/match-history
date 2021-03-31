@@ -19,6 +19,13 @@ public class FilterList {
         this.filterData = filterData;
     }
 
+    public void clearFilter() {
+        this.allFilters = new Filter[]{};
+        this.filterData = new Object[]{};
+    }
+
+
+
     public boolean isFiltered(Set set) {
         for (int i = 0; i < allFilters.length; i++) {
             if (filterData[i] instanceof Integer) {
