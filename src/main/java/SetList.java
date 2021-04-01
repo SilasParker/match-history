@@ -62,6 +62,7 @@ public class SetList {
         allSets.remove(setToRemove);
     }
 
+
     private void insertionSort(Set newSet, int low, int high) {
         int mid = (low + high) / 2;
         if (high <= low && allSets.size() > 1) {

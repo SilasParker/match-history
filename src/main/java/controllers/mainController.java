@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 import javax.swing.Action;
 import javax.swing.event.MenuDragMouseEvent;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -32,10 +33,14 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Border;
@@ -51,18 +56,22 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import src.main.java.Character;
+import src.main.java.CharacterStat;
 import src.main.java.FilterList;
 import src.main.java.Game;
 import src.main.java.Map;
 import src.main.java.Match;
 import src.main.java.Set;
 import src.main.java.SetList;
+import src.main.java.Statistics;
 import src.main.java.filters.DateFilter;
 import src.main.java.filters.Filter;
 import src.main.java.filters.MapFilter;
 import src.main.java.filters.OpponentCharacterFilter;
 import src.main.java.filters.OpponentFilter;
+import src.main.java.filters.OpponentScoreFilter;
 import src.main.java.filters.PlayerCharacterFilter;
+import src.main.java.filters.PlayerScoreFilter;
 import src.main.java.filters.TeammateFilter;
 import src.main.java.filters.TournamentFilter;
 
@@ -84,11 +93,22 @@ public class mainController implements Initializable {
     @FXML
     private DatePicker reportDatePicker, filterDatePicker;
     @FXML
-    private HBox dateTeammateHBox, filterBottomHBox, filterHBox;
+    private HBox dateTeammateHBox, filterBottomHBox, filterHBox, matchHistoryHBox;
     @FXML
     private ChoiceBox<String> filterMapChoiceBox;
     @FXML
     private ChoiceBox<Integer> filterPlayerScoreChoiceBox, filterOpponentScoreChoiceBox;
+    @FXML
+    private ScrollPane tableScrollPane;
+    @FXML
+    private TableView<CharacterStat> statsTableView;
+    @FXML
+    private TableColumn<CharacterStat, Integer> tableTotalSetsColumn, tableTotalMatchesColumn;
+    @FXML
+    private TableColumn<CharacterStat, String> tableCharacterNameColumn, tableBestMapColumn, tableWorstMapColumn,
+            tableBestMatchupColumn, tableWorstMatchupColumn;
+    @FXML
+    private TableColumn<CharacterStat, Double> tableSetWinRatioColumn, tableMatchWinRatioColumn;
 
     private Game game;
     private ArrayList<Match> tempMatches = new ArrayList<>();
@@ -152,6 +172,7 @@ public class mainController implements Initializable {
         ArrayList<Set> useSets = game.getSetList().getAllSets();
         if (filtered) {
             useSets = filteredSetList.getAllSets();
+            System.out.println("Number of Sets Filtered: " + useSets.size());
         }
         for (Set set : useSets) {
             HBox setContainerHBox = new HBox();
@@ -623,9 +644,9 @@ public class mainController implements Initializable {
     }
 
     public void processFilter(ActionEvent event) {
-        String opponentName = filterOpponentTextField.getText();
+        String opponentName = filterOpponentTextField.getText().toString();
 
-        String tournamentName = filterTournamentTextField.getText();
+        String tournamentName = filterTournamentTextField.getText().toString();
 
         Character[] playerCharacters = new Character[game.getCharactersPerSide()];
         int count = 0;
@@ -641,16 +662,26 @@ public class mainController implements Initializable {
             }
         }
 
+        int playerScore = -1;
+        if (!filterPlayerScoreChoiceBox.getSelectionModel().isEmpty()) {
+            playerScore = Integer.valueOf(filterPlayerScoreChoiceBox.getValue().toString());
+        }
+
         String mapSelectedString = filterMapChoiceBox.getValue();
         Map mapSelected = null;
         if (game.isMap()) {
             if (mapSelectedString != null) {
                 for (Map map : game.getMaps()) {
-                    if (map.getName().equals(mapSelectedString)) {
+                    if (map.getName().equals(mapSelectedString.toString())) {
                         mapSelected = map;
                     }
                 }
             }
+        }
+
+        int opponentScore = -1;
+        if (!filterOpponentScoreChoiceBox.getSelectionModel().isEmpty()) {
+            opponentScore = Integer.valueOf(filterOpponentScoreChoiceBox.getValue().toString());
         }
 
         Character[] opponentCharacters = new Character[game.getCharactersPerSide()];
@@ -659,7 +690,7 @@ public class mainController implements Initializable {
             ChoiceBox<String> characterChoice = (ChoiceBox<String>) choiceBoxNode;
             if (!characterChoice.getSelectionModel().isEmpty()) {
                 for (Character character : game.getCharacters()) {
-                    if (!characterChoice.getValue().equals(characterChoice.getValue())) {
+                    if (character.getName().equals(characterChoice.getValue())) {
                         opponentCharacters[count] = character;
                         count++;
                     }
@@ -678,29 +709,39 @@ public class mainController implements Initializable {
         Object[] filterData = new Object[13];
         int filterCount = 0;
 
-        if (opponentName != null) {
+        if (!opponentName.equals("")) {
             filtersToSet[filterCount] = new OpponentFilter();
             filterData[filterCount] = opponentName;
             filterCount++;
         }
-        if (tournamentName != null) {
+        if (!tournamentName.equals("")) {
             filtersToSet[filterCount] = new TournamentFilter();
             filterData[filterCount] = tournamentName;
             filterCount++;
         }
-        if (playerCharacters.length > 0) {
+        if (playerCharacters[0] != null) {
             for (Character character : playerCharacters) {
                 filtersToSet[filterCount] = new PlayerCharacterFilter();
                 filterData[filterCount] = character;
                 filterCount++;
             }
         }
+        if (playerScore != -1) {
+            filtersToSet[filterCount] = new PlayerScoreFilter();
+            filterData[filterCount] = playerScore;
+            filterCount++;
+        }
         if (mapSelected != null) {
             filtersToSet[filterCount] = new MapFilter();
             filterData[filterCount] = mapSelected;
             filterCount++;
         }
-        if (opponentCharacters.length > 0) {
+        if (opponentScore != -1) {
+            filtersToSet[filterCount] = new OpponentScoreFilter();
+            filterData[filterCount] = opponentScore;
+            filterCount++;
+        }
+        if (opponentCharacters[0] != null) {
             for (Character character : opponentCharacters) {
                 filtersToSet[filterCount] = new OpponentCharacterFilter();
                 filterData[filterCount] = character;
@@ -712,13 +753,68 @@ public class mainController implements Initializable {
             filterData[filterCount] = dateSelected;
             filterCount++;
         }
-        if (teammateName != null) {
-            filtersToSet[filterCount] = new TeammateFilter();
-            filterData[filterCount] = teammateName;
+        if (game.isTeammate()) {
+            if (!teammateName.equals("")) {
+                filtersToSet[filterCount] = new TeammateFilter();
+                filterData[filterCount] = teammateName;
+            }
         }
         FilterList filterList = new FilterList(filtersToSet, filterData);
+        System.out.println(filtersToSet[0]);
         this.filteredSetList = game.getSetList().applyFilters(filterList);
+        System.out.println(filteredSetList.getLength());
         generateMatchHistoryDisplay(true);
     }
 
+    public void clearFilter(ActionEvent event) {
+        for (Node choiceBoxNode : filterPlayerVBox.getChildren()) {
+            ChoiceBox<String> characterChoiceBox = (ChoiceBox<String>) choiceBoxNode;
+            characterChoiceBox.getSelectionModel().clearSelection();
+        }
+        filterOpponentTextField.clear();
+        filterTournamentTextField.clear();
+        filterPlayerScoreChoiceBox.getSelectionModel().clearSelection();
+        filterMapChoiceBox.getSelectionModel().clearSelection();
+        filterOpponentScoreChoiceBox.getSelectionModel().clearSelection();
+        filterDatePicker.getEditor().clear();
+        filterTeammateTextField.clear();
+        for (Node choiceBoxNode : filterOpponentVBox.getChildren()) {
+            ChoiceBox<String> characterChoiceBox = (ChoiceBox<String>) choiceBoxNode;
+            characterChoiceBox.getSelectionModel().clearSelection();
+        }
+        generateMatchHistoryDisplay(false);
+    }
+
+    public void showMatchHistory(ActionEvent event) {
+        matchHistoryHBox.toBack();
+    }
+
+    public void showTable(ActionEvent event) {
+        populateStatisticsTable(false);
+        tableScrollPane.toBack();
+        
+    }
+
+    private void populateStatisticsTable(boolean filtered) {
+        SetList setListToUse = game.getSetList();
+        if (filtered) {
+            setListToUse = filteredSetList;
+        }
+        Statistics stats = new Statistics(setListToUse, game);
+        stats.fillCharacterStats();
+        stats.sortByMatchCount();
+
+        ObservableList<CharacterStat> list = stats.getCharacterStatObservableList();
+
+        tableCharacterNameColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,String>("characterName"));
+        tableSetWinRatioColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,Double>("setWinRatio"));
+        tableMatchWinRatioColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,Double>("matchWinRatio"));
+        tableBestMapColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,String>("bestMap"));
+        tableWorstMapColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,String>("worstMap"));
+        tableBestMatchupColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,String>("bestMatchup"));
+        tableWorstMatchupColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,String>("worstMatchup"));
+        tableTotalSetsColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,Integer>("setCount"));
+        tableTotalMatchesColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,Integer>("matchCount"));
+        statsTableView.setItems(list);
+    }
 }

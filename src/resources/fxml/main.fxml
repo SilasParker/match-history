@@ -9,15 +9,15 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -57,7 +57,12 @@
                      <children>
                         <TextField fx:id="filterOpponentTextField" promptText="Opponent Name" />
                         <TextField fx:id="filterTournamentTextField" promptText="Tournament Name" />
-                        <Button mnemonicParsing="false" onAction="#processFilter" text="FILTER" />
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#processFilter" text="FILTER" />
+                              <Button mnemonicParsing="false" onAction="#clearFilter" text="CLEAR" />
+                           </children>
+                        </HBox>
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
@@ -92,298 +97,126 @@
             </VBox>
             <VBox fx:id="filterOpponentVBox" alignment="CENTER" prefHeight="200.0" prefWidth="125.0" />
          </children></HBox>
-      <ScrollPane hbarPolicy="NEVER" prefHeight="550.0" prefWidth="900.0">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="900.0">
+      <HBox prefHeight="100.0" prefWidth="300.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#showMatchHistory" prefHeight="110.0" prefWidth="100.0" text="Match History" />
+            <Button mnemonicParsing="false" onAction="#showTable" prefHeight="110.0" prefWidth="100.0" text="Table" />
+            <Button mnemonicParsing="false" prefHeight="110.0" prefWidth="100.0" text="Graphs" />
+         </children>
+      </HBox>
+      <VBox prefHeight="1650.0" prefWidth="1200.0">
+         <children>
+            <HBox fx:id="matchHistoryHBox" prefHeight="550.0" prefWidth="1200.0">
                <children>
-                  <VBox fx:id="matchHistoryVBox" prefHeight="550.0" prefWidth="900.0">
-                     <children>
-                        <HBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="125.0" prefWidth="200.0">
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="550.0" prefWidth="900.0">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="900.0">
                            <children>
-                              <VBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="150.0" spacing="10.0">
+                              <VBox fx:id="matchHistoryVBox" prefHeight="550.0" prefWidth="900.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </ScrollPane>
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="500.0" prefWidth="300.0">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="300.0">
+                           <children>
+                              <VBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="300.0" spacing="10.0">
                                  <children>
-                                    <ImageView fitHeight="90.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../../../../Pictures/2021/109543156_3281365781907074_3820516317265522548_n.jpg" />
-                                       </image>
-                                    </ImageView>
-                                    <Label text="Teammate" />
-                                 </children>
-                              </VBox>
-                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="600.0">
-                                 <children>
-                                    <Label text="Tournament Name - Winners Round 1">
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Report Match">
                                        <font>
-                                          <Font name="System Bold" size="12.0" />
+                                          <Font size="25.0" />
                                        </font>
-                                    </Label>
-                                    <HBox prefHeight="100.0" prefWidth="200.0">
+                                    </Text>
+                                 </children>
+                              </VBox>
+                              <VBox fx:id="reportSetVBox" alignment="TOP_CENTER" layoutY="44.0" prefHeight="500.0" prefWidth="300.0">
+                                 <children>
+                                    <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
                                        <children>
-                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="120.0">
-                                             <children>
-                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                                   <children>
-                                                      <Label text="Character 2">
-                                                         <font>
-                                                            <Font size="10.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label text="Character 1">
-                                                         <font>
-                                                            <Font size="10.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                                         <children>
-                                                            <Circle fill="#1fff35" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
-                                                            <Label text="MAP NAME" underline="true" />
-                                                         </children>
-                                                      </VBox>
-                                                   </children>
-                                                </VBox>
-                                                <Label text="Character 3">
-                                                   <font>
-                                                      <Font size="10.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="Character 4">
-                                                   <font>
-                                                      <Font size="10.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </VBox>
-                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="120.0">
-                                             <children>
-                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                                   <children>
-                                                      <Label text="Character 2">
-                                                         <font>
-                                                            <Font size="10.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label text="Character 1">
-                                                         <font>
-                                                            <Font size="10.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                                         <children>
-                                                            <Circle fill="#ff2121" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
-                                                            <Label text="MAP NAME" underline="true" />
-                                                         </children>
-                                                      </VBox>
-                                                   </children>
-                                                </VBox>
-                                                <Label text="Character 3">
-                                                   <font>
-                                                      <Font size="10.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="Character 4">
-                                                   <font>
-                                                      <Font size="10.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </VBox>
-                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="120.0">
-                                             <children>
-                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                                   <children>
-                                                      <Label text="Character 2">
-                                                         <font>
-                                                            <Font size="10.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label text="Character 1">
-                                                         <font>
-                                                            <Font size="10.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                                         <children>
-                                                            <Circle fill="#1fff35" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
-                                                            <Label text="MAP NAME" underline="true" />
-                                                         </children>
-                                                      </VBox>
-                                                   </children>
-                                                </VBox>
-                                                <Label text="Character 3">
-                                                   <font>
-                                                      <Font size="10.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="Character 4">
-                                                   <font>
-                                                      <Font size="10.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </VBox>
-                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="120.0">
-                                             <children>
-                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                                   <children>
-                                                      <Label text="Character 2">
-                                                         <font>
-                                                            <Font size="10.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label text="Character 1">
-                                                         <font>
-                                                            <Font size="10.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                                         <children>
-                                                            <Circle fill="#1fff35" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
-                                                            <Label text="MAP NAME" underline="true" />
-                                                         </children>
-                                                      </VBox>
-                                                   </children>
-                                                </VBox>
-                                                <Label text="Character 3">
-                                                   <font>
-                                                      <Font size="10.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label text="Character 4">
-                                                   <font>
-                                                      <Font size="10.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </VBox>
-                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="120.0">
-                                             <children>
-                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                                   <children>
-                                                      <Label>
-                                                         <font>
-                                                            <Font size="10.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label>
-                                                         <font>
-                                                            <Font size="10.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                                                         <children>
-                                                            <Circle fill="#21ff3400" radius="15.0" stroke="BLACK" strokeType="INSIDE" />
-                                                            <Label underline="true" />
-                                                         </children>
-                                                      </VBox>
-                                                   </children>
-                                                </VBox>
-                                                <Label>
-                                                   <font>
-                                                      <Font size="10.0" />
-                                                   </font>
-                                                </Label>
-                                                <Label>
-                                                   <font>
-                                                      <Font size="10.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </VBox>
+                                          <TextField fx:id="reportOpponentInput" promptText="Opponent Name..." />
+                                          <TextField fx:id="reportTournamentInput" promptText="Tournament Name..." />
                                        </children>
+                                       <VBox.margin>
+                                          <Insets left="10.0" right="20.0" />
+                                       </VBox.margin>
                                     </HBox>
-                                 </children>
-                              </VBox>
-                              <VBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="150.0" spacing="10.0">
-                                 <children>
-                                    <ImageView fitHeight="90.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../../../../Pictures/Melee/screen_shot_2013-03-08_at_3.10.56_pm.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label text="Opp Team Name" />
+                                    <HBox fx:id="dateTeammateHBox" alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
+                                       <children>
+                                          <DatePicker fx:id="reportDatePicker" prefWidth="150.0" promptText="Select the Date" />
+                                          <TextField fx:id="reportTeammateInput" promptText="Teammate Name..." />
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets left="10.0" right="20.0" />
+                                       </VBox.margin>
+                                       <padding>
+                                          <Insets bottom="75.0" top="12.5" />
+                                       </padding>
+                                    </HBox>
+                                    <VBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="300.0">
+                                       <children>
+                                          <Label text="Winner">
+                                             <font>
+                                                <Font name="System Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                             <children>
+                                                <RadioButton mnemonicParsing="false" text="Me">
+                                                   <toggleGroup>
+                                                      <ToggleGroup fx:id="reportWinner" />
+                                                   </toggleGroup>
+                                                </RadioButton>
+                                                <RadioButton mnemonicParsing="false" text="Opponent" toggleGroup="$reportWinner" />
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                    <Button fx:id="reportAddGameButton" mnemonicParsing="false" onAction="#addMatchToTempSet" text="Add Game">
+                                       <VBox.margin>
+                                          <Insets top="10.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                    <ListView fx:id="reportListView" prefHeight="125.0" prefWidth="200.0">
+                                       <VBox.margin>
+                                          <Insets left="5.0" right="15.0" top="10.0" />
+                                       </VBox.margin>
+                                    </ListView>
+                                    <Button mnemonicParsing="false" onAction="#submitSet" text="SUBMIT SET">
+                                       <VBox.margin>
+                                          <Insets top="20.0" />
+                                       </VBox.margin>
+                                    </Button>
                                  </children>
                               </VBox>
                            </children>
-                        </HBox>
-                     </children></VBox>
+                        </AnchorPane>
+                    </content>
+                  </ScrollPane>
                </children>
-            </AnchorPane>
-        </content>
-      </ScrollPane>
-      <ScrollPane hbarPolicy="NEVER" prefHeight="500.0" prefWidth="300.0">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="300.0">
-               <children>
-                  <VBox alignment="TOP_CENTER" prefHeight="50.0" prefWidth="300.0" spacing="10.0">
+            </HBox>
+            <ScrollPane fx:id="tableScrollPane" prefHeight="550.0" prefWidth="1200.0">
+              <content>
+                <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="1200.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Report Match">
-                           <font>
-                              <Font size="25.0" />
-                           </font>
-                        </Text>
+                        <TableView fx:id="statsTableView" prefHeight="550.0" prefWidth="1200.0">
+                          <columns>
+                            <TableColumn fx:id="tableCharacterNameColumn" prefWidth="75.0" text="Character" />
+                              <TableColumn fx:id="tableSetWinRatioColumn" prefWidth="92.0" text="Set Win Ratio" />
+                              <TableColumn fx:id="tableMatchWinRatioColumn" prefWidth="102.0" text="Match Win Ratio" />
+                              <TableColumn fx:id="tableBestMapColumn" prefWidth="64.0" text="Best Map" />
+                              <TableColumn fx:id="tableWorstMapColumn" minWidth="0.0" prefWidth="78.0" text="Worst Map" />
+                              <TableColumn fx:id="tableBestMatchupColumn" prefWidth="85.0" text="Best Matchup" />
+                              <TableColumn fx:id="tableWorstMatchupColumn" prefWidth="97.0" text="Worst Matchup" />
+                              <TableColumn fx:id="tableTotalSetsColumn" minWidth="7.0" prefWidth="74.0" text="Sets Played" />
+                              <TableColumn fx:id="tableTotalMatchesColumn" minWidth="0.0" prefWidth="100.0" text="Matches Played" />
+                          </columns>
+                        </TableView>
                      </children>
-                  </VBox>
-                  <VBox fx:id="reportSetVBox" alignment="TOP_CENTER" layoutY="44.0" prefHeight="500.0" prefWidth="300.0">
-                     <children>
-                        <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
-                           <children>
-                              <TextField fx:id="reportOpponentInput" promptText="Opponent Name..." />
-                              <TextField fx:id="reportTournamentInput" promptText="Tournament Name..." />
-                           </children>
-                           <VBox.margin>
-                              <Insets left="10.0" right="20.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <HBox fx:id="dateTeammateHBox" alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
-                           <children>
-                              <DatePicker fx:id="reportDatePicker" prefWidth="150.0" promptText="Select the Date" />
-                              <TextField fx:id="reportTeammateInput" promptText="Teammate Name..." />
-                           </children>
-                           <VBox.margin>
-                              <Insets left="10.0" right="20.0" />
-                           </VBox.margin>
-                           <padding>
-                              <Insets bottom="75.0" top="12.5" />
-                           </padding>
-                        </HBox>
-                        <VBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="300.0">
-                           <children>
-                              <Label text="Winner">
-                                 <font>
-                                    <Font name="System Bold" size="14.0" />
-                                 </font>
-                              </Label>
-                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
-                                 <children>
-                                    <RadioButton mnemonicParsing="false" text="Me">
-                                       <toggleGroup>
-                                          <ToggleGroup fx:id="reportWinner" />
-                                       </toggleGroup>
-                                    </RadioButton>
-                                    <RadioButton mnemonicParsing="false" text="Opponent" toggleGroup="$reportWinner" />
-                                 </children>
-                              </HBox>
-                           </children>
-                        </VBox>
-                        <Button fx:id="reportAddGameButton" mnemonicParsing="false" onAction="#addMatchToTempSet" text="Add Game">
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
-                        </Button>
-                        <ListView fx:id="reportListView" prefHeight="125.0" prefWidth="200.0">
-                           <VBox.margin>
-                              <Insets left="5.0" right="15.0" top="10.0" />
-                           </VBox.margin>
-                        </ListView>
-                        <Button mnemonicParsing="false" onAction="#submitSet" text="SUBMIT SET">
-                           <VBox.margin>
-                              <Insets top="20.0" />
-                           </VBox.margin>
-                        </Button>
-                     </children></VBox>
-               </children>
-            </AnchorPane>
-        </content>
-      </ScrollPane>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+         </children>
+      </VBox>
    </children>
 </FlowPane>

@@ -9,7 +9,7 @@ public class DateFilter extends Filter {
     
     @Override
     public boolean apply(Set set, LocalDate date) {
-        if (set.getDate() == date) {
+        if (set.getDate().isEqual(date)) {
             return true;
         }
         return false;

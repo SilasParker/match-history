@@ -1,5 +1,6 @@
 package src.main.java;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import src.main.java.filters.Filter;
@@ -28,6 +29,7 @@ public class FilterList {
 
     public boolean isFiltered(Set set) {
         for (int i = 0; i < allFilters.length; i++) {
+            System.out.println("Filter: "+allFilters[i]);
             if (filterData[i] instanceof Integer) {
                 int intFilterData = ((Integer) filterData[i]).intValue();
                 if (!allFilters[i].apply(set, intFilterData)) {
@@ -36,10 +38,11 @@ public class FilterList {
             } else if (filterData[i] instanceof String) {
                 String strFilterData = ((String) filterData[i]);
                 if (!allFilters[i].apply(set, strFilterData)) {
+                    System.out.println(allFilters[i].apply(set, strFilterData));
                     return false;
                 }
-            } else if (filterData[i] instanceof Date) {
-                Date dateFilterData = ((Date) filterData[i]);
+            } else if (filterData[i] instanceof LocalDate) {
+                LocalDate dateFilterData = ((LocalDate) filterData[i]);
                 if (!allFilters[i].apply(set, dateFilterData)) {
                     return false;
                 }

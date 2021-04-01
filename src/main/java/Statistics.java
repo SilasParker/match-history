@@ -1,6 +1,11 @@
 package src.main.java;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 
 public class Statistics {
     private SetList setList;
@@ -11,6 +16,7 @@ public class Statistics {
         this.setList = setList;
         this.gameRef = game;
         this.characterStats = generateCharacterStatsInstances();
+        fillCharacterStats();
     }
 
     public String toString() {
@@ -21,6 +27,22 @@ public class Statistics {
         return output;
     }
 
+    public void sortByMatchCount() {
+        Arrays.sort(characterStats);
+    }
+
+    public ObservableList<CharacterStat> getCharacterStatObservableList() {
+        ObservableList<CharacterStat> characterStatsObservable = FXCollections.observableArrayList();
+        for (CharacterStat charStat : characterStats) {
+            CharacterStat tempCharStat = new CharacterStat(charStat.getCharacterName(), charStat.getSetWinRatio(),
+                    charStat.getMatchWinRatio(), charStat.getBestMap(), charStat.getWorstMap(),
+                    charStat.getBestMatchup(), charStat.getWorstMatchup(), charStat.getSetCount(),
+                    charStat.getMatchCount());
+            characterStatsObservable.add(tempCharStat);
+        }
+        return characterStatsObservable;
+    }
+
     public CharacterStat[] generateCharacterStatsInstances() {
         CharacterStat[] charStatArrInstance = new CharacterStat[gameRef.getCharacters().length];
         int count = 0;
@@ -28,6 +50,7 @@ public class Statistics {
             charStatArrInstance[count] = new CharacterStat(character, gameRef);
             count++;
         }
+
         return charStatArrInstance;
     }
 
@@ -123,7 +146,7 @@ public class Statistics {
     private int getCharacterIndex(Character character) {
         int count = 0;
         for (Character charToCompare : gameRef.getCharacters()) {
-            if (character == charToCompare) {
+            if (character.getName().equals(charToCompare.getName())) {
                 return count;
             }
             count++;
