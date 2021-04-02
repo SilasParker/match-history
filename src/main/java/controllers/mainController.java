@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 import javax.swing.Action;
 import javax.swing.event.MenuDragMouseEvent;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -24,6 +25,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -57,6 +61,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import src.main.java.Character;
 import src.main.java.CharacterStat;
+import src.main.java.CharacterStatColumn;
 import src.main.java.FilterList;
 import src.main.java.Game;
 import src.main.java.Map;
@@ -93,7 +98,7 @@ public class mainController implements Initializable {
     @FXML
     private DatePicker reportDatePicker, filterDatePicker;
     @FXML
-    private HBox dateTeammateHBox, filterBottomHBox, filterHBox, matchHistoryHBox;
+    private HBox dateTeammateHBox, filterBottomHBox, filterHBox, matchHistoryHBox, chartHBox;
     @FXML
     private ChoiceBox<String> filterMapChoiceBox;
     @FXML
@@ -101,14 +106,18 @@ public class mainController implements Initializable {
     @FXML
     private ScrollPane tableScrollPane;
     @FXML
-    private TableView<CharacterStat> statsTableView;
+    private TableView<CharacterStatColumn> statsTableView;
     @FXML
-    private TableColumn<CharacterStat, Integer> tableTotalSetsColumn, tableTotalMatchesColumn;
+    private TableColumn<CharacterStatColumn, Integer> tableNumColumn, tableTotalSetsColumn, tableTotalMatchesColumn;
     @FXML
-    private TableColumn<CharacterStat, String> tableCharacterNameColumn, tableBestMapColumn, tableWorstMapColumn,
+    private TableColumn<CharacterStatColumn, String> tableCharacterNameColumn, tableBestMapColumn, tableWorstMapColumn,
             tableBestMatchupColumn, tableWorstMatchupColumn;
     @FXML
-    private TableColumn<CharacterStat, Double> tableSetWinRatioColumn, tableMatchWinRatioColumn;
+    private TableColumn<CharacterStatColumn, Double> tableSetWinRatioColumn, tableMatchWinRatioColumn;
+    @FXML
+    private PieChart characterMatchPieChart;
+    @FXML
+    private BarChart<String, Double> mapRatioBarChart;
 
     private Game game;
     private ArrayList<Match> tempMatches = new ArrayList<>();
@@ -132,6 +141,7 @@ public class mainController implements Initializable {
         System.out.println(gameImageView.getX() + "," + gameImageView.getY());
         gameNameLabel.setText(game.getName());
         generateMatchHistoryDisplay(false);
+        populateStatisticsTable(false);
         generateReportSetForm();
         generateFilterBox();
     }
@@ -593,6 +603,7 @@ public class mainController implements Initializable {
             game.getSetList().addSet(newSet);
             game.setListJsonToFile();
             generateMatchHistoryDisplay(false);
+            populateStatisticsTable(false);
         } else {
             Alert setReportAlert = new Alert(AlertType.ERROR, error);
             setReportAlert.show();
@@ -764,6 +775,7 @@ public class mainController implements Initializable {
         this.filteredSetList = game.getSetList().applyFilters(filterList);
         System.out.println(filteredSetList.getLength());
         generateMatchHistoryDisplay(true);
+        populateStatisticsTable(true);
     }
 
     public void clearFilter(ActionEvent event) {
@@ -783,6 +795,7 @@ public class mainController implements Initializable {
             characterChoiceBox.getSelectionModel().clearSelection();
         }
         generateMatchHistoryDisplay(false);
+        populateStatisticsTable(false);
     }
 
     public void showMatchHistory(ActionEvent event) {
@@ -790,9 +803,13 @@ public class mainController implements Initializable {
     }
 
     public void showTable(ActionEvent event) {
-        populateStatisticsTable(false);
         tableScrollPane.toBack();
-        
+    }
+
+    public void showCharts(ActionEvent event) {
+        chartHBox.toBack();
+        // REMOVE THIS:
+        populateCharts(false);
     }
 
     private void populateStatisticsTable(boolean filtered) {
@@ -801,20 +818,81 @@ public class mainController implements Initializable {
             setListToUse = filteredSetList;
         }
         Statistics stats = new Statistics(setListToUse, game);
-        stats.fillCharacterStats();
         stats.sortByMatchCount();
 
-        ObservableList<CharacterStat> list = stats.getCharacterStatObservableList();
+        ObservableList<CharacterStatColumn> list = stats.getCharacterStatColumnObservableList();
 
-        tableCharacterNameColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,String>("characterName"));
-        tableSetWinRatioColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,Double>("setWinRatio"));
-        tableMatchWinRatioColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,Double>("matchWinRatio"));
-        tableBestMapColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,String>("bestMap"));
-        tableWorstMapColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,String>("worstMap"));
-        tableBestMatchupColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,String>("bestMatchup"));
-        tableWorstMatchupColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,String>("worstMatchup"));
-        tableTotalSetsColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,Integer>("setCount"));
-        tableTotalMatchesColumn.setCellValueFactory(new PropertyValueFactory<CharacterStat,Integer>("matchCount"));
+        tableNumColumn.setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, Integer>("num"));
+        tableCharacterNameColumn
+                .setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, String>("characterName"));
+        tableSetWinRatioColumn
+                .setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, Double>("setWinRatio"));
+        tableMatchWinRatioColumn
+                .setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, Double>("matchWinRatio"));
+        tableBestMapColumn.setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, String>("bestMap"));
+        tableWorstMapColumn.setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, String>("worstMap"));
+        tableBestMatchupColumn
+                .setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, String>("bestMatchup"));
+        tableWorstMatchupColumn
+                .setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, String>("worstMatchup"));
+        tableTotalSetsColumn.setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, Integer>("setsPlayed"));
+        tableTotalMatchesColumn
+                .setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, Integer>("matchesPlayed"));
         statsTableView.setItems(list);
+    }
+
+    private void populateCharts(boolean filtered) {
+        SetList setListToUse = game.getSetList();
+        if (filtered) {
+            setListToUse = filteredSetList;
+        }
+        Statistics stats = new Statistics(setListToUse, game);
+
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+        for (CharacterStat charStat : stats.getCharacterStats()) {
+            if (charStat.calculateTotalMatchesPlayed() > 0) {
+                System.out.println("Pie Data: " + charStat.getCharacter().getName() + ": "
+                        + charStat.calculateTotalMatchesPlayed());
+                pieChartData.add(
+                        new PieChart.Data(charStat.getCharacter().getName(), charStat.calculateTotalMatchesPlayed()));
+            }
+        }
+        characterMatchPieChart.setData(pieChartData);
+
+        int[] mapWins = new int[game.getMaps().length];
+        int[] mapLosses = new int[game.getMaps().length];
+        boolean set = false;
+        for (CharacterStat charStat : stats.getCharacterStats()) {
+            if (!set) {
+                mapWins = charStat.getMapWins();
+                mapLosses = charStat.getMapLosses();
+                set = true;
+            } else {
+                for (int i = 0; i < mapWins.length; i++) {
+                    mapWins[i] += charStat.getMapWins()[i];
+                    mapLosses[i] += charStat.getMapLosses()[i];
+                }
+            }
+        }
+
+        //WORK ON THIS SHIT vv
+        double[] mapRatioArray = new double[game.getMaps().length];
+        for (int i = 0; i < mapRatioArray.length; i++) {
+            if (mapWins[i] == 0) {
+                mapRatioArray[i] = 0.0;
+            } else {
+                mapRatioArray[i] = (double) ((mapWins[i] + mapLosses[i]) / mapWins[i]);
+            }
+        }
+        int count = 0;
+        for (double mapRatio : mapRatioArray) {
+            XYChart.Series<String, Double> series = new XYChart.Series<>();
+            XYChart.Data<String, Double> mapRatioBar = new XYChart.Data<>();
+            mapRatioBar.XValueProperty().set(game.getMaps()[count].getName());
+            mapRatioBar.YValueProperty().set(mapRatio);
+            series.getData().add(mapRatioBar);
+            count++;
+            mapRatioBarChart.getData().add(series);
+        }
     }
 }

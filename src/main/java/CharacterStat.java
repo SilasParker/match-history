@@ -4,9 +4,7 @@ public class CharacterStat implements Comparable<CharacterStat> {
     private Character character;
     private Game gameRef; // reference to the game at hand
     private int[] mapWins, mapLosses, charWins, charLosses;
-    private int matchWins, matchLosses, setWins, setLosses, setCount, matchCount;
-    private double setWinRatio, matchWinRatio;
-    private String characterName, bestMatchup, worstMatchup, bestMap, worstMap;
+    private int matchWins, matchLosses, setWins, setLosses;
 
     public CharacterStat(Character character, Game game) {
         this.character = character;
@@ -27,64 +25,15 @@ public class CharacterStat implements Comparable<CharacterStat> {
         fillIntArrayWithZero(charLosses);
     }
 
-    public CharacterStat(String characterName, Double setWinRatio, Double matchWinRatio, String bestMap, String worstMap, String bestMatchup, String worstMatchup, Integer setCount, Integer matchCount) {
-        this.characterName = characterName;
-        this.setWinRatio = setWinRatio;
-        this.matchWinRatio = matchWinRatio;
-        this.bestMap = bestMap;
-        this.worstMap = worstMap;
-        this.bestMatchup = bestMatchup;
-        this.worstMatchup = worstMatchup;
-        this.setCount = setCount;
-        this.matchCount = matchCount;
+    public Character getCharacter() {
+        return this.character;
     }
 
-    public void setAllFinalisedStats() {
-        this.setWinRatio = calculateSetWinPercentage();
-        this.matchWinRatio = calculateMatchWinPercentage();
-        this.setCount = calculateTotalSetsPlayed();
-        this.matchCount = calculateTotalMatchesPlayed();
-        this.bestMatchup = calculateBestCharacterWinRate().getName();
-        this.worstMatchup = calculateWorstCharacterWinRate().getName();
-        this.bestMap = calculateBestMapWinRate().getName();
-        this.worstMap = calculateWorstMapWinRate().getName();
-        this.characterName = character.getName();
-    }
-
-    public double getSetWinRatio() {
-        return setWinRatio;
-    }
-
-    public double getMatchWinRatio() {
-        return matchWinRatio;
-    } 
-
-    public int getSetCount() {
-        return setCount;
-    }
-
-    public int getMatchCount() {
-        return matchCount;
-    }
-
-    public String getBestMatchup() {
-        return bestMatchup;
-    }
-
-    public String getWorstMatchup() {
-        return worstMatchup;
-    }
-
-    public String getBestMap() {
-        return bestMap;
-    }
-
-    public String getWorstMap() {
-        return worstMap;
-    }
-
-    public String getCharacterName() {
-        return characterName;
+    public CharacterStatColumn getColumn(int num) {
+        return new CharacterStatColumn(num, character.getName(), calculateSetWinPercentage(),
+                calculateMatchWinPercentage(), calculateBestMapWinRate().getName(),
+                calculateWorstMapWinRate().getName(), calculateBestCharacterWinRate().getName(),
+                calculateWorstCharacterWinRate().getName(), calculateTotalSetsPlayed(), calculateTotalMatchesPlayed());
     }
 
     public String toString() {
@@ -113,10 +62,18 @@ public class CharacterStat implements Comparable<CharacterStat> {
         return output + "\n";
     }
 
-    private void fillIntArrayWithZero(int[] array) {
+    public void fillIntArrayWithZero(int[] array) {
         for (int i = 0; i < array.length; i++) {
             array[i] = 0;
         }
+    }
+
+    public int[] getMapWins() {
+        return this.mapWins;
+    }
+
+    public int[] getMapLosses() {
+        return this.mapLosses;
     }
 
     public void incrementMatchWins() {
@@ -137,7 +94,7 @@ public class CharacterStat implements Comparable<CharacterStat> {
 
     public void incrementMapWins(Map map) {
         for (int i = 0; i < gameRef.getMaps().length; i++) {
-            if (gameRef.getMaps()[i] == map) {
+            if (gameRef.getMaps()[i].getName().equals(map.getName())) {
                 this.mapWins[i]++;
             }
         }
@@ -145,7 +102,7 @@ public class CharacterStat implements Comparable<CharacterStat> {
 
     public void incrementMapLosses(Map map) {
         for (int i = 0; i < gameRef.getMaps().length; i++) {
-            if (gameRef.getMaps()[i] == map) {
+            if (gameRef.getMaps()[i].getName().equals(map.getName())) {
                 this.mapLosses[i]++;
             }
         }
@@ -153,7 +110,7 @@ public class CharacterStat implements Comparable<CharacterStat> {
 
     public void incrementCharacterWins(Character character) {
         for (int i = 0; i < gameRef.getCharacters().length; i++) {
-            if (gameRef.getCharacters()[i] == character) {
+            if (gameRef.getCharacters()[i].getName().equals(character.getName())) {
                 this.charWins[i]++;
             }
         }
@@ -161,7 +118,7 @@ public class CharacterStat implements Comparable<CharacterStat> {
 
     public void incrementCharacterLosses(Character character) {
         for (int i = 0; i < gameRef.getCharacters().length; i++) {
-            if (gameRef.getCharacters()[i] == character) {
+            if (gameRef.getCharacters()[i].getName().equals(character.getName())) {
                 this.charLosses[i]++;
             }
         }
@@ -191,14 +148,17 @@ public class CharacterStat implements Comparable<CharacterStat> {
                 gamesPlayed = this.mapWins[i] + this.mapLosses[i];
             }
         }
+        if(high == 0.0) {
+            return new Map("N/A");
+        }
         return this.gameRef.getMaps()[index];
     }
 
     private Map calculateWorstMapWinRate() {
         int index = 0;
-        double low = 100.0;
+        double low = 1.0;
         int gamesPlayed = 0;
-        for (int i = 0; i < mapWins.length; i++) {
+        for (int i = 0; i < mapLosses.length; i++) {
             double winrate = (this.mapWins[i] / (double) (this.mapWins[i] + this.mapLosses[i]));
             if (winrate < low) {
                 low = winrate;
@@ -209,6 +169,9 @@ public class CharacterStat implements Comparable<CharacterStat> {
                 index = i;
                 gamesPlayed = this.mapWins[i] + this.mapLosses[i];
             }
+        }
+        if(low == 1.0) {
+            return new Map("N/A");
         }
         return this.gameRef.getMaps()[index];
     }
@@ -229,12 +192,15 @@ public class CharacterStat implements Comparable<CharacterStat> {
                 gamesPlayed = this.charWins[i] + this.charLosses[i];
             }
         }
+        if(high == 0.0) {
+            return new Character("N/A",null);
+        }
         return this.gameRef.getCharacters()[index];
     }
 
     private Character calculateWorstCharacterWinRate() {
         int index = 0;
-        double low = 100.0;
+        double low = 1.0;
         int gamesPlayed = 0;
         for (int i = 0; i < charWins.length; i++) {
             double winrate = (this.charWins[i] / (double) (this.charWins[i] + this.charLosses[i]));
@@ -247,6 +213,9 @@ public class CharacterStat implements Comparable<CharacterStat> {
                 gamesPlayed = this.charWins[i] + this.charLosses[i];
             }
         }
+        if(low == 1.0) {
+            return new Character("N/A", null);
+        }
         return this.gameRef.getCharacters()[index];
     }
 
@@ -254,7 +223,7 @@ public class CharacterStat implements Comparable<CharacterStat> {
         return setWins + setLosses;
     }
 
-    private int calculateTotalMatchesPlayed() {
+    public int calculateTotalMatchesPlayed() {
         return matchWins + matchLosses;
     }
 

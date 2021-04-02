@@ -31,16 +31,19 @@ public class Statistics {
         Arrays.sort(characterStats);
     }
 
-    public ObservableList<CharacterStat> getCharacterStatObservableList() {
-        ObservableList<CharacterStat> characterStatsObservable = FXCollections.observableArrayList();
+    public ObservableList<CharacterStatColumn> getCharacterStatColumnObservableList() {
+        ObservableList<CharacterStatColumn> characterStatsObservable = FXCollections.observableArrayList();
+        int count = 1;
         for (CharacterStat charStat : characterStats) {
-            CharacterStat tempCharStat = new CharacterStat(charStat.getCharacterName(), charStat.getSetWinRatio(),
-                    charStat.getMatchWinRatio(), charStat.getBestMap(), charStat.getWorstMap(),
-                    charStat.getBestMatchup(), charStat.getWorstMatchup(), charStat.getSetCount(),
-                    charStat.getMatchCount());
-            characterStatsObservable.add(tempCharStat);
+            CharacterStatColumn column = charStat.getColumn(count);
+            count++;
+            characterStatsObservable.add(column);
         }
         return characterStatsObservable;
+    }
+
+    public CharacterStat[] getCharacterStats() {
+        return this.characterStats;
     }
 
     public CharacterStat[] generateCharacterStatsInstances() {
@@ -62,7 +65,7 @@ public class Statistics {
                 generateSetLosses(set);
             }
             generateMatchWinsLosses(set);
-            if (gameRef.getMaps().length > 0) {
+            if (gameRef.isMap()) {
                 generateMapWinsLosses(set);
             }
             generateCharWinsLosses(set);
@@ -89,6 +92,7 @@ public class Statistics {
         for (Match match : set.getMatches()) {
             for (Character character : match.getPlayerCharacters()) {
                 if (match.isWin()) {
+                    System.out.println("Found win for "+character.getName()+" on "+match.getMap().getName());
                     characterStats[getCharacterIndex(character)].incrementMapWins(match.getMap());
                 } else {
                     characterStats[getCharacterIndex(character)].incrementMapLosses(match.getMap());

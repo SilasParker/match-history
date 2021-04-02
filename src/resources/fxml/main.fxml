@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ChoiceBox?>
@@ -101,7 +106,7 @@
          <children>
             <Button mnemonicParsing="false" onAction="#showMatchHistory" prefHeight="110.0" prefWidth="100.0" text="Match History" />
             <Button mnemonicParsing="false" onAction="#showTable" prefHeight="110.0" prefWidth="100.0" text="Table" />
-            <Button mnemonicParsing="false" prefHeight="110.0" prefWidth="100.0" text="Graphs" />
+            <Button mnemonicParsing="false" onAction="#showCharts" prefHeight="110.0" prefWidth="100.0" text="Graphs" />
          </children>
       </HBox>
       <VBox prefHeight="1650.0" prefWidth="1200.0">
@@ -201,6 +206,7 @@
                      <children>
                         <TableView fx:id="statsTableView" prefHeight="550.0" prefWidth="1200.0">
                           <columns>
+                              <TableColumn fx:id="tableNumColumn" prefWidth="75.0" text="#" />
                             <TableColumn fx:id="tableCharacterNameColumn" prefWidth="75.0" text="Character" />
                               <TableColumn fx:id="tableSetWinRatioColumn" prefWidth="92.0" text="Set Win Ratio" />
                               <TableColumn fx:id="tableMatchWinRatioColumn" prefWidth="102.0" text="Match Win Ratio" />
@@ -216,6 +222,43 @@
                   </AnchorPane>
               </content>
             </ScrollPane>
+            <HBox fx:id="chartHBox" prefHeight="550.0" prefWidth="1200.0">
+               <children>
+                  <VBox prefHeight="550.0" prefWidth="600.0">
+                     <children>
+                        <PieChart fx:id="characterMatchPieChart" prefHeight="275.0" prefWidth="600.0" title="Character Match Count" />
+                        <BarChart fx:id="mapRatioBarChart" prefHeight="275.0" title="Map W/L Ratio">
+                          <xAxis>
+                            <CategoryAxis label="Map" prefHeight="20.0" side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis label="Win %" prefWidth="20.0" side="LEFT" />
+                          </yAxis>
+                        </BarChart>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="550.0" prefWidth="600.0">
+                     <children>
+                        <LineChart fx:id="setRatioLineChart" prefHeight="275.0" title="Set W/L Ratio Over Time">
+                          <xAxis>
+                            <CategoryAxis label="Month" prefHeight="20.0" side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis label="Win %" prefWidth="20.0" side="LEFT" />
+                          </yAxis>
+                        </LineChart>
+                        <BarChart fx:id="matchupRatioBarChart" prefHeight="275.0" title="Matchup W/L Ratio">
+                          <xAxis>
+                            <CategoryAxis label="Character" prefHeight="20.0" side="BOTTOM" />
+                          </xAxis>
+                          <yAxis>
+                            <NumberAxis label="Win %" prefWidth="20.0" side="LEFT" />
+                          </yAxis>
+                        </BarChart>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
          </children>
       </VBox>
    </children>
