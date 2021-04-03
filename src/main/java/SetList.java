@@ -58,6 +58,14 @@ public class SetList {
 
     }
 
+    public SetList getSetListByDate() {
+        SetList toReturn = new SetList();
+        for(Set set : this.allSets) {
+            toReturn.addSet(set);
+        }
+        return toReturn;
+    }
+
     public void removeSet(Set setToRemove) {
         allSets.remove(setToRemove);
     }

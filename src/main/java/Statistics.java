@@ -27,6 +27,30 @@ public class Statistics {
         return output;
     }
 
+    public void getSetWinRatioOverMonths() {
+        ArrayList<String> monthAndYearArray = new ArrayList<>();
+        ArrayList<Integer> setCount = new ArrayList<>();
+        SetList setListByDate = setList.getSetListByDate();
+        int count = 0;
+        for(int i = setListByDate.getLength()-1;i > -1; i--) {
+            String month = setListByDate.getSet(i).getDate().getMonth().toString();
+            int year = setListByDate.getSet(i).getDate().getYear();
+            if(monthAndYearArray.size() == 0) {
+                monthAndYearArray.add(month+" "+year);
+                setCount.add(1);
+            } else if(!monthAndYearArray.get(count).equals(month+" "+year)) {
+                count++;
+                monthAndYearArray.add(month+" "+year);
+                setCount.add(1);
+            } else {
+                setCount.set(count,setCount.get(count)+1);
+            }
+        }
+        //TODO Iterate through and calculate set win ratio per month (by the count)
+
+
+    }
+
     public void sortByMatchCount() {
         Arrays.sort(characterStats);
     }

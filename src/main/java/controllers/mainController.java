@@ -27,6 +27,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
+import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -117,7 +118,7 @@ public class mainController implements Initializable {
     @FXML
     private PieChart characterMatchPieChart;
     @FXML
-    private BarChart<String, Double> mapRatioBarChart;
+    private StackedBarChart<String, Double> mapRatioBarChart;
 
     private Game game;
     private ArrayList<Match> tempMatches = new ArrayList<>();
@@ -848,6 +849,7 @@ public class mainController implements Initializable {
         }
         Statistics stats = new Statistics(setListToUse, game);
 
+        characterMatchPieChart.getData().clear();
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
         for (CharacterStat charStat : stats.getCharacterStats()) {
             if (charStat.calculateTotalMatchesPlayed() > 0) {
@@ -875,24 +877,31 @@ public class mainController implements Initializable {
             }
         }
 
-        //WORK ON THIS SHIT vv
-        double[] mapRatioArray = new double[game.getMaps().length];
-        for (int i = 0; i < mapRatioArray.length; i++) {
-            if (mapWins[i] == 0) {
-                mapRatioArray[i] = 0.0;
-            } else {
-                mapRatioArray[i] = (double) ((mapWins[i] + mapLosses[i]) / mapWins[i]);
+        // WORK ON THIS SHIT vv
+        if (game.isMap()) {
+            mapRatioBarChart.getData().clear();
+            double[] mapRatioArray = new double[game.getMaps().length];
+            for (int i = 0; i < mapRatioArray.length; i++) {
+                if (mapWins[i] == 0) {
+                    mapRatioArray[i] = 0.0;
+                } else {
+
+                    mapRatioArray[i] = 100 * (double) ((double) mapWins[i] / (double) (mapWins[i] + mapLosses[i]));
+                }
+            }
+            int count = 0;
+            for (double mapRatio : mapRatioArray) {
+                XYChart.Series<String, Double> series = new XYChart.Series<>();
+                XYChart.Data<String, Double> mapRatioBar = new XYChart.Data<>();
+                mapRatioBar.XValueProperty().set(game.getMaps()[count].getName());
+                mapRatioBar.YValueProperty().set(mapRatio);
+                System.out.println("Bar Data: " + game.getMaps()[count].getName() + ": " + mapRatio);
+                series.getData().add(mapRatioBar);
+                count++;
+                mapRatioBarChart.getData().add(series);
             }
         }
-        int count = 0;
-        for (double mapRatio : mapRatioArray) {
-            XYChart.Series<String, Double> series = new XYChart.Series<>();
-            XYChart.Data<String, Double> mapRatioBar = new XYChart.Data<>();
-            mapRatioBar.XValueProperty().set(game.getMaps()[count].getName());
-            mapRatioBar.YValueProperty().set(mapRatio);
-            series.getData().add(mapRatioBar);
-            count++;
-            mapRatioBarChart.getData().add(series);
-        }
+
+        stats.getSetWinRatioOverMonths();
     }
 }
