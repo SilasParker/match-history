@@ -26,6 +26,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
@@ -118,7 +119,10 @@ public class mainController implements Initializable {
     @FXML
     private PieChart characterMatchPieChart;
     @FXML
-    private StackedBarChart<String, Double> mapRatioBarChart;
+    private StackedBarChart<String, Double> mapRatioBarChart, matchupRatioBarChart;
+    @FXML
+    private LineChart<String,Double> setRatioLineChart;
+    
 
     private Game game;
     private ArrayList<Match> tempMatches = new ArrayList<>();
@@ -877,7 +881,7 @@ public class mainController implements Initializable {
             }
         }
 
-        // WORK ON THIS SHIT vv
+        
         if (game.isMap()) {
             mapRatioBarChart.getData().clear();
             double[] mapRatioArray = new double[game.getMaps().length];
@@ -902,6 +906,21 @@ public class mainController implements Initializable {
             }
         }
 
-        stats.getSetWinRatioOverMonths();
+        setRatioLineChart.getData().clear();
+        ArrayList<ArrayList<Object>> ratioOverMonthsArray = stats.getSetWinRatioOverMonths();
+        ArrayList<Object> monthAndYearArray = ratioOverMonthsArray.get(0);
+        ArrayList<Object> setRatios = ratioOverMonthsArray.get(1);
+        XYChart.Series<String,Double> series = new XYChart.Series<String,Double>();
+        for(int i = 0; i < ratioOverMonthsArray.size(); i++) {
+            String monthYear = (String) monthAndYearArray.get(i);
+            Double setRatio = (Double) setRatios.get(i);
+            System.out.println("Line Data: "+monthYear+": "+setRatio);
+            series.getData().add(new XYChart.Data<String,Double>(monthYear,setRatio*100.0));
+            
+        }
+        
+        setRatioLineChart.getData().add(series);
+        
+
     }
 }

@@ -38,9 +38,6 @@ public class SetList {
             if (cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
                     && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)) {
                 for (int i = 0; i <= allSets.size() - 1; i++) {
-                    System.out.println(newSet.getDate().isAfter(allSets.get(i).getDate()));
-                    System.out.println(newSet.getDate().isBefore(allSets.get(i).getDate()));
-                    System.out.println(newSet.getDate().equals(allSets.get(i).getDate()));
                     if (newSet.getDate().isAfter(allSets.get(i).getDate())) {
                         allSets.add(i, newSet);
                     }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
@@ -228,7 +227,7 @@
                   <VBox prefHeight="550.0" prefWidth="600.0">
                      <children>
                         <PieChart fx:id="characterMatchPieChart" prefHeight="275.0" prefWidth="600.0" title="Character Match Count" />
-                        <StackedBarChart fx:id="mapRatioBarChart" animated="false" prefHeight="275.0" title="Map Win Ratio">
+                        <StackedBarChart fx:id="mapRatioBarChart" animated="false" legendVisible="false" prefHeight="275.0" title="Map Win Ratio">
                           <xAxis>
                             <CategoryAxis label="Map" side="BOTTOM" />
                           </xAxis>
@@ -240,7 +239,7 @@
                   </VBox>
                   <VBox prefHeight="550.0" prefWidth="600.0">
                      <children>
-                        <LineChart fx:id="setRatioLineChart" prefHeight="275.0" title="Set W/L Ratio Over Time">
+                        <LineChart fx:id="setRatioLineChart" animated="false" createSymbols="false" legendVisible="false" prefHeight="275.0" title="Set W/L Ratio Over Time">
                           <xAxis>
                             <CategoryAxis label="Month" prefHeight="20.0" side="BOTTOM" />
                           </xAxis>
@@ -248,14 +247,14 @@
                             <NumberAxis label="Win %" prefWidth="20.0" side="LEFT" />
                           </yAxis>
                         </LineChart>
-                        <BarChart fx:id="matchupRatioBarChart" prefHeight="275.0" title="Matchup W/L Ratio">
+                        <StackedBarChart fx:id="matchupRatioBarChart" animated="false" legendVisible="false" prefHeight="275.0" title="Matchup Win Ratio">
                           <xAxis>
-                            <CategoryAxis label="Character" prefHeight="20.0" side="BOTTOM" />
+                            <CategoryAxis label="Character" side="BOTTOM" />
                           </xAxis>
                           <yAxis>
-                            <NumberAxis label="Win %" prefWidth="20.0" side="LEFT" />
+                            <NumberAxis label="Win %" side="LEFT" />
                           </yAxis>
-                        </BarChart>
+                        </StackedBarChart>
                      </children>
                   </VBox>
                </children>

@@ -27,8 +27,8 @@ public class Statistics {
         return output;
     }
 
-    public void getSetWinRatioOverMonths() {
-        ArrayList<String> monthAndYearArray = new ArrayList<>();
+    public ArrayList<ArrayList<Object>> getSetWinRatioOverMonths() {
+        ArrayList<Object> monthAndYearArray = new ArrayList<>();
         ArrayList<Integer> setCount = new ArrayList<>();
         SetList setListByDate = setList.getSetListByDate();
         int count = 0;
@@ -46,6 +46,33 @@ public class Statistics {
                 setCount.set(count,setCount.get(count)+1);
             }
         }
+        
+        ArrayList<Set> setListArray = setListByDate.getAllSets();
+        ArrayList<Object> ratioArray = new ArrayList<>();
+        ArrayList<ArrayList<Object>> toReturn = new ArrayList<>();
+        count = 0;
+        while(setListArray.size() > 0) {
+            int wins = 0;
+            int losses = 0;;
+            for(int i = 0; i < setCount.get(count);i++) {
+                if(setListArray.get(0).getWin()) {
+                    wins++;
+                } else {
+                    losses++;
+                }
+                setListArray.remove(0);
+            }
+            if(wins == 0) {
+                ratioArray.add(0.0);
+            } else {
+                Double ratio = (Double) ((double) wins / ((double) wins + (double) losses));
+                ratioArray.add(ratio);
+            }
+            count++;
+        }
+        toReturn.add(monthAndYearArray);
+        toReturn.add(ratioArray);
+        return toReturn;
         //TODO Iterate through and calculate set win ratio per month (by the count)
 
 
