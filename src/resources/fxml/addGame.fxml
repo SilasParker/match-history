@@ -101,7 +101,7 @@
             <Insets left="172.0" />
          </GridPane.margin>
       </Label>
-      <RadioButton fx:id="mapRadio1" mnemonicParsing="false" selected="true" GridPane.rowIndex="2">
+      <RadioButton fx:id="mapRadio1" mnemonicParsing="false" onAction="#disableEnableMapEntry" selected="true" GridPane.rowIndex="2">
          <font>
             <Font size="18.0" />
          </font>
@@ -115,7 +115,7 @@
             <Insets left="255.0" top="50.0" />
          </GridPane.margin>
       </RadioButton>
-      <RadioButton fx:id="mapRadio2" mnemonicParsing="false" toggleGroup="$maps" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+      <RadioButton fx:id="mapRadio2" mnemonicParsing="false" onAction="#disableEnableMapEntry" toggleGroup="$maps" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets right="255.0" top="50.0" />
          </GridPane.margin>
@@ -203,7 +203,7 @@
             <Insets right="215.0" />
          </GridPane.margin>
       </Button>
-      <Button fx:id="cancel" mnemonicParsing="false" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="5">
+      <Button fx:id="cancel" mnemonicParsing="false" onAction="#cancelPressed" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="5">
          <font>
             <Font size="28.0" />
          </font>
@@ -221,7 +221,7 @@
             <Insets bottom="90.0" left="215.0" />
          </GridPane.margin>
       </Label>
-      <Label fx:id="gameImgPathLabel" textFill="#d7d4d4" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+      <Label fx:id="gameImgPathLabel" prefHeight="17.0" prefWidth="56.0" textFill="#d7d4d4" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets right="85.0" top="50.0" />
          </GridPane.margin>

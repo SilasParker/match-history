@@ -7,6 +7,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -26,7 +27,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
@@ -60,7 +63,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser.ExtensionFilter;
 import src.main.java.Character;
 import src.main.java.CharacterStat;
 import src.main.java.CharacterStatColumn;
@@ -89,7 +94,7 @@ public class mainController implements Initializable {
     @FXML
     private Label gameNameLabel;
     @FXML
-    private VBox matchHistoryVBox, reportSetVBox, filterPlayerVBox, filterOpponentVBox;
+    private VBox matchHistoryVBox, reportSetVBox, filterPlayerVBox, filterOpponentVBox, filterMapVBox;
     @FXML
     private ToggleGroup reportWinner;
     @FXML
@@ -100,7 +105,7 @@ public class mainController implements Initializable {
     @FXML
     private DatePicker reportDatePicker, filterDatePicker;
     @FXML
-    private HBox dateTeammateHBox, filterBottomHBox, filterHBox, matchHistoryHBox, chartHBox;
+    private HBox dateTeammateHBox, filterBottomHBox, filterHBox, matchHistoryHBox, chartHBox, filterMiddleHBox;
     @FXML
     private ChoiceBox<String> filterMapChoiceBox;
     @FXML
@@ -121,8 +126,9 @@ public class mainController implements Initializable {
     @FXML
     private StackedBarChart<String, Double> mapRatioBarChart, matchupRatioBarChart;
     @FXML
-    private LineChart<String,Double> setRatioLineChart;
-    
+    private LineChart<String, Double> setRatioLineChart;
+    @FXML
+    private CategoryAxis mapRatioXAxis;
 
     private Game game;
     private ArrayList<Match> tempMatches = new ArrayList<>();
@@ -147,8 +153,11 @@ public class mainController implements Initializable {
         gameNameLabel.setText(game.getName());
         generateMatchHistoryDisplay(false);
         populateStatisticsTable(false);
+        populateCharts(false);
         generateReportSetForm();
         generateFilterBox();
+        statsTableView.getColumns().remove(tableBestMapColumn);
+        statsTableView.getColumns().remove(tableWorstMapColumn);
     }
 
     private void centerImageInImageView(ImageView imgView) {
@@ -609,6 +618,7 @@ public class mainController implements Initializable {
             game.setListJsonToFile();
             generateMatchHistoryDisplay(false);
             populateStatisticsTable(false);
+            populateCharts(false);
         } else {
             Alert setReportAlert = new Alert(AlertType.ERROR, error);
             setReportAlert.show();
@@ -648,11 +658,15 @@ public class mainController implements Initializable {
         filterPlayerScoreChoiceBox.getItems().setAll(scores);
         filterOpponentScoreChoiceBox.getItems().setAll(scores);
 
-        ArrayList<String> allMapNames = new ArrayList<>();
-        for (Map map : game.getMaps()) {
-            allMapNames.add(map.getName());
+        if (game.isMap()) {
+            ArrayList<String> allMapNames = new ArrayList<>();
+            for (Map map : game.getMaps()) {
+                allMapNames.add(map.getName());
+            }
+            filterMapChoiceBox.getItems().setAll(allMapNames);
+        } else {
+            filterMiddleHBox.getChildren().remove(filterMapVBox);
         }
-        filterMapChoiceBox.getItems().setAll(allMapNames);
 
         if (!game.isTeammate()) {
             filterBottomHBox.getChildren().remove(filterTeammateTextField);
@@ -667,12 +681,14 @@ public class mainController implements Initializable {
         Character[] playerCharacters = new Character[game.getCharactersPerSide()];
         int count = 0;
         for (Node choiceBoxNode : filterPlayerVBox.getChildren()) {
-            ChoiceBox<String> characterChoice = (ChoiceBox<String>) choiceBoxNode;
-            if (!characterChoice.getSelectionModel().isEmpty()) {
-                for (Character character : game.getCharacters()) {
-                    if (character.getName().equals(characterChoice.getValue())) {
-                        playerCharacters[count] = character;
-                        count++;
+            if (choiceBoxNode instanceof ChoiceBox) {
+                ChoiceBox<String> characterChoice = (ChoiceBox<String>) choiceBoxNode;
+                if (!characterChoice.getSelectionModel().isEmpty()) {
+                    for (Character character : game.getCharacters()) {
+                        if (character.getName().equals(characterChoice.getValue())) {
+                            playerCharacters[count] = character;
+                            count++;
+                        }
                     }
                 }
             }
@@ -703,12 +719,14 @@ public class mainController implements Initializable {
         Character[] opponentCharacters = new Character[game.getCharactersPerSide()];
         count = 0;
         for (Node choiceBoxNode : filterOpponentVBox.getChildren()) {
-            ChoiceBox<String> characterChoice = (ChoiceBox<String>) choiceBoxNode;
-            if (!characterChoice.getSelectionModel().isEmpty()) {
-                for (Character character : game.getCharacters()) {
-                    if (character.getName().equals(characterChoice.getValue())) {
-                        opponentCharacters[count] = character;
-                        count++;
+            if (choiceBoxNode instanceof ChoiceBox) {
+                ChoiceBox<String> characterChoice = (ChoiceBox<String>) choiceBoxNode;
+                if (!characterChoice.getSelectionModel().isEmpty()) {
+                    for (Character character : game.getCharacters()) {
+                        if (character.getName().equals(characterChoice.getValue())) {
+                            opponentCharacters[count] = character;
+                            count++;
+                        }
                     }
                 }
             }
@@ -781,6 +799,7 @@ public class mainController implements Initializable {
         System.out.println(filteredSetList.getLength());
         generateMatchHistoryDisplay(true);
         populateStatisticsTable(true);
+        populateCharts(true);
     }
 
     public void clearFilter(ActionEvent event) {
@@ -801,6 +820,7 @@ public class mainController implements Initializable {
         }
         generateMatchHistoryDisplay(false);
         populateStatisticsTable(false);
+        populateCharts(false);
     }
 
     public void showMatchHistory(ActionEvent event) {
@@ -834,8 +854,10 @@ public class mainController implements Initializable {
                 .setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, Double>("setWinRatio"));
         tableMatchWinRatioColumn
                 .setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, Double>("matchWinRatio"));
-        tableBestMapColumn.setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, String>("bestMap"));
-        tableWorstMapColumn.setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, String>("worstMap"));
+        if (game.isMap()) {
+            tableBestMapColumn.setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, String>("bestMap"));
+            tableWorstMapColumn.setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, String>("worstMap"));
+        }
         tableBestMatchupColumn
                 .setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, String>("bestMatchup"));
         tableWorstMatchupColumn
@@ -865,31 +887,28 @@ public class mainController implements Initializable {
         }
         characterMatchPieChart.setData(pieChartData);
 
-        int[] mapWins = new int[game.getMaps().length];
-        int[] mapLosses = new int[game.getMaps().length];
-        boolean set = false;
-        for (CharacterStat charStat : stats.getCharacterStats()) {
-            if (!set) {
-                mapWins = charStat.getMapWins();
-                mapLosses = charStat.getMapLosses();
-                set = true;
-            } else {
-                for (int i = 0; i < mapWins.length; i++) {
-                    mapWins[i] += charStat.getMapWins()[i];
-                    mapLosses[i] += charStat.getMapLosses()[i];
+        mapRatioBarChart.getData().clear();
+        if (game.isMap()) {
+            int[] mapWins = new int[game.getMaps().length];
+            int[] mapLosses = new int[game.getMaps().length];
+            boolean set = false;
+            for (CharacterStat charStat : stats.getCharacterStats()) {
+                if (!set) {
+                    mapWins = charStat.getMapWins();
+                    mapLosses = charStat.getMapLosses();
+                    set = true;
+                } else {
+                    for (int i = 0; i < mapWins.length; i++) {
+                        mapWins[i] += charStat.getMapWins()[i];
+                        mapLosses[i] += charStat.getMapLosses()[i];
+                    }
                 }
             }
-        }
-
-        
-        if (game.isMap()) {
-            mapRatioBarChart.getData().clear();
             double[] mapRatioArray = new double[game.getMaps().length];
             for (int i = 0; i < mapRatioArray.length; i++) {
                 if (mapWins[i] == 0) {
                     mapRatioArray[i] = 0.0;
                 } else {
-
                     mapRatioArray[i] = 100 * (double) ((double) mapWins[i] / (double) (mapWins[i] + mapLosses[i]));
                 }
             }
@@ -897,30 +916,108 @@ public class mainController implements Initializable {
             for (double mapRatio : mapRatioArray) {
                 XYChart.Series<String, Double> series = new XYChart.Series<>();
                 XYChart.Data<String, Double> mapRatioBar = new XYChart.Data<>();
-                mapRatioBar.XValueProperty().set(game.getMaps()[count].getName());
+                String mapName = game.getMaps()[count].getName();
+                if (mapName.length() > 17) {
+                    mapName = mapName.substring(0, 15) + "...";
+                }
+                mapRatioBar.XValueProperty().set(mapName);
                 mapRatioBar.YValueProperty().set(mapRatio);
                 System.out.println("Bar Data: " + game.getMaps()[count].getName() + ": " + mapRatio);
                 series.getData().add(mapRatioBar);
                 count++;
                 mapRatioBarChart.getData().add(series);
             }
+        } else {
+            mapRatioBarChart.setTitle("Character Match Win Ratio");
+            mapRatioXAxis.setLabel("Character");
+            for (CharacterStat charStat : stats.getCharacterStats()) {
+                XYChart.Series<String, Double> series = new XYChart.Series<>();
+                XYChart.Data<String, Double> matchRatioBar = new XYChart.Data<>();
+                matchRatioBar.XValueProperty().set(charStat.getCharacter().getName());
+                matchRatioBar.YValueProperty().set(charStat.calculateMatchWinPercentage());
+                System.out.println("Bar Data: " + charStat.getCharacter().getName() + ": "
+                        + charStat.calculateMatchWinPercentage());
+                series.getData().add(matchRatioBar);
+                mapRatioBarChart.getData().add(series);
+
+            }
+        }
+
+        int[] charWins = new int[game.getCharacters().length];
+        int[] charLosses = new int[game.getCharacters().length];
+        boolean set = false;
+        for (CharacterStat charStat : stats.getCharacterStats()) {
+            if (!set) {
+                charWins = charStat.getCharacterWins();
+                charLosses = charStat.getCharacterLosses();
+                set = true;
+            } else {
+                for (int i = 0; i < charWins.length; i++) {
+                    charWins[i] += charStat.getCharacterWins()[i];
+                    charLosses[i] += charStat.getCharacterLosses()[i];
+                }
+            }
+        }
+        matchupRatioBarChart.getData().clear();
+        double[] charRatioArray = new double[game.getCharacters().length];
+        for (int i = 0; i < charRatioArray.length; i++) {
+            if (charWins[i] == 0) {
+                charRatioArray[i] = 0.0;
+            } else {
+                charRatioArray[i] = 100 * (double) ((double) charWins[i] / (double) (charWins[i] + charLosses[i]));
+            }
+        }
+        int count = 0;
+        for (double charRatio : charRatioArray) {
+            XYChart.Series<String, Double> series = new XYChart.Series<>();
+            XYChart.Data<String, Double> charRatioBar = new XYChart.Data<>();
+            charRatioBar.XValueProperty().set(game.getCharacters()[count].getName());
+            charRatioBar.YValueProperty().set(charRatio);
+            System.out.println("Bar2 Date: " + game.getCharacters()[count].getName() + ": " + charRatio);
+            series.getData().add(charRatioBar);
+            count++;
+            matchupRatioBarChart.getData().add(series);
         }
 
         setRatioLineChart.getData().clear();
         ArrayList<ArrayList<Object>> ratioOverMonthsArray = stats.getSetWinRatioOverMonths();
         ArrayList<Object> monthAndYearArray = ratioOverMonthsArray.get(0);
         ArrayList<Object> setRatios = ratioOverMonthsArray.get(1);
-        XYChart.Series<String,Double> series = new XYChart.Series<String,Double>();
-        for(int i = 0; i < ratioOverMonthsArray.size(); i++) {
-            String monthYear = (String) monthAndYearArray.get(i);
-            Double setRatio = (Double) setRatios.get(i);
-            System.out.println("Line Data: "+monthYear+": "+setRatio);
-            series.getData().add(new XYChart.Data<String,Double>(monthYear,setRatio*100.0));
-            
-        }
-        
-        setRatioLineChart.getData().add(series);
-        
+        XYChart.Series<String, Double> series = new XYChart.Series<String, Double>();
+        if (monthAndYearArray.size() > 1) {
+            for (int i = 0; i < ratioOverMonthsArray.size(); i++) {
+                String monthYear = (String) monthAndYearArray.get(i);
+                Double setRatio = (Double) setRatios.get(i);
+                System.out.println("Line Data: " + monthYear + ": " + setRatio);
+                series.getData().add(new XYChart.Data<String, Double>(monthYear, setRatio * 100.0));
 
+            }
+            setRatioLineChart.getData().add(series);
+        }
+
+    }
+
+    public void importSetList(ActionEvent event) {
+        FileChooser fc = new FileChooser();
+        fc.getExtensionFilters().addAll(new ExtensionFilter("JSON Files", "*.json"));
+        File selectedJson = fc.showOpenDialog(null);
+        if (!Objects.isNull(selectedJson)) {
+            String filePath = selectedJson.getAbsolutePath();
+            Alert replaceImport = new Alert(AlertType.CONFIRMATION,
+                    "Would you like to replace your set list with the imported file or add contained sets to current set list?");
+            ButtonType replaceButton = new ButtonType("REPLACE");
+            ButtonType addButton = new ButtonType("ADD TO EXISTING");
+            replaceImport.getButtonTypes().setAll(replaceButton, addButton);
+            Optional<ButtonType> confirm = replaceImport.showAndWait();
+            if (confirm.get() == replaceButton) {
+                game.importSetList(filePath, true);
+            } else if (confirm.get() == addButton) {
+                game.importSetList(filePath, false);
+            }
+            generateMatchHistoryDisplay(false);
+            populateCharts(false);
+            populateStatisticsTable(false);
+
+        }
     }
 }

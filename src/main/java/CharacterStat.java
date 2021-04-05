@@ -128,7 +128,11 @@ public class CharacterStat implements Comparable<CharacterStat> {
         return (this.setWins / (double) (this.setWins + this.setLosses)) * 100;
     }
 
-    private double calculateMatchWinPercentage() {
+    public double calculateMatchWinPercentage() {
+        double result = (this.matchWins / (double) (this.matchWins + this.matchLosses)) * 100;
+        if(Double.isNaN(result)) {
+            return 0.0;
+        }
         return (this.matchWins / (double) (this.matchWins + this.matchLosses)) * 100;
     }
 
@@ -225,6 +229,14 @@ public class CharacterStat implements Comparable<CharacterStat> {
 
     public int calculateTotalMatchesPlayed() {
         return matchWins + matchLosses;
+    }
+
+    public int[] getCharacterWins() {
+        return this.charWins;
+    }
+
+    public int[] getCharacterLosses() {
+        return this.charLosses;
     }
 
     @Override

@@ -73,7 +73,7 @@ public class Statistics {
         toReturn.add(monthAndYearArray);
         toReturn.add(ratioArray);
         return toReturn;
-        //TODO Iterate through and calculate set win ratio per month (by the count)
+        
 
 
     }

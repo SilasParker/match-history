@@ -43,7 +43,7 @@ public class Game {
     }
 
     public boolean isMap() {
-        if(this.maps == null) {
+        if (this.maps.length == 0) {
             return false;
         } else {
             return true;
@@ -109,7 +109,7 @@ public class Game {
 
         Writer writer;
         try {
-            writer = Files.newBufferedWriter(Paths.get("src/local/games/" + fileName, fileName + ".json")); 
+            writer = Files.newBufferedWriter(Paths.get("src/local/games/" + fileName, fileName + ".json"));
             gson.toJson(json, writer);
             writer.close();
         } catch (IOException e) {
@@ -143,7 +143,7 @@ public class Game {
         String fileName = toDirectorySafeString(this.name);
         Writer writer;
         try {
-            writer = Files.newBufferedWriter(Paths.get("src/local/setLists", fileName+".json"));
+            writer = Files.newBufferedWriter(Paths.get("src/local/setLists", fileName + ".json"));
             gson.toJson(json, writer);
             writer.close();
         } catch (IOException e) {
@@ -189,20 +189,25 @@ public class Game {
                                 .get(currentOpponentCharJsonObj.get("imagePath").getAsString());
                         allOpponentCharsArr.add(new Character(currentOpponentCharName, currentOpponentImgPath));
                     }
-                    JsonObject mapObject = currentMatchJsonObject.get("map").getAsJsonObject();
-                    Map map = new Map(mapObject.get("name").getAsString());
+                    Map map = null;
+                    if (this.isMap()) {
+                        JsonObject mapObject = currentMatchJsonObject.get("map").getAsJsonObject();
+                        map = new Map(mapObject.get("name").getAsString());
+                    }
+                    
                     boolean win = currentMatchJsonObject.get("win").getAsBoolean();
                     Character[] allPlayerCharsArrFinal = allPlayerCharsArr
                             .toArray(new Character[allPlayerCharsArr.size()]);
                     Character[] allOpponentCharsArrFinal = allOpponentCharsArr
                             .toArray(new Character[allOpponentCharsArr.size()]);
+                    
                     allMatchesArr.add(new Match(allPlayerCharsArrFinal, allOpponentCharsArrFinal, map, win));
                 }
                 String opponent = currentSetJsonObject.get("opponent").getAsString();
                 String teammate = currentSetJsonObject.get("teammate").getAsString();
                 String tournament = currentSetJsonObject.get("tournament").getAsString();
                 String dateString = currentSetJsonObject.get("date").getAsString();
-                LocalDate localDate = LocalDate.parse(dateString,DateTimeFormatter.ofPattern("DD-MM-yyyy"));
+                LocalDate localDate = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("DD-MM-yyyy"));
 
                 tempSetList.addSet(new Set((Match[]) allMatchesArr.toArray(new Match[allMatchesArr.size()]), opponent,
                         teammate, tournament, localDate));
@@ -212,8 +217,10 @@ public class Game {
             if (replace) {
                 this.setList = tempSetList;
             } else {
+                System.out.println("SET LIST LENGTH: "+tempSetList.getLength());
                 tempSetList.getAllSets().forEach((set) -> this.setList.addSet(set));
             }
+            setListJsonToFile();
         }
 
     }

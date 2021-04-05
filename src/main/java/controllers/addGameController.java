@@ -25,6 +25,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
@@ -51,6 +53,16 @@ public class addGameController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        charNameEntry.setOnKeyReleased(event -> {
+            if(event.getCode() == KeyCode.ENTER) {
+                addCharName(null);
+            }
+        });
+        mapNameEntry.setOnKeyPressed(event -> {
+            if(event.getCode() == KeyCode.ENTER) {
+                addMapName(null);
+            }
+        });
     }
 
     public void addCharName(ActionEvent event) {
@@ -90,15 +102,25 @@ public class addGameController implements Initializable {
         fc.getExtensionFilters().addAll(new ExtensionFilter("PNG Files", "*.png"));
         File selectedFile = fc.showOpenDialog(null);
         if (!Objects.isNull(selectedFile)) {
-            gameImgPathLabel.setText(selectedFile.getAbsolutePath());
+            gameImgPathLabel.setText("Image Path Set");
         }
         defaultWindowPath = selectedFile.getParentFile();
 
     }
 
+    public void disableEnableMapEntry(ActionEvent event) {
+        if(mapRadio1.isSelected()) {
+            mapNameEntry.setDisable(false);
+            mapNameAdd.setDisable(false);
+        } else {
+            mapNameEntry.setDisable(true);
+            mapNameAdd.setDisable(true);
+        }
+    }
+
     public void editCharMapImagePath(String name, ListView<HBox> listView) {
         FileChooser fc = new FileChooser();
-        if (defaultWindowPath.exists()) {
+        if (defaultWindowPath != null) {
             fc.setInitialDirectory(defaultWindowPath);
         }
         fc.getExtensionFilters().addAll(new ExtensionFilter("PNG Files", "*.png"));
@@ -107,8 +129,9 @@ public class addGameController implements Initializable {
             Label label = (Label) getHBoxFromLV(name, listView).getChildren().get(3);
             label.setText(selectedFile.getAbsolutePath());
         }
-        defaultWindowPath = selectedFile;
+        defaultWindowPath = selectedFile.getParentFile();
     }
+
 
     private String toDirectorySafeString(String string) {
         char[] unsuitableChars = { '#', '%', '&', '{', '}', '\\', '<', '>', '*', '?', '/', ' ', '$', '!', '\'', '"',
@@ -304,6 +327,10 @@ public class addGameController implements Initializable {
         newGame.toJson();
         gameName.getScene().getWindow().hide(); // exits
 
+    }
+
+    public void cancelPressed(ActionEvent event) {
+        gameName.getScene().getWindow().hide();
     }
 
 }

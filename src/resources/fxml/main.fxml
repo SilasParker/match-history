@@ -45,7 +45,7 @@
             </Label>
             <ButtonBar nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0">
               <buttons>
-                <Button mnemonicParsing="false" text="IMPORT" translateX="10.0" ButtonBar.buttonData="LEFT" />
+                <Button mnemonicParsing="false" onAction="#importSetList" text="IMPORT" translateX="10.0" ButtonBar.buttonData="LEFT" />
                 <Button mnemonicParsing="false" onAction="#backToGameSelect" text="BACK" translateX="-10.0" ButtonBar.buttonData="RIGHT" />
               </buttons>
                <HBox.margin>
@@ -55,7 +55,10 @@
          </children></HBox>
       <HBox fx:id="filterHBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="110.0" prefWidth="900.0">
          <children>
-            <VBox fx:id="filterPlayerVBox" alignment="CENTER" prefHeight="200.0" prefWidth="125.0" />
+            <VBox fx:id="filterPlayerVBox" alignment="CENTER" prefHeight="200.0" prefWidth="125.0">
+               <children>
+                  <Label text="Player Character(s)" />
+               </children></VBox>
             <VBox fx:id="filterMainVBox" alignment="CENTER" prefHeight="200.0" prefWidth="650.0">
                <children>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
@@ -70,7 +73,7 @@
                         </HBox>
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                  <HBox fx:id="filterMiddleHBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
                      <children>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0">
                            <children>
@@ -78,7 +81,7 @@
                               <ChoiceBox fx:id="filterPlayerScoreChoiceBox" prefWidth="150.0" />
                            </children>
                         </VBox>
-                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0">
+                        <VBox fx:id="filterMapVBox" alignment="CENTER" prefHeight="200.0" prefWidth="150.0">
                            <children>
                               <Label text="Map" />
                               <ChoiceBox fx:id="filterMapChoiceBox" prefWidth="150.0" />
@@ -100,7 +103,10 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox fx:id="filterOpponentVBox" alignment="CENTER" prefHeight="200.0" prefWidth="125.0" />
+            <VBox fx:id="filterOpponentVBox" alignment="CENTER" prefHeight="200.0" prefWidth="125.0">
+               <children>
+                  <Label text="Opponent Character(s)" />
+               </children></VBox>
          </children></HBox>
       <HBox prefHeight="100.0" prefWidth="300.0">
          <children>
@@ -226,10 +232,10 @@
                <children>
                   <VBox prefHeight="550.0" prefWidth="600.0">
                      <children>
-                        <PieChart fx:id="characterMatchPieChart" prefHeight="275.0" prefWidth="600.0" title="Character Match Count" />
-                        <StackedBarChart fx:id="mapRatioBarChart" animated="false" legendVisible="false" prefHeight="275.0" title="Map Win Ratio">
+                        <PieChart fx:id="characterMatchPieChart" legendVisible="false" prefHeight="275.0" prefWidth="600.0" title="Character Match Count" />
+                        <StackedBarChart fx:id="mapRatioBarChart" animated="false" categoryGap="2.0" legendVisible="false" prefHeight="275.0" title="Map Win Ratio">
                           <xAxis>
-                            <CategoryAxis label="Map" side="BOTTOM" />
+                            <CategoryAxis fx:id="mapRatioXAxis" label="Map" side="BOTTOM" />
                           </xAxis>
                           <yAxis>
                             <NumberAxis label="Win %" side="LEFT" />

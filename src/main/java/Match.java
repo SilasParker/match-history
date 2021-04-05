@@ -24,7 +24,9 @@ public class Match {
         for (Character opponentChar : opponentChars) {
             toPrint += opponentChar.toString() + " ";
         }
-        toPrint += this.map.toString() + " ";
+        if (map != null) {
+            toPrint += this.map.toString() + " ";
+        }
         toPrint += this.win + " ";
         return toPrint;
     }
@@ -39,7 +41,9 @@ public class Match {
         }
         json.add("playerChars", playerCharsArray);
         json.add("opponentChars", opponentCharsArray);
-        json.add("map", this.map.toJsonObject());
+        if (map != null) {
+            json.add("map", this.map.toJsonObject());
+        }
         json.addProperty("win", this.win);
         return json;
 
