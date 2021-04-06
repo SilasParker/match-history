@@ -117,9 +117,9 @@ public class Game {
         }
     }
 
-    public String toDirectorySafeString(String string) {
+    public static String toDirectorySafeString(String string) {
         char[] unsuitableChars = { '#', '%', '&', '{', '}', '\\', '<', '>', '*', '?', '/', ' ', '$', '!', '\'', '"',
-                ':', '@', '+', '`', '|', '=', '.' };
+                ':', '@', '+', '`', '|', '=', '.','(',')'};
         String fileName = "";
         for (int i = 0; i < string.length(); i++) {
             boolean charSafe = true;

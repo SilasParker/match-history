@@ -102,7 +102,7 @@ public class addGameController implements Initializable {
         fc.getExtensionFilters().addAll(new ExtensionFilter("PNG Files", "*.png"));
         File selectedFile = fc.showOpenDialog(null);
         if (!Objects.isNull(selectedFile)) {
-            gameImgPathLabel.setText("Image Path Set");
+            gameImgPathLabel.setText(selectedFile.getAbsolutePath());
         }
         defaultWindowPath = selectedFile.getParentFile();
 
@@ -128,29 +128,13 @@ public class addGameController implements Initializable {
         if (!Objects.isNull(selectedFile)) {
             Label label = (Label) getHBoxFromLV(name, listView).getChildren().get(3);
             label.setText(selectedFile.getAbsolutePath());
+            defaultWindowPath = selectedFile.getParentFile();
         }
-        defaultWindowPath = selectedFile.getParentFile();
+        
     }
 
 
-    private String toDirectorySafeString(String string) {
-        char[] unsuitableChars = { '#', '%', '&', '{', '}', '\\', '<', '>', '*', '?', '/', ' ', '$', '!', '\'', '"',
-                ':', '@', '+', '`', '|', '=' };
-        String fileName = "";
-        for (int i = 0; i < string.length(); i++) {
-            boolean charSafe = true;
-            for (int j = 0; j < unsuitableChars.length; j++) {
-                if (string.charAt(i) == unsuitableChars[j]) {
-                    charSafe = false;
-                }
-            }
-            if (charSafe) {
-                fileName += string.charAt(i);
-            }
-        }
-        return fileName.toLowerCase();
 
-    }
 
     private HBox getHBoxFromLV(String name, ListView<HBox> listView) {
         for (HBox hbox : listView.getItems()) {
@@ -183,7 +167,7 @@ public class addGameController implements Initializable {
             });
         }
         Button removeButton = new Button();
-        removeButton.setText("Remove");
+        removeButton.setText("X");
         removeButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -200,7 +184,7 @@ public class addGameController implements Initializable {
     }
 
     public void preSubmit(ActionEvent event) throws IOException { // attempts to copy over images
-        String dirSafeGameName = toDirectorySafeString(gameName.getText());
+        String dirSafeGameName = Game.toDirectorySafeString(gameName.getText());
         Path gamePath = Paths.get("src/local/games/" + dirSafeGameName);
         if (gameName.getText().equals("")) {
             Alert missingFieldAlert = new Alert(AlertType.WARNING, "Please Complete Missing Fields");
@@ -229,7 +213,7 @@ public class addGameController implements Initializable {
                 if (!pathLabel.getText().equals("")) {
                     File source = new File(pathLabel.getText());
                     Path namePath = Paths.get("src/local/games/" + dirSafeGameName + "/chars/"
-                            + toDirectorySafeString(nameLabel.getText()) + ".png");
+                            + Game.toDirectorySafeString(nameLabel.getText()) + ".png");
                     if (Files.exists(namePath)) {
                         System.out.println("Files for this character already exist");
                         characterNameErrorList += nameLabel.getText() + ", ";
@@ -307,8 +291,8 @@ public class addGameController implements Initializable {
         for (HBox hbox : charListView.getItems()) {
             Label tempCharNameLabel = (Label) hbox.getChildren().get(0);
             String tempCharName = tempCharNameLabel.getText();
-            Path tempCharPath = Paths.get("/src/local/games/" + toDirectorySafeString(subGameName) + "/chars/"
-                    + toDirectorySafeString(tempCharName) + ".png");
+            Path tempCharPath = Paths.get("/src/local/games/" + Game.toDirectorySafeString(subGameName) + "/chars/"
+                    + Game.toDirectorySafeString(tempCharName) + ".png");
             Character tempChar = new Character(tempCharName, tempCharPath);
             subCharacters[charCounter] = tempChar;
             charCounter++;

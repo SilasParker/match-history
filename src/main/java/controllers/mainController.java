@@ -156,8 +156,10 @@ public class mainController implements Initializable {
         populateCharts(false);
         generateReportSetForm();
         generateFilterBox();
-        statsTableView.getColumns().remove(tableBestMapColumn);
-        statsTableView.getColumns().remove(tableWorstMapColumn);
+        if (!game.isMap()) {
+            statsTableView.getColumns().remove(tableBestMapColumn);
+            statsTableView.getColumns().remove(tableWorstMapColumn);
+        }
     }
 
     private void centerImageInImageView(ImageView imgView) {
@@ -511,6 +513,9 @@ public class mainController implements Initializable {
                 Match match = new Match(playerCharsArray, opponentCharsArray, mapSelected, playerWin);
                 tempMatches.add(match);
                 reportListView.getItems().add(getHBoxFromMatch(match));
+
+                RadioButton radBut = (RadioButton) reportWinner.getSelectedToggle();
+                radBut.setSelected(false);
             } else {
                 Alert invalidMatchError = new Alert(AlertType.ERROR, "Please ensure all match details are filled in");
                 invalidMatchError.show();
@@ -537,7 +542,7 @@ public class mainController implements Initializable {
         matchHbox.getChildren().add(matchLabel);
 
         Button removeButton = new Button();
-        removeButton.setText("Remove");
+        removeButton.setText("X");
         removeButton.setOnAction((EventHandler<ActionEvent>) new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -619,6 +624,31 @@ public class mainController implements Initializable {
             generateMatchHistoryDisplay(false);
             populateStatisticsTable(false);
             populateCharts(false);
+            VBox playerCharactersVBox = (VBox) matchEntryHBox.getChildren().get(0);
+            for (Node node : playerCharactersVBox.getChildren()) {
+                if (node instanceof ChoiceBox<?>) {
+                    ChoiceBox<String> choiceBox = (ChoiceBox<String>) node;
+                    choiceBox.getSelectionModel().clearSelection();
+                }
+            }
+            VBox opponentCharactersVBox;
+            opponentCharactersVBox = (VBox) matchEntryHBox.getChildren().get(1);
+            if (game.isMap()) {
+                opponentCharactersVBox = (VBox) matchEntryHBox.getChildren().get(2);
+            }
+            for (Node node : opponentCharactersVBox.getChildren()) {
+                if (node instanceof ChoiceBox<?>) {
+                    ChoiceBox<String> choiceBox = (ChoiceBox<String>) node;
+                    choiceBox.getSelectionModel().clearSelection();
+                }
+            }
+            if (game.isMap()) {
+                VBox mapVBox = (VBox) matchEntryHBox.getChildren().get(1);
+                ChoiceBox<String> mapChoiceBox = (ChoiceBox<String>) mapVBox.getChildren().get(1);
+                mapChoiceBox.getSelectionModel().clearSelection();
+            }
+            reportListView.getItems().clear();
+            reportOpponentInput.setText("");
         } else {
             Alert setReportAlert = new Alert(AlertType.ERROR, error);
             setReportAlert.show();
@@ -804,8 +834,10 @@ public class mainController implements Initializable {
 
     public void clearFilter(ActionEvent event) {
         for (Node choiceBoxNode : filterPlayerVBox.getChildren()) {
-            ChoiceBox<String> characterChoiceBox = (ChoiceBox<String>) choiceBoxNode;
-            characterChoiceBox.getSelectionModel().clearSelection();
+            if (choiceBoxNode instanceof ChoiceBox) {
+                ChoiceBox<String> characterChoiceBox = (ChoiceBox<String>) choiceBoxNode;
+                characterChoiceBox.getSelectionModel().clearSelection();
+            }
         }
         filterOpponentTextField.clear();
         filterTournamentTextField.clear();
@@ -815,8 +847,10 @@ public class mainController implements Initializable {
         filterDatePicker.getEditor().clear();
         filterTeammateTextField.clear();
         for (Node choiceBoxNode : filterOpponentVBox.getChildren()) {
-            ChoiceBox<String> characterChoiceBox = (ChoiceBox<String>) choiceBoxNode;
-            characterChoiceBox.getSelectionModel().clearSelection();
+            if (choiceBoxNode instanceof ChoiceBox<?>) {
+                ChoiceBox<String> characterChoiceBox = (ChoiceBox<String>) choiceBoxNode;
+                characterChoiceBox.getSelectionModel().clearSelection();
+            }
         }
         generateMatchHistoryDisplay(false);
         populateStatisticsTable(false);
@@ -844,7 +878,6 @@ public class mainController implements Initializable {
         }
         Statistics stats = new Statistics(setListToUse, game);
         stats.sortByMatchCount();
-
         ObservableList<CharacterStatColumn> list = stats.getCharacterStatColumnObservableList();
 
         tableNumColumn.setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, Integer>("num"));
@@ -855,6 +888,12 @@ public class mainController implements Initializable {
         tableMatchWinRatioColumn
                 .setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, Double>("matchWinRatio"));
         if (game.isMap()) {
+            System.out.println("IS MAP");
+            if (!statsTableView.getColumns().get(4).equals(tableBestMapColumn)) {
+                System.out.println("ADDING COLUMN");
+                statsTableView.getColumns().add(4, tableBestMapColumn);
+                statsTableView.getColumns().add(5, tableWorstMapColumn);
+            }
             tableBestMapColumn.setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, String>("bestMap"));
             tableWorstMapColumn.setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, String>("worstMap"));
         }
