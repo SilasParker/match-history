@@ -1,19 +1,13 @@
 package src.main.java.controllers;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-import javax.swing.Action;
-import javax.swing.event.MenuDragMouseEvent;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,14 +16,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
@@ -46,7 +37,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -105,7 +95,7 @@ public class mainController implements Initializable {
     @FXML
     private DatePicker reportDatePicker, filterDatePicker;
     @FXML
-    private HBox dateTeammateHBox, filterBottomHBox, filterHBox, matchHistoryHBox, chartHBox, filterMiddleHBox;
+    private HBox dateTeammateHBox, filterBottomHBox, filterHBox, matchHistoryHBox, chartHBox, filterMiddleHBox, tabHBox;
     @FXML
     private ChoiceBox<String> filterMapChoiceBox;
     @FXML
@@ -140,16 +130,11 @@ public class mainController implements Initializable {
     }
 
     public void initData(Game game) {
-        System.out.println(game.getName());
         this.game = game;
-
         String imageDirectory = "/src/local/games/" + game.toDirectorySafeString(game.getName()) + ".png";
-        System.out.println(imageDirectory);
-
         gameImageView.setImage(new Image("src/local/games/" + game.toDirectorySafeString(game.getName()) + "/"
                 + game.toDirectorySafeString(game.getName()) + ".png"));
         centerImageInImageView(gameImageView);
-        System.out.println(gameImageView.getX() + "," + gameImageView.getY());
         gameNameLabel.setText(game.getName());
         generateMatchHistoryDisplay(false);
         populateStatisticsTable(false);
@@ -182,7 +167,6 @@ public class mainController implements Initializable {
     }
 
     public void backToGameSelect(ActionEvent event) throws IOException {
-
         FXMLLoader loader = new FXMLLoader();
         URL fxmlURL = getClass().getResource("/src/resources/fxml/gameSelect.fxml");
         loader.setLocation(fxmlURL);
@@ -198,7 +182,6 @@ public class mainController implements Initializable {
         ArrayList<Set> useSets = game.getSetList().getAllSets();
         if (filtered) {
             useSets = filteredSetList.getAllSets();
-            System.out.println("Number of Sets Filtered: " + useSets.size());
         }
         for (Set set : useSets) {
             HBox setContainerHBox = new HBox();
@@ -209,7 +192,7 @@ public class mainController implements Initializable {
             if (set.getWin()) {
                 setContainerHBox.setStyle("-fx-background-color: #90EE90;");
             } else {
-                setContainerHBox.setStyle("-fx-background-color: #FF0000;");
+                setContainerHBox.setStyle("-fx-background-color: #FF6C70;");
             }
 
             VBox removeButtonVBox = new VBox();
@@ -237,7 +220,6 @@ public class mainController implements Initializable {
             ImageView playerImageView, teammateImageView;
             if (!game.isTeammate()) {
                 Character mostPlayed = playerMostPlayed.get(0);
-                System.out.println(mostPlayed.getImagePath().toString());
                 playerImageView = new ImageView(mostPlayed.getImagePath().toString());
                 playerImageView.setFitHeight(90.0);
                 playerImageView.setFitWidth(90.0);
@@ -351,7 +333,7 @@ public class mainController implements Initializable {
             if (match.isWin()) {
                 matchCircle.setFill(javafx.scene.paint.Color.rgb(56, 93, 56));
             } else {
-                matchCircle.setFill(javafx.scene.paint.Color.rgb(220, 20, 60));
+                matchCircle.setFill(javafx.scene.paint.Color.rgb(255, 0, 0));
             }
             middleVBoxContainer.getChildren().add(matchCircle);
             if (game.isMap()) {
@@ -436,7 +418,16 @@ public class mainController implements Initializable {
         if (!game.isTeammate()) {
             dateTeammateHBox.getChildren().remove(reportTeammateInput);
         }
+    }
 
+    private void highlightTab(int tabSelected) {
+        for (int i = 0; i < 3; i++) {
+            Button btn = (Button) tabHBox.getChildren().get(i);
+            btn.setStyle(null);
+            if (tabSelected == i) {
+                btn.setStyle("-fx-background-color: #878787;");
+            }
+        }
     }
 
     public void addMatchToTempSet(ActionEvent event) {
@@ -490,9 +481,7 @@ public class mainController implements Initializable {
                     }
                 }
                 if (opponentChars.size() != game.getCharactersPerSide()) {
-                    System.out.println(opponentChars.toString() + " ???");
                     matchValid = false;
-                    System.out.println("Broke at 3 " + opponentChars.size() + " " + game.getCharactersPerSide());
                 }
             }
             boolean playerWin = false;
@@ -504,7 +493,6 @@ public class mainController implements Initializable {
                     }
                 } else {
                     matchValid = false;
-                    System.out.println("Broke at 4");
                 }
             }
             if (matchValid) {
@@ -824,9 +812,7 @@ public class mainController implements Initializable {
             }
         }
         FilterList filterList = new FilterList(filtersToSet, filterData);
-        System.out.println(filtersToSet[0]);
         this.filteredSetList = game.getSetList().applyFilters(filterList);
-        System.out.println(filteredSetList.getLength());
         generateMatchHistoryDisplay(true);
         populateStatisticsTable(true);
         populateCharts(true);
@@ -859,16 +845,17 @@ public class mainController implements Initializable {
 
     public void showMatchHistory(ActionEvent event) {
         matchHistoryHBox.toBack();
+        highlightTab(0);
     }
 
     public void showTable(ActionEvent event) {
         tableScrollPane.toBack();
+        highlightTab(1);
     }
 
     public void showCharts(ActionEvent event) {
         chartHBox.toBack();
-        // REMOVE THIS:
-        populateCharts(false);
+        highlightTab(2);
     }
 
     private void populateStatisticsTable(boolean filtered) {
@@ -888,9 +875,7 @@ public class mainController implements Initializable {
         tableMatchWinRatioColumn
                 .setCellValueFactory(new PropertyValueFactory<CharacterStatColumn, Double>("matchWinRatio"));
         if (game.isMap()) {
-            System.out.println("IS MAP");
             if (!statsTableView.getColumns().get(4).equals(tableBestMapColumn)) {
-                System.out.println("ADDING COLUMN");
                 statsTableView.getColumns().add(4, tableBestMapColumn);
                 statsTableView.getColumns().add(5, tableWorstMapColumn);
             }
@@ -918,8 +903,6 @@ public class mainController implements Initializable {
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
         for (CharacterStat charStat : stats.getCharacterStats()) {
             if (charStat.calculateTotalMatchesPlayed() > 0) {
-                System.out.println("Pie Data: " + charStat.getCharacter().getName() + ": "
-                        + charStat.calculateTotalMatchesPlayed());
                 pieChartData.add(
                         new PieChart.Data(charStat.getCharacter().getName(), charStat.calculateTotalMatchesPlayed()));
             }
@@ -961,7 +944,6 @@ public class mainController implements Initializable {
                 }
                 mapRatioBar.XValueProperty().set(mapName);
                 mapRatioBar.YValueProperty().set(mapRatio);
-                System.out.println("Bar Data: " + game.getMaps()[count].getName() + ": " + mapRatio);
                 series.getData().add(mapRatioBar);
                 count++;
                 mapRatioBarChart.getData().add(series);
@@ -974,8 +956,6 @@ public class mainController implements Initializable {
                 XYChart.Data<String, Double> matchRatioBar = new XYChart.Data<>();
                 matchRatioBar.XValueProperty().set(charStat.getCharacter().getName());
                 matchRatioBar.YValueProperty().set(charStat.calculateMatchWinPercentage());
-                System.out.println("Bar Data: " + charStat.getCharacter().getName() + ": "
-                        + charStat.calculateMatchWinPercentage());
                 series.getData().add(matchRatioBar);
                 mapRatioBarChart.getData().add(series);
 
@@ -1012,7 +992,6 @@ public class mainController implements Initializable {
             XYChart.Data<String, Double> charRatioBar = new XYChart.Data<>();
             charRatioBar.XValueProperty().set(game.getCharacters()[count].getName());
             charRatioBar.YValueProperty().set(charRatio);
-            System.out.println("Bar2 Date: " + game.getCharacters()[count].getName() + ": " + charRatio);
             series.getData().add(charRatioBar);
             count++;
             matchupRatioBarChart.getData().add(series);
@@ -1027,7 +1006,6 @@ public class mainController implements Initializable {
             for (int i = 0; i < ratioOverMonthsArray.size(); i++) {
                 String monthYear = (String) monthAndYearArray.get(i);
                 Double setRatio = (Double) setRatios.get(i);
-                System.out.println("Line Data: " + monthYear + ": " + setRatio);
                 series.getData().add(new XYChart.Data<String, Double>(monthYear, setRatio * 100.0));
 
             }

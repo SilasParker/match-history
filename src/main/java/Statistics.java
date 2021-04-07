@@ -143,7 +143,6 @@ public class Statistics {
         for (Match match : set.getMatches()) {
             for (Character character : match.getPlayerCharacters()) {
                 if (match.isWin()) {
-                    System.out.println("Found win for "+character.getName()+" on "+match.getMap().getName());
                     characterStats[getCharacterIndex(character)].incrementMapWins(match.getMap());
                 } else {
                     characterStats[getCharacterIndex(character)].incrementMapLosses(match.getMap());

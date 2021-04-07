@@ -37,7 +37,6 @@ public class Set {
             if(!opponent) {
                 for(Character characters : match.getPlayerCharacters()) {
                     if(!allChars.contains(characters)) {
-                        System.out.println("ADDED: "+characters.getName());
                         allChars.add(characters);
                         charCount.add(1);
                     } else {
@@ -58,18 +57,15 @@ public class Set {
             }
         }
         ArrayList<Character> allCharsOrdered = new ArrayList<>();
-        System.out.println(allChars.size());
         for(int i = 0; i < allChars.size(); i++) {
             int highNum = 0;
             int highIndex = 0;
-            for(int j = 0;i < allChars.size();i++) {
+            for(int j = 0;j < allChars.size();j++) {
                 if(charCount.get(j) > highNum) {
                     highNum = charCount.get(j);
                     highIndex = j;
                 }
             }
-            //CHECK WHY THIS AINT WORKIN
-            System.out.println("SUPER ADD: "+allChars.get(highIndex));
             allCharsOrdered.add(allChars.get(highIndex));
             allChars.remove(highIndex);
             charCount.remove(highIndex);

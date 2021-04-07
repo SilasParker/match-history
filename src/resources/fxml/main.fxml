@@ -108,7 +108,7 @@
                   <Label text="Opponent Character(s)" />
                </children></VBox>
          </children></HBox>
-      <HBox prefHeight="100.0" prefWidth="300.0">
+      <HBox fx:id="tabHBox" prefHeight="100.0" prefWidth="300.0">
          <children>
             <Button mnemonicParsing="false" onAction="#showMatchHistory" prefHeight="110.0" prefWidth="100.0" text="Match History" />
             <Button mnemonicParsing="false" onAction="#showTable" prefHeight="110.0" prefWidth="100.0" text="Table" />
@@ -232,7 +232,7 @@
                <children>
                   <VBox prefHeight="550.0" prefWidth="600.0">
                      <children>
-                        <PieChart fx:id="characterMatchPieChart" legendVisible="false" prefHeight="275.0" prefWidth="600.0" title="Character Match Count" />
+                        <PieChart fx:id="characterMatchPieChart" legendSide="RIGHT" prefHeight="275.0" prefWidth="600.0" title="Character Match Count" />
                         <StackedBarChart fx:id="mapRatioBarChart" animated="false" categoryGap="2.0" legendVisible="false" prefHeight="275.0" title="Map Win Ratio">
                           <xAxis>
                             <CategoryAxis fx:id="mapRatioXAxis" label="Map" side="BOTTOM" />

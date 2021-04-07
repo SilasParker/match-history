@@ -175,8 +175,6 @@ public class Game {
                     for (JsonElement currentPlayerChar : allPlayerChars) {
                         JsonObject currentPlayerCharJsonObj = currentPlayerChar.getAsJsonObject();
                         String currentPlayerCharName = currentPlayerCharJsonObj.get("name").getAsString();
-                        System.out.println(currentPlayerCharName);
-                        System.out.println(currentPlayerCharJsonObj.get("imagePath").getAsString());
                         Path currentPlayerImgPath = Paths.get(currentPlayerCharJsonObj.get("imagePath").getAsString());
                         allPlayerCharsArr.add(new Character(currentPlayerCharName, currentPlayerImgPath));
                     }
@@ -217,7 +215,6 @@ public class Game {
             if (replace) {
                 this.setList = tempSetList;
             } else {
-                System.out.println("SET LIST LENGTH: "+tempSetList.getLength());
                 tempSetList.getAllSets().forEach((set) -> this.setList.addSet(set));
             }
             setListJsonToFile();

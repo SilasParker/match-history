@@ -10,7 +10,6 @@ public class SetList {
     public String toString() {
         String toPrint = "SetList: ";
         for (Set set : allSets) {
-            System.out.println(allSets.size());
             toPrint += set.toString() + "\n";
         }
         return toPrint;
@@ -88,9 +87,7 @@ public class SetList {
     public SetList applyFilters(FilterList allFilters) {
         SetList tempSetList = new SetList();
         for (int i = 0; i < allSets.size(); i++) {
-            System.out.println("Checking set " + (i + 1));
             if (allFilters.isFiltered(allSets.get(i))) {
-                System.out.println("Adding set");
                 tempSetList.addSet(allSets.get(i));
             }
         }

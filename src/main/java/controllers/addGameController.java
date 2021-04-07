@@ -72,7 +72,6 @@ public class addGameController implements Initializable {
                 charNameLabel.setText("");
                 charNameEntry.setText("");
             } else {
-                System.out.println(getHBoxFromLV(charNameEntry.getText(), charListView));
                 charNameLabel.setText("This Character Already Exists");
             }
         } else {
@@ -139,7 +138,6 @@ public class addGameController implements Initializable {
     private HBox getHBoxFromLV(String name, ListView<HBox> listView) {
         for (HBox hbox : listView.getItems()) {
             Label curItem = (Label) hbox.getChildren().get(0);
-            System.out.println(curItem.getText() + " " + name);
             if (curItem.getText().equals(name)) {
 
                 return hbox;
@@ -190,7 +188,6 @@ public class addGameController implements Initializable {
             Alert missingFieldAlert = new Alert(AlertType.WARNING, "Please Complete Missing Fields");
             missingFieldAlert.show();
         } else if (Files.exists(gamePath)) {
-            System.out.println("Game Directory Already Exists");
             Alert dirExistsAlert = new Alert(AlertType.ERROR,
                     "This Game Already Exists. If not, the name is potentially too similar to another");
             dirExistsAlert.show();
@@ -200,14 +197,12 @@ public class addGameController implements Initializable {
                     "Please add at least 1 character or map (if applicable)");
             noCharOrMapAlert.show();
         } else {
-            System.out.println("Directory not found, making new one");
             Files.createDirectories(gamePath);
             Path charsPath = Paths.get("src/local/games/" + dirSafeGameName + "/chars");
             Files.createDirectories(charsPath);
             String characterNameErrorList = "";
             boolean charFileCopySuccess = true;
             for (HBox hbox : charListView.getItems()) {
-                System.out.println("Looping through characters");
                 Label nameLabel = (Label) hbox.getChildren().get(0);
                 Label pathLabel = (Label) hbox.getChildren().get(3);
                 if (!pathLabel.getText().equals("")) {
@@ -215,11 +210,9 @@ public class addGameController implements Initializable {
                     Path namePath = Paths.get("src/local/games/" + dirSafeGameName + "/chars/"
                             + Game.toDirectorySafeString(nameLabel.getText()) + ".png");
                     if (Files.exists(namePath)) {
-                        System.out.println("Files for this character already exist");
                         characterNameErrorList += nameLabel.getText() + ", ";
                         charFileCopySuccess = false;
                     } else {
-                        System.out.println("Copying image");
                         File dest = new File(namePath.toString());
                         try {
                             Files.copy(source.toPath(), dest.toPath());
@@ -237,7 +230,6 @@ public class addGameController implements Initializable {
                 File source = new File(gameImgPathLabel.getText());
                 Path namePath = Paths.get("src/local/games/" + dirSafeGameName + "/" + dirSafeGameName + ".png");
                 if (Files.exists(namePath)) {
-                    System.out.println("File for this game already exists");
                     gameImageError = "An image for this game has already been set";
                     gameFileCopySuccess = false;
                 } else {
@@ -262,7 +254,6 @@ public class addGameController implements Initializable {
                 Alert fileCopyError = new Alert(AlertType.ERROR, error);
                 fileCopyError.show();
             } else {
-                System.out.println("niceone");
                 submit(event);
             }
         }
