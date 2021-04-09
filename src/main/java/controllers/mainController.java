@@ -636,6 +636,7 @@ public class mainController implements Initializable {
                 mapChoiceBox.getSelectionModel().clearSelection();
             }
             reportListView.getItems().clear();
+            tempMatches.clear();
             reportOpponentInput.setText("");
         } else {
             Alert setReportAlert = new Alert(AlertType.ERROR, error);

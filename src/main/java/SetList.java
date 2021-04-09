@@ -36,10 +36,15 @@ public class SetList {
             cal2.setTime(allSets.get(0).getLocalDateAsDate());
             if (cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
                     && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)) {
+                boolean added = false;
                 for (int i = 0; i <= allSets.size() - 1; i++) {
-                    if (newSet.getDate().isAfter(allSets.get(i).getDate())) {
+                    if (newSet.getDate().isAfter(allSets.get(i).getDate()) && !added) {
                         allSets.add(i, newSet);
+                        added = true;
                     }
+                }
+                if(!added) {
+                    allSets.add(allSets.size(),newSet);
                 }
             } else {
                 insertionSort(newSet, 0, allSets.size() - 1);

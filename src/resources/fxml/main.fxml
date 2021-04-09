@@ -119,13 +119,10 @@
          <children>
             <HBox fx:id="matchHistoryHBox" prefHeight="550.0" prefWidth="1200.0">
                <children>
-                  <ScrollPane hbarPolicy="NEVER" prefHeight="550.0" prefWidth="900.0">
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="550.0" prefWidth="900.0" vbarPolicy="ALWAYS">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="550.0" prefWidth="900.0">
-                           <children>
-                              <VBox fx:id="matchHistoryVBox" prefHeight="550.0" prefWidth="900.0" />
-                           </children>
-                        </AnchorPane>
+                    <VBox fx:id="matchHistoryVBox" prefWidth="900.0" />
+                      
                     </content>
                   </ScrollPane>
                   <ScrollPane hbarPolicy="NEVER" prefHeight="500.0" prefWidth="300.0">
@@ -232,7 +229,7 @@
                <children>
                   <VBox prefHeight="550.0" prefWidth="600.0">
                      <children>
-                        <PieChart fx:id="characterMatchPieChart" legendSide="RIGHT" prefHeight="275.0" prefWidth="600.0" title="Character Match Count" />
+                        <PieChart fx:id="characterMatchPieChart" legendSide="RIGHT" legendVisible="false" prefHeight="275.0" prefWidth="600.0" title="Character Match Count" />
                         <StackedBarChart fx:id="mapRatioBarChart" animated="false" categoryGap="2.0" legendVisible="false" prefHeight="275.0" title="Map Win Ratio">
                           <xAxis>
                             <CategoryAxis fx:id="mapRatioXAxis" label="Map" side="BOTTOM" />
