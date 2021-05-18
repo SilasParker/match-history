@@ -109,11 +109,6 @@ public class GameList {
         allGames.add(newGame);
     }
 
-    public void outputAllGames() {
-        allGames.forEach((game) -> {
-            System.out.println(game.getName());
-        });
-    }
 
     public ArrayList<Game> getAllGames() {
         return this.allGames;

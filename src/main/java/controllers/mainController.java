@@ -84,7 +84,7 @@ public class mainController implements Initializable {
     @FXML
     private Label gameNameLabel;
     @FXML
-    private VBox matchHistoryVBox, reportSetVBox, filterPlayerVBox, filterOpponentVBox, filterMapVBox;
+    private VBox matchHistoryVBox, reportSetVBox, filterPlayerVBox, filterOpponentVBox, filterMapVBox, suggestionVBox;
     @FXML
     private ToggleGroup reportWinner;
     @FXML
@@ -127,6 +127,7 @@ public class mainController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
+        highlightTab(0);
     }
 
     public void initData(Game game) {
@@ -381,6 +382,7 @@ public class mainController implements Initializable {
         for (int i = 1; i <= game.getCharactersPerSide(); i++) {
             ChoiceBox<String> playerChoiceBox = new ChoiceBox<String>();
             playerChoiceBox.getItems().setAll(allCharacterStrings);
+            playerChoiceBox.setMaxWidth(80.0);
             playerCharactersVBox.getChildren().add(playerChoiceBox);
         }
 
@@ -398,6 +400,7 @@ public class mainController implements Initializable {
             }
             ChoiceBox<String> mapChoiceBox = new ChoiceBox<String>();
             mapChoiceBox.getItems().setAll(allMapsStrings);
+            mapChoiceBox.setMaxWidth(80.0);
             mapVBox.getChildren().add(mapChoiceBox);
         }
 
@@ -411,6 +414,7 @@ public class mainController implements Initializable {
 
         for (int i = 1; i <= game.getCharactersPerSide(); i++) {
             ChoiceBox<String> opponentChoiceBox = new ChoiceBox<String>();
+            opponentChoiceBox.setMaxWidth(80.0);
             opponentChoiceBox.getItems().setAll(allCharacterStrings);
             opponentCharactersVBox.getChildren().add(opponentChoiceBox);
         }
@@ -421,7 +425,7 @@ public class mainController implements Initializable {
     }
 
     private void highlightTab(int tabSelected) {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             Button btn = (Button) tabHBox.getChildren().get(i);
             btn.setStyle(null);
             if (tabSelected == i) {
@@ -859,6 +863,11 @@ public class mainController implements Initializable {
         highlightTab(2);
     }
 
+    public void showSuggestions(ActionEvent event) {
+        suggestionVBox.toBack();
+        highlightTab(3);
+    }
+
     private void populateStatisticsTable(boolean filtered) {
         SetList setListToUse = game.getSetList();
         if (filtered) {
@@ -945,6 +954,7 @@ public class mainController implements Initializable {
                 }
                 mapRatioBar.XValueProperty().set(mapName);
                 mapRatioBar.YValueProperty().set(mapRatio);
+                
                 series.getData().add(mapRatioBar);
                 count++;
                 mapRatioBarChart.getData().add(series);
@@ -1007,6 +1017,7 @@ public class mainController implements Initializable {
             for (int i = 0; i < ratioOverMonthsArray.size(); i++) {
                 String monthYear = (String) monthAndYearArray.get(i);
                 Double setRatio = (Double) setRatios.get(i);
+                System.out.println(monthYear+": "+setRatio);
                 series.getData().add(new XYChart.Data<String, Double>(monthYear, setRatio * 100.0));
 
             }

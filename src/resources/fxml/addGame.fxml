@@ -134,13 +134,10 @@
             <ToggleGroup fx:id="teammate" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="teammateRadio1" mnemonicParsing="false" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+      <RadioButton fx:id="teammateRadio1" mnemonicParsing="false" toggleGroup="$teammate" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
          <font>
             <Font size="18.0" />
          </font>
-         <toggleGroup>
-            <ToggleGroup fx:id="teammate1" />
-         </toggleGroup>
          <GridPane.margin>
             <Insets right="140.0" top="50.0" />
          </GridPane.margin>

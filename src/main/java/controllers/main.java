@@ -24,6 +24,7 @@ public class main extends Application {
             Scene scene = new Scene(root, 1200, 750);
             scene.getStylesheets().add(getClass().getResource("/src/resources/css/application.css").toExternalForm());
             primaryStage.setScene(scene);
+            primaryStage.setTitle("HitStat");
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();

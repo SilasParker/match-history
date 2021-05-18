@@ -151,7 +151,8 @@ public class gameSelectController implements Initializable {
         ImageView imageClicked = (ImageView) event.getSource();
         int x = GridPane.getColumnIndex(imageClicked);
         int y = GridPane.getRowIndex(imageClicked);
-        int arrayPos = (y * 4) + x;
+
+        int arrayPos = (y * 8) + x;
         Game gameToOpen = gameList.getAllGames().get(arrayPos);
         FXMLLoader loader = new FXMLLoader();
         URL fxmlURL = getClass().getResource("/src/resources/fxml/main.fxml");

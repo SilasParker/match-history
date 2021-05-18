@@ -57,7 +57,7 @@ public class Set {
             }
         }
         ArrayList<Character> allCharsOrdered = new ArrayList<>();
-        for(int i = 0; i < allChars.size(); i++) {
+        for(int i = 0; i <= allChars.size(); i++) {
             int highNum = 0;
             int highIndex = 0;
             for(int j = 0;j < allChars.size();j++) {
