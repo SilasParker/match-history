@@ -7,13 +7,9 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -23,7 +19,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+//Class to represent a Game and all that encompasses it
 public class Game {
+    
     private String name;
     private int characterNumPerSide;
     private boolean teammate;
@@ -32,6 +30,14 @@ public class Game {
     private Gson gson = new Gson();
     private Character[] characters;
 
+    // Constructor to initialise a Game instance
+    // name: Name of the Game
+    // characterNumPerSide: The number of Characters on each team in this Game
+    // teammate: Whether there are two players per side in this Game or not
+    // maps: Array containing all the Maps in this Game (if any)
+    // setList: Match History SetList containing all Sets associate to this Game
+    // locally
+    // characters: Array containing all the Characters in this Game
     public Game(String name, int characterNumPerSide, boolean teammate, Map[] maps, SetList setList,
             Character[] characters) {
         this.name = name;
@@ -42,14 +48,8 @@ public class Game {
         this.characters = characters;
     }
 
-    public boolean isMap() {
-        if (this.maps.length == 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
+    // Converts all this Game's information into a String
+    // Returns: A String containing all this Game's information neatly formatted
     public String toString() {
         String toPrint = "Game: ";
         toPrint += name + " ";
@@ -65,93 +65,45 @@ public class Game {
         return toPrint;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public int getCharactersPerSide() {
-        return this.characterNumPerSide;
-    }
-
-    public boolean isTeammate() {
-        return this.teammate;
-    }
-
-    public Map[] getMaps() {
-        return this.maps;
-    }
-
-    public SetList getSetList() {
-        return this.setList;
-    }
-
+    // Getter for all Characters in this Game
+    // Returns: Array containing all Character instances
     public Character[] getCharacters() {
         return this.characters;
     }
 
-    public void toJson() {
-        JsonObject json = new JsonObject();
-        json.addProperty("name", this.name);
-        json.addProperty("characterNumPerSide", this.characterNumPerSide);
-        json.addProperty("teammate", this.teammate);
-        JsonArray allMaps = new JsonArray();
-        for (int i = 0; i < this.maps.length; i++) {
-            allMaps.add(this.maps[i].toJsonObject());
-        }
-        json.add("maps", allMaps);
-        JsonArray allChars = new JsonArray();
-        for (int i = 0; i < this.characters.length; i++) {
-            allChars.add(this.characters[i].toJsonObject());
-        }
-        json.add("characters", allChars);
-
-        String fileName = toDirectorySafeString(this.name);
-
-        Writer writer;
-        try {
-            writer = Files.newBufferedWriter(Paths.get("src/local/games/" + fileName, fileName + ".json"));
-            gson.toJson(json, writer);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    // Getter for number of Characters on each team in this Game
+    // Returns: The number
+    public int getCharactersPerSide() {
+        return this.characterNumPerSide;
     }
 
-    public static String toDirectorySafeString(String string) {
-        char[] unsuitableChars = { '#', '%', '&', '{', '}', '\\', '<', '>', '*', '?', '/', ' ', '$', '!', '\'', '"',
-                ':', '@', '+', '`', '|', '=', '.','(',')'};
-        String fileName = "";
-        for (int i = 0; i < string.length(); i++) {
-            boolean charSafe = true;
-            for (int j = 0; j < unsuitableChars.length; j++) {
-                if (string.charAt(i) == unsuitableChars[j]) {
-                    charSafe = false;
-                }
-            }
-            if (charSafe) {
-                fileName += string.charAt(i);
-            }
-        }
-        return fileName.toLowerCase();
-
+    // Getter for all Maps in this Game
+    // Returns: Array containing all Map instances
+    public Map[] getMaps() {
+        return this.maps;
     }
 
-    public void setListJsonToFile() {
-        JsonObject json = new JsonObject();
-        JsonArray setListArray = this.setList.toJsonArray();
-        json.add("allSets", setListArray);
-        String fileName = toDirectorySafeString(this.name);
-        Writer writer;
-        try {
-            writer = Files.newBufferedWriter(Paths.get("src/local/setLists", fileName + ".json"));
-            gson.toJson(json, writer);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+    // Getter for this Game's name
+    // Returns: The name
+    public String getName() {
+        return this.name;
     }
 
+    // Getter for this Game's SetList
+    // Returns: The SetList
+    public SetList getSetList() {
+        return this.setList;
+    }
+
+    // Getter for whether this Game requires a teammate or not
+    // Returns: true if this Game requires a teammate, false if not
+    public boolean isTeammate() {
+        return this.teammate;
+    }
+
+    // Either extends or replaces this Game's SetList
+    // jsonPath: The name of the Path to the Json that is being imported by the user
+    // replace: Whether the SetList is being replaced or extended
     public void importSetList(String jsonPath, boolean replace) {
         JsonParser parser = new JsonParser();
         JsonObject json = null;
@@ -192,13 +144,11 @@ public class Game {
                         JsonObject mapObject = currentMatchJsonObject.get("map").getAsJsonObject();
                         map = new Map(mapObject.get("name").getAsString());
                     }
-                    
                     boolean win = currentMatchJsonObject.get("win").getAsBoolean();
                     Character[] allPlayerCharsArrFinal = allPlayerCharsArr
                             .toArray(new Character[allPlayerCharsArr.size()]);
                     Character[] allOpponentCharsArrFinal = allOpponentCharsArr
                             .toArray(new Character[allOpponentCharsArr.size()]);
-                    
                     allMatchesArr.add(new Match(allPlayerCharsArrFinal, allOpponentCharsArrFinal, map, win));
                 }
                 String opponent = currentSetJsonObject.get("opponent").getAsString();
@@ -209,9 +159,7 @@ public class Game {
 
                 tempSetList.addSet(new Set((Match[]) allMatchesArr.toArray(new Match[allMatchesArr.size()]), opponent,
                         teammate, tournament, localDate));
-
             }
-
             if (replace) {
                 this.setList = tempSetList;
             } else {
@@ -219,6 +167,80 @@ public class Game {
             }
             setListJsonToFile();
         }
-
     }
+
+    // Converts and saves the current SetList to a Json file
+    public void setListJsonToFile() {
+        JsonObject json = new JsonObject();
+        JsonArray setListArray = this.setList.toJsonArray();
+        json.add("allSets", setListArray);
+        String fileName = toDirectorySafeString(this.name);
+        Writer writer;
+        try {
+            writer = Files.newBufferedWriter(Paths.get("src/local/setLists", fileName + ".json"));
+            gson.toJson(json, writer);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Converts a string to be "directory safe" (can be used as a file name)
+    // string: String to convert
+    // Returns: The "directory safe" version of the String
+    public static String toDirectorySafeString(String string) {
+        char[] unsuitableChars = { '#', '%', '&', '{', '}', '\\', '<', '>', '*', '?', '/', ' ', '$', '!', '\'', '"',
+                ':', '@', '+', '`', '|', '=', '.', '(', ')' };
+        String fileName = "";
+        for (int i = 0; i < string.length(); i++) {
+            boolean charSafe = true;
+            for (int j = 0; j < unsuitableChars.length; j++) {
+                if (string.charAt(i) == unsuitableChars[j]) {
+                    charSafe = false;
+                }
+            }
+            if (charSafe) {
+                fileName += string.charAt(i);
+            }
+        }
+        return fileName.toLowerCase();
+    }
+
+    // Converts this Game into a JsonObject and saves it as a Json file
+    public void toJson() {
+        JsonObject json = new JsonObject();
+        json.addProperty("name", this.name);
+        json.addProperty("characterNumPerSide", this.characterNumPerSide);
+        json.addProperty("teammate", this.teammate);
+        JsonArray allMaps = new JsonArray();
+        for (int i = 0; i < this.maps.length; i++) {
+            allMaps.add(this.maps[i].toJsonObject());
+        }
+        json.add("maps", allMaps);
+        JsonArray allChars = new JsonArray();
+        for (int i = 0; i < this.characters.length; i++) {
+            allChars.add(this.characters[i].toJsonObject());
+        }
+        json.add("characters", allChars);
+        String fileName = toDirectorySafeString(this.name);
+        Writer writer;
+        try {
+            writer = Files.newBufferedWriter(Paths.get("src/local/games/" + fileName, fileName + ".json"));
+            gson.toJson(json, writer);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Determines whether this Game uses Maps or not
+    // Returns: Whether this Game uses Maps or not
+    public boolean isMap() {
+        if (this.maps.length == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }

@@ -3,11 +3,7 @@ package src.main.java.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.channels.GatheringByteChannel;
-import java.nio.file.Paths;
 import java.util.ResourceBundle;
-
-import javax.swing.Action;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,18 +19,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.Window;
 import src.main.java.Game;
 import src.main.java.GameList;
 
+//Controller for the Game Select window
 public class gameSelectController implements Initializable {
 
     @FXML
@@ -44,13 +37,15 @@ public class gameSelectController implements Initializable {
 
     private GameList gameList;
 
+    // Ran upon loading the window
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         gameList = new GameList();
         generateGameDisplays(null);
-
     }
 
+    // Generate the game displays
+    // event: ActionEvent passed from a mouse click
     public void generateGameDisplays(ActionEvent event) {
         gameList = new GameList();
         gameGrid.getChildren().clear();
@@ -67,9 +62,7 @@ public class gameSelectController implements Initializable {
             gameImg.setPreserveRatio(true);
             gameImg.setFitWidth(150.0);
             gameImg.setFitHeight(150.0);
-
             gameImg.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-
                 @Override
                 public void handle(MouseEvent arg0) {
                     try {
@@ -77,9 +70,7 @@ public class gameSelectController implements Initializable {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
                 }
-
             });
             GridPane.setHalignment(gameImg, HPos.CENTER);
             gameGrid.add(gameImg, x, y);
@@ -90,20 +81,38 @@ public class gameSelectController implements Initializable {
             GridPane.setHalignment(deleteButton, HPos.RIGHT);
             GridPane.setValignment(deleteButton, VPos.TOP);
             deleteButton.setOnAction(new EventHandler<ActionEvent>() {
-
                 @Override
                 public void handle(ActionEvent arg0) {
                     deleteGame(arg0);
-
                 }
-
             });
             gameGrid.add(deleteButton, x, y);
-
             x++;
         }
     }
 
+    // Opens the main window based on the Game selected
+    // event: ActionEvent passed from a mouse click
+    public void openMainWindow(MouseEvent event) throws IOException {
+        ImageView imageClicked = (ImageView) event.getSource();
+        int x = GridPane.getColumnIndex(imageClicked);
+        int y = GridPane.getRowIndex(imageClicked);
+        int arrayPos = (y * 8) + x;
+        Game gameToOpen = gameList.getAllGames().get(arrayPos);
+        FXMLLoader loader = new FXMLLoader();
+        URL fxmlURL = getClass().getResource("/src/resources/fxml/main.fxml");
+        loader.setLocation(fxmlURL);
+        Parent mainViewParent = loader.load();
+        Scene mainViewScene = new Scene(mainViewParent);
+        mainController controller = loader.getController();
+        controller.initData(gameToOpen);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(mainViewScene);
+        window.show();
+    }
+
+    // Deletes selected Game
+    // event: ActionEvent passed from a mouse click
     public void deleteGame(ActionEvent event) {
         Button btnClicked = (Button) event.getSource();
         int x = GridPane.getColumnIndex(btnClicked);
@@ -132,6 +141,8 @@ public class gameSelectController implements Initializable {
         }
     }
 
+    // Opens Add New Game screen
+    // event: ActionEvent passed from a mouse click
     public void addNewGame(ActionEvent event) throws IOException {
         Parent addGameParent = FXMLLoader.load(getClass().getResource("../../../resources/fxml/addGame.fxml"));
         Stage addGameStage = new Stage();
@@ -142,28 +153,9 @@ public class gameSelectController implements Initializable {
         addGameStage.showAndWait();
     }
 
+    // Getter for the GameList
     public GameList getGameList() {
         return this.gameList;
-    }
-
-    public void openMainWindow(MouseEvent event) throws IOException {
-
-        ImageView imageClicked = (ImageView) event.getSource();
-        int x = GridPane.getColumnIndex(imageClicked);
-        int y = GridPane.getRowIndex(imageClicked);
-
-        int arrayPos = (y * 8) + x;
-        Game gameToOpen = gameList.getAllGames().get(arrayPos);
-        FXMLLoader loader = new FXMLLoader();
-        URL fxmlURL = getClass().getResource("/src/resources/fxml/main.fxml");
-        loader.setLocation(fxmlURL);
-        Parent mainViewParent = loader.load();
-        Scene mainViewScene = new Scene(mainViewParent);
-        mainController controller = loader.getController();
-        controller.initData(gameToOpen);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(mainViewScene);
-        window.show();
     }
 
 }

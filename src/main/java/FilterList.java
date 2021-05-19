@@ -1,14 +1,19 @@
 package src.main.java;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import src.main.java.filters.Filter;
 
+//List that holds all the Filters that are being applied to a Match History, along with the filter data
 public class FilterList {
+
     private Filter[] allFilters;
     private Object[] filterData;
 
+    // Constructor to initialise the Filter List
+    // allFilters: array of filters
+    // filterData: array of filter data that is consecutive with the allFilters
+    // array
     public FilterList(Filter[] allFilters, Object[] filterData) {
         this.allFilters = allFilters;
         this.filterData = filterData;
@@ -19,13 +24,9 @@ public class FilterList {
         this.filterData = filterData;
     }
 
-    public void clearFilter() {
-        this.allFilters = new Filter[]{};
-        this.filterData = new Object[]{};
-    }
-
-
-
+    // Applies all present filters against a set to see if it is filtered or not
+    // set: The set being checked against
+    // Returns: Whether the Set is filtered or not
     public boolean isFiltered(Set set) {
         for (int i = 0; i < allFilters.length; i++) {
             if (filterData[i] instanceof Integer) {
@@ -57,7 +58,12 @@ public class FilterList {
 
         }
         return true;
+    }
 
+    // Clears this FilterList of all Filters and data
+    public void clearFilter() {
+        this.allFilters = new Filter[] {};
+        this.filterData = new Object[] {};
     }
 
 }

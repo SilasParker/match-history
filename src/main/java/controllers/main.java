@@ -6,17 +6,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import src.main.java.*;
-import src.main.java.Character;
-import src.main.java.filters.*;
-import src.main.java.filters.Filter;
-
-import java.util.Date;
-import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
+//main class that is executed start the application
 public class main extends Application {
+
+    // Opens the Game Select window
+    // primaryStage: Stage represents the window that is opened
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -31,17 +25,9 @@ public class main extends Application {
         }
     }
 
+    // main function that is ran to start the application
     public static void main(String[] args) {
         launch(args);
-    }
-
-    public static Date parseDate(String date) {
-        try {
-            return new SimpleDateFormat("DD-MM-yyyy").parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
 }

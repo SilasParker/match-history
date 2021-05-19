@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import com.google.gson.JsonArray;
 
+//List that contains and manages all the Sets (essentially the Match History as an object)
 public class SetList {
+
     private ArrayList<Set> allSets = new ArrayList<Set>();
 
+    // Converts all this Character's information into a String
+    // Returns: A String containing all this GameList's information neatly formatted
     public String toString() {
         String toPrint = "SetList: ";
         for (Set set : allSets) {
@@ -15,14 +19,14 @@ public class SetList {
         return toPrint;
     }
 
-    public int getLength() {
-        return this.allSets.size();
+    // Getter for all the Sets within this SetList
+    // Returns: All the Sets in an ArrayList
+    public ArrayList<Set> getAllSets() {
+        return this.allSets;
     }
 
-    public Set getSet(int index) {
-        return this.allSets.get(index);
-    }
-
+    // Adds a Set to this SetList and sorts it by Date
+    // newSet: Set to add to the SetList
     public void addSet(Set newSet) {
         if (allSets.size() == 0) {
             allSets.add(0, newSet);
@@ -43,35 +47,27 @@ public class SetList {
                         added = true;
                     }
                 }
-                if(!added) {
-                    allSets.add(allSets.size(),newSet);
+                if (!added) {
+                    allSets.add(allSets.size(), newSet);
                 }
             } else {
                 insertionSort(newSet, 0, allSets.size() - 1);
             }
         }
+        // Sort explanation:
         // check if date is before the first position
         // if yes - insert it into first spot
         // if no - carry on
-        // check is month is the same as first position
+        // check if month is the same as first position
         // if yes - iterate through it
         // if not - quicksort it
-
     }
 
-    public SetList getSetListByDate() {
-        SetList toReturn = new SetList();
-        for(Set set : this.allSets) {
-            toReturn.addSet(set);
-        }
-        return toReturn;
-    }
-
-    public void removeSet(Set setToRemove) {
-        allSets.remove(setToRemove);
-    }
-
-
+    // Sorts the Set by Date within this SetList by Date (using an adapted Insertion
+    // Sort algorithm)
+    // newSet: Set being sorted into the SetList
+    // low: The lowest index that the Set could be inserted into
+    // high: The highest index that the Set could be inserted into
     private void insertionSort(Set newSet, int low, int high) {
         int mid = (low + high) / 2;
         if (high <= low && allSets.size() > 1) {
@@ -89,6 +85,9 @@ public class SetList {
         }
     }
 
+    // Applies the Filters to the current SetList
+    // allFilters: FilterList containing all the filters to apply to this SetList
+    // Returns: the filtered SetList
     public SetList applyFilters(FilterList allFilters) {
         SetList tempSetList = new SetList();
         for (int i = 0; i < allSets.size(); i++) {
@@ -99,6 +98,8 @@ public class SetList {
         return tempSetList;
     }
 
+    // Converts this SetList into a JsonArray
+    // Returns: this SetList as a JsonArray
     public JsonArray toJsonArray() {
         JsonArray jsonArray = new JsonArray();
         this.allSets.forEach((set) -> {
@@ -107,8 +108,32 @@ public class SetList {
         return jsonArray;
     }
 
-    public ArrayList<Set> getAllSets() {
-        return this.allSets;
+    // Ensures the SetList is sorted by Date to return
+    // Returns: the SetList sorted by Date
+    public SetList getSetListByDate() {
+        SetList toReturn = new SetList();
+        for (Set set : this.allSets) {
+            toReturn.addSet(set);
+        }
+        return toReturn;
+    }
+
+    // Removes a Set from the SetList
+    // setToRemove: the Set to remove
+    public void removeSet(Set setToRemove) {
+        allSets.remove(setToRemove);
+    }
+
+    // Retrieves the Set by index
+    // index: the index to get the Set from the SetList from
+    public Set getSet(int index) {
+        return this.allSets.get(index);
+    }
+
+    // Retrieves this SetList's size
+    // returns: the length of this SetList
+    public int getLength() {
+        return this.allSets.size();
     }
 
 }
