@@ -91,13 +91,16 @@ public class mainController implements Initializable {
     private ListView<HBox> reportListView;
     @FXML
     private TextField reportOpponentInput, reportTournamentInput, reportTeammateInput, filterOpponentTextField,
-            filterTournamentTextField, filterTeammateTextField;
+            filterTournamentTextField, filterTeammateTextField, teammateSuggestionTextField,
+            opponentSuggestionTextField;
     @FXML
     private DatePicker reportDatePicker, filterDatePicker;
     @FXML
     private HBox dateTeammateHBox, filterBottomHBox, filterHBox, matchHistoryHBox, chartHBox, filterMiddleHBox, tabHBox;
     @FXML
-    private ChoiceBox<String> filterMapChoiceBox;
+    private ChoiceBox<String> filterMapChoiceBox, playerCharSuggestionChoice1, playerCharSuggestionChoice2,
+            playerCharSuggestionChoice3, mapSuggestionChoice, opponentCharSuggestionChoice1,
+            opponentCharSuggestionChoice2, opponentCharSuggestionChoice3;
     @FXML
     private ChoiceBox<Integer> filterPlayerScoreChoiceBox, filterOpponentScoreChoiceBox;
     @FXML
@@ -119,6 +122,9 @@ public class mainController implements Initializable {
     private LineChart<String, Double> setRatioLineChart;
     @FXML
     private CategoryAxis mapRatioXAxis;
+    @FXML
+    private ListView<Label> suggestTeammateList, suggestPlayerCharList, suggestMapList, suggestOpponentCharList,
+            suggestOpponentList;
 
     private Game game;
     private ArrayList<Match> tempMatches = new ArrayList<>();
@@ -140,6 +146,7 @@ public class mainController implements Initializable {
             if (tabSelected == i) {
                 btn.setStyle("-fx-background-color: #878787;");
             }
+
         }
     }
 
@@ -829,6 +836,7 @@ public class mainController implements Initializable {
     public void showSuggestions(ActionEvent event) {
         suggestionVBox.toBack();
         highlightTab(3);
+        initialiseSuggestionsTab();
     }
 
     // Opens a filechooser and lets the user attempt to import a valid set list to
@@ -1038,4 +1046,172 @@ public class mainController implements Initializable {
         }
     }
 
+    //Initialises the Suggestion Tab
+    private void initialiseSuggestionsTab() {
+        ArrayList<String> allCharacterNames = new ArrayList<>();
+        for (Character character : game.getCharacters()) {
+            allCharacterNames.add(character.getName());
+        }
+        ArrayList<String> allMapNames = new ArrayList<>();
+        for (Map map : game.getMaps()) {
+            allMapNames.add(map.getName());
+        }
+        this.playerCharSuggestionChoice1.getItems().setAll(allCharacterNames);
+        this.playerCharSuggestionChoice2.getItems().setAll(allCharacterNames);
+        this.playerCharSuggestionChoice3.getItems().setAll(allCharacterNames);
+        this.opponentCharSuggestionChoice1.getItems().setAll(allCharacterNames);
+        this.opponentCharSuggestionChoice2.getItems().setAll(allCharacterNames);
+        this.opponentCharSuggestionChoice3.getItems().setAll(allCharacterNames);
+        this.mapSuggestionChoice.getItems().setAll(allMapNames);
+        if (!this.game.isTeammate()) {
+            this.teammateSuggestionTextField.setDisable(true);
+        }
+        if (game.getCharactersPerSide() < 2) {
+            this.playerCharSuggestionChoice2.setDisable(true);
+            this.opponentCharSuggestionChoice2.setDisable(true);
+        }
+        if (game.getCharactersPerSide() < 3) {
+            this.playerCharSuggestionChoice3.setDisable(true);
+            this.opponentCharSuggestionChoice3.setDisable(true);
+        }
+        if (!game.isMap()) {
+            this.mapSuggestionChoice.setDisable(true);
+        }
+    }
+
+    //Calculates suggestions based on the user's input and displays the results to them
+    //event: ActionEvent passed from a mouse click
+    public void calculateSuggestions(ActionEvent event) {
+        suggestTeammateList.getItems().clear();
+        suggestPlayerCharList.getItems().clear();
+        suggestMapList.getItems().clear();
+        suggestOpponentCharList.getItems().clear();
+        suggestOpponentList.getItems().clear();
+        SetList tempSetList = game.getSetList().getSetListByDate();
+        ArrayList<Filter> filters = new ArrayList<>();
+        ArrayList<Object> filterData = new ArrayList<>();
+        ArrayList<String> playerChars = new ArrayList<>();
+        ArrayList<String> opponentChars = new ArrayList<>();
+        String map = null;
+        //BASICALLY teammate needs to take account of characters and maps
+        //playerchars needs to take account of opponent chars and maps
+        //map needs to take account of player chars and opponent chars
+        //opponent chars needs to take account of player chars and maps
+        //opponent is the same as teammate
+        //pass these as arguments to the suggest functions and check the individual matches against these arguments
+        if (!this.teammateSuggestionTextField.getText().equals("")) {
+            filters.add(new TeammateFilter());
+            filterData.add(this.teammateSuggestionTextField.getText());
+        }
+        if (!this.playerCharSuggestionChoice1.getSelectionModel().isEmpty()) {
+            playerChars.add(this.playerCharSuggestionChoice1.getSelectionModel().getSelectedItem());
+            filters.add(new PlayerCharacterFilter());
+            filterData.add(
+                    game.getCharacterByString(this.playerCharSuggestionChoice1.getSelectionModel().getSelectedItem()));
+        }
+        if (!this.playerCharSuggestionChoice2.getSelectionModel().isEmpty()) {
+            playerChars.add(this.playerCharSuggestionChoice2.getSelectionModel().getSelectedItem());
+            filters.add(new PlayerCharacterFilter());
+            filterData.add(
+                    game.getCharacterByString(this.playerCharSuggestionChoice2.getSelectionModel().getSelectedItem()));
+        }
+        if (!this.playerCharSuggestionChoice3.getSelectionModel().isEmpty()) {
+            playerChars.add(this.playerCharSuggestionChoice3.getSelectionModel().getSelectedItem());
+            filters.add(new PlayerCharacterFilter());
+            filterData.add(
+                    game.getCharacterByString(this.playerCharSuggestionChoice3.getSelectionModel().getSelectedItem()));
+        }
+        if (!this.mapSuggestionChoice.getSelectionModel().isEmpty()) {
+            map = mapSuggestionChoice.getSelectionModel().getSelectedItem();
+            filters.add(new MapFilter());
+            filterData.add(game.getMapByString(this.mapSuggestionChoice.getSelectionModel().getSelectedItem()));
+        }
+        if (!this.opponentCharSuggestionChoice1.getSelectionModel().isEmpty()) {
+            opponentChars.add(this.opponentCharSuggestionChoice1.getSelectionModel().getSelectedItem());
+            filters.add(new OpponentCharacterFilter());
+            filterData.add(game
+                    .getCharacterByString(this.opponentCharSuggestionChoice1.getSelectionModel().getSelectedItem()));
+        }
+        if (!this.opponentCharSuggestionChoice2.getSelectionModel().isEmpty()) {
+            opponentChars.add(this.opponentCharSuggestionChoice2.getSelectionModel().getSelectedItem());
+            filters.add(new OpponentCharacterFilter());
+            filterData.add(game
+                    .getCharacterByString(this.opponentCharSuggestionChoice2.getSelectionModel().getSelectedItem()));
+        }
+        if (!this.opponentCharSuggestionChoice3.getSelectionModel().isEmpty()) {
+            opponentChars.add(this.opponentCharSuggestionChoice3.getSelectionModel().getSelectedItem());
+            filters.add(new OpponentCharacterFilter());
+            filterData.add(game
+                    .getCharacterByString(this.opponentCharSuggestionChoice3.getSelectionModel().getSelectedItem()));
+        }
+        if(!this.opponentSuggestionTextField.getText().equals("")) {
+            filters.add(new OpponentFilter());
+            filterData.add(this.opponentSuggestionTextField.getText());
+        }
+        Filter[] filterArray = (Filter[]) filters.toArray(new Filter[filters.size()]);
+        Object[] filterDataArray = filterData.toArray();
+        FilterList filterList = new FilterList(filterArray, filterDataArray);
+        tempSetList = tempSetList.applyFilters(filterList);
+        Statistics tempStatistics = new Statistics(tempSetList, game);
+        if (game.isTeammate() && teammateSuggestionTextField.getText().equals("")) {
+            ArrayList<String> teammateSuggestions = tempStatistics.suggestTeammates(playerChars,opponentChars,map);
+            for (String suggestion : teammateSuggestions) {
+                Label suggestLabel = new Label(suggestion);
+                suggestTeammateList.getItems().add(suggestLabel);
+            }
+        }
+        if ((playerCharSuggestionChoice1.getSelectionModel().isEmpty() && !playerCharSuggestionChoice1.isDisabled())
+                || (playerCharSuggestionChoice2.getSelectionModel().isEmpty()
+                        && !playerCharSuggestionChoice2.isDisabled())
+                || (playerCharSuggestionChoice3.getSelectionModel().isEmpty()
+                        && !playerCharSuggestionChoice3.isDisabled())) {
+            ArrayList<String> playerCharSuggestions = tempStatistics.suggestCharacters(true,playerChars,opponentChars,map);
+            for (String suggestion : playerCharSuggestions) {
+                suggestPlayerCharList.getItems().add(new Label(suggestion));
+            }
+        }
+        if ((opponentCharSuggestionChoice1.getSelectionModel().isEmpty() && !opponentCharSuggestionChoice1.isDisabled())
+                || (opponentCharSuggestionChoice2.getSelectionModel().isEmpty()
+                        && !opponentCharSuggestionChoice2.isDisabled())
+                || (opponentCharSuggestionChoice3.getSelectionModel().isEmpty()
+                        && !opponentCharSuggestionChoice3.isDisabled())) {
+            ArrayList<String> opponentCharSuggestions = tempStatistics.suggestCharacters(false,playerChars,opponentChars,map);
+            for (String suggestion : opponentCharSuggestions) {
+                suggestOpponentCharList.getItems().add(new Label(suggestion));
+            }
+        }
+        if (game.isMap() && mapSuggestionChoice.getSelectionModel().isEmpty()) {
+            ArrayList<String> mapSuggestions = tempStatistics.suggestMaps(playerChars,opponentChars,map);
+            for (String suggestion : mapSuggestions) {
+                Label suggestLabel = new Label(suggestion);
+                suggestMapList.getItems().add(suggestLabel);
+            }
+        }
+        if (opponentSuggestionTextField.getText().equals("")) {
+            ArrayList<String> opponentSuggestions = tempStatistics.suggestOpponents(playerChars,opponentChars,map);
+            for (String suggestion : opponentSuggestions) {
+                Label suggestLabel = new Label(suggestion);
+                suggestOpponentList.getItems().add(suggestLabel);
+            }
+        }
+    }
+
+    //Clears the suggestions entry fields
+    //event: ActionEvent passed from a mouse click
+    public void clearSuggestions(ActionEvent event) {
+        teammateSuggestionTextField.clear();
+        opponentSuggestionTextField.clear();
+        playerCharSuggestionChoice1.getSelectionModel().clearSelection();
+        playerCharSuggestionChoice2.getSelectionModel().clearSelection();
+        playerCharSuggestionChoice3.getSelectionModel().clearSelection();
+        opponentCharSuggestionChoice1.getSelectionModel().clearSelection();
+        opponentCharSuggestionChoice2.getSelectionModel().clearSelection();
+        opponentCharSuggestionChoice3.getSelectionModel().clearSelection();
+        mapSuggestionChoice.getSelectionModel().clearSelection();
+        suggestTeammateList.getItems().clear();
+        suggestPlayerCharList.getItems().clear();
+        suggestMapList.getItems().clear();
+        suggestOpponentCharList.getItems().clear();
+        suggestOpponentList.getItems().clear();
+    } 
 }

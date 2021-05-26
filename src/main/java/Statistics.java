@@ -236,4 +236,267 @@ public class Statistics {
         Arrays.sort(characterStats);
     }
 
+    // Inflates the Teammate suggestion list to the user
+    // playerChars: Player Characters to take account of
+    // opponentChars: Opponent Characters to take account of
+    // map: Map to take account of
+    // Returns: The list of results to inflate the ListView with
+    public ArrayList<String> suggestTeammates(ArrayList<String> playerChars, ArrayList<String> opponentChars,
+            String map) {
+        ArrayList<String> teammates = new ArrayList<>();
+        ArrayList<Integer> wins = new ArrayList<>();
+        ArrayList<Integer> matchCount = new ArrayList<>();
+        for (Set set : setList.getAllSets()) {
+            int index;
+            if (teammates.contains(set.getTeammate())) {
+                index = teammates.indexOf(set.getTeammate());
+            } else {
+                teammates.add(set.getTeammate());
+                wins.add(0);
+                matchCount.add(0);
+                index = teammates.size() - 1;
+            }
+            for (Match match : set.getMatches()) {
+                if (match.isWin() && matchesSuggestionParams(playerChars, opponentChars, map, match)) {
+                    wins.set(index, wins.get(index) + 1);
+                    matchCount.set(index, matchCount.get(index) + 1);
+                } else if (matchesSuggestionParams(playerChars, opponentChars, map, match)) {
+                    matchCount.set(index, matchCount.get(index) + 1);
+                }
+
+            }
+        }
+        ArrayList<Double> averages = new ArrayList<>();
+        for (int i = 0; i < teammates.size(); i++) {
+            Double average = (double) (wins.get(i) / (double) matchCount.get(i));
+            averages.add(average * 100);
+        }
+        ArrayList<String> teammatesToReturn = new ArrayList<>();
+        while (averages.size() > 0) {
+            double high = 0.0;
+            int index = 0;
+            for (int i = 0; i < averages.size(); i++) {
+                if (averages.get(i) >= high) {
+                    high = averages.get(i);
+                    index = i;
+                }
+            }
+            teammatesToReturn.add(teammates.remove(index) + ": " + averages.remove(index) + "%");
+        }
+        return teammatesToReturn;
+    }
+
+    // Inflates a Character suggestion list to the user
+    // player: Whether the Characters being suggested are for the Player or Opponent
+    // playerChars: Player Characters to take account of
+    // opponentChars: Opponent Characters to take account of
+    // map: Map to take account of
+    // Returns: The list of results to inflate the ListView with
+    public ArrayList<String> suggestCharacters(boolean player, ArrayList<String> playerChars,
+            ArrayList<String> opponentChars, String map) {
+        ArrayList<String> characters = new ArrayList<>();
+        ArrayList<Integer> wins = new ArrayList<>();
+        ArrayList<Integer> matchCount = new ArrayList<>();
+        for (Set set : setList.getAllSets()) {
+            for (Match match : set.getMatches()) {
+                Character[] allCharacters = match.getPlayerCharacters();
+                if (!player) {
+                    allCharacters = match.getOpponentCharacters();
+                }
+                for (Character character : allCharacters) {
+                    int index;
+                    if (characters.contains(character.getName())) {
+                        index = characters.indexOf(character.getName());
+                    } else {
+                        characters.add(character.getName());
+                        wins.add(0);
+                        matchCount.add(0);
+                        index = characters.size() - 1;
+                    }
+                    if (match.isWin() && matchesSuggestionParams(playerChars, opponentChars, map, match)) {
+                        wins.set(index, wins.get(index) + 1);
+                        matchCount.set(index, matchCount.get(index) + 1);
+                    } else if (matchesSuggestionParams(playerChars, opponentChars, map, match)) {
+                        matchCount.set(index, matchCount.get(index) + 1);
+                    }
+
+                }
+            }
+        }
+        ArrayList<Double> averages = new ArrayList<>();
+        for (int i = 0; i < characters.size(); i++) {
+            Double average = (double) (wins.get(i) / (double) matchCount.get(i));
+            averages.add(average * 100);
+        }
+        ArrayList<String> charactersToReturn = new ArrayList<>();
+        while (averages.size() > 0) {
+            double high = 0.0;
+            int index = 0;
+            for (int i = 0; i < averages.size(); i++) {
+                if (averages.get(i) >= high) {
+                    high = averages.get(i);
+                    index = i;
+                }
+            }
+            if (averages.get(index).isNaN()) {
+                characters.remove(index);
+                averages.remove(index);
+            } else {
+                charactersToReturn.add(characters.remove(index) + ": " + averages.remove(index) + "%");
+            }
+        }
+        return charactersToReturn;
+    }
+
+    // Inflates the Map suggestion list to the user
+    // playerChars: Player Characters to take account of
+    // opponentChars: Opponent Characters to take account of
+    // map: Map to take account of
+    // Returns: The list of results to inflate the ListView with
+    public ArrayList<String> suggestMaps(ArrayList<String> playerChars, ArrayList<String> opponentChars, String map) {
+        ArrayList<String> maps = new ArrayList<>();
+        ArrayList<Integer> wins = new ArrayList<>();
+        ArrayList<Integer> matchCount = new ArrayList<>();
+        for (Set set : setList.getAllSets()) {
+            for (Match match : set.getMatches()) {
+                int index;
+                if (maps.contains(match.getMap().getName())) {
+                    index = maps.indexOf(match.getMap().getName());
+                } else {
+                    maps.add(match.getMap().getName());
+                    wins.add(0);
+                    matchCount.add(0);
+                    index = maps.size() - 1;
+                }
+                if (match.isWin() && matchesSuggestionParams(playerChars, opponentChars, map, match)) {
+                    wins.set(index, wins.get(index) + 1);
+                    matchCount.set(index, matchCount.get(index) + 1);
+                } else if (matchesSuggestionParams(playerChars, opponentChars, map, match)) {
+                    matchCount.set(index, matchCount.get(index) + 1);
+                }
+            }
+        }
+        ArrayList<Double> averages = new ArrayList<>();
+        for (int i = 0; i < maps.size(); i++) {
+            Double average = (double) (wins.get(i) / (double) matchCount.get(i));
+            averages.add(average * 100);
+        }
+        ArrayList<String> mapsToReturn = new ArrayList<>();
+        while (averages.size() > 0) {
+            double high = 0.0;
+            int index = 0;
+            for (int i = 0; i < averages.size(); i++) {
+                if (averages.get(i) >= high) {
+                    high = averages.get(i);
+                    index = i;
+                }
+            }
+            if (averages.get(index).isNaN()) {
+                maps.remove(index);
+                averages.remove(index);
+            } else {
+                mapsToReturn.add(maps.remove(index) + ": " + averages.remove(index) + "%");
+            }
+        }
+        return mapsToReturn;
+    }
+
+    // Inflates the Opponent suggestion list to the user
+    // playerChars: Player Characters to take account of
+    // opponentChars: Opponent Characters to take account of
+    // map: Map to take account of
+    // Returns: The list of results to inflate the ListView with
+    public ArrayList<String> suggestOpponents(ArrayList<String> playerChars, ArrayList<String> opponentChars,
+            String map) {
+        ArrayList<String> opponents = new ArrayList<>();
+        ArrayList<Integer> wins = new ArrayList<>();
+        ArrayList<Integer> matchCount = new ArrayList<>();
+        for (Set set : setList.getAllSets()) {
+            int index;
+            if (opponents.contains(set.getOpponent())) {
+                index = opponents.indexOf(set.getOpponent());
+            } else {
+                opponents.add(set.getOpponent());
+                wins.add(0);
+                matchCount.add(0);
+                index = opponents.size() - 1;
+            }
+            for (Match match : set.getMatches()) {
+                if (match.isWin() && matchesSuggestionParams(playerChars, opponentChars, map, match)) {
+                    wins.set(index, wins.get(index) + 1);
+                    matchCount.set(index, matchCount.get(index) + 1);
+                } else if (matchesSuggestionParams(playerChars, opponentChars, map, match)) {
+                    matchCount.set(index, matchCount.get(index) + 1);
+                }
+
+            }
+        }
+        ArrayList<Double> averages = new ArrayList<>();
+        for (int i = 0; i < opponents.size(); i++) {
+            Double average = (double) (wins.get(i) / (double) matchCount.get(i));
+            averages.add(average * 100);
+        }
+        ArrayList<String> opponentsToReturn = new ArrayList<>();
+        while (averages.size() > 0) {
+            double high = 0.0;
+            int index = 0;
+            for (int i = 0; i < averages.size(); i++) {
+                if (averages.get(i) >= high) {
+                    high = averages.get(i);
+                    index = i;
+                }
+            }
+            opponentsToReturn.add(opponents.remove(index) + ": " + averages.remove(index) + "%");
+        }
+        return opponentsToReturn;
+    }
+
+    // Determines whether the match passed in has matching characteristics to all
+    // other passed parameters
+    // playerChars: All Player Characters to match
+    // opponentChars: All Opponent Characters to match
+    // map: Map to match
+    // match: Match to match
+    // Returns true if the match matches the parameters, false if otherwise
+    private boolean matchesSuggestionParams(ArrayList<String> playerChars, ArrayList<String> opponentChars, String map,
+            Match match) {
+        boolean playerFilter = !playerChars.isEmpty();
+        boolean opponentFilter = !opponentChars.isEmpty();
+        boolean mapFilter = true;
+        if (map == null) {
+            mapFilter = false;
+        }
+        if (playerFilter) {
+            int count = 0;
+            for (String character : playerChars) {
+                for (Character actualCharacter : match.getPlayerCharacters()) {
+                    if (actualCharacter.getName().equals(character)) {
+                        count++;
+                    }
+                }
+            }
+            if (count != playerChars.size()) {
+                return false;
+            }
+        }
+        if (opponentFilter) {
+            int count = 0;
+            for (String character : opponentChars) {
+                for (Character actualCharacter : match.getOpponentCharacters()) {
+                    if (actualCharacter.getName().equals(character)) {
+                        count++;
+                    }
+                }
+            }
+            if (count != match.getOpponentCharacters().length) {
+                return false;
+            }
+        }
+        if (mapFilter) {
+            if (!match.getMap().getName().equals(map)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

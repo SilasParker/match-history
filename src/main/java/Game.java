@@ -21,7 +21,7 @@ import com.google.gson.JsonSyntaxException;
 
 //Class to represent a Game and all that encompasses it
 public class Game {
-    
+
     private String name;
     private int characterNumPerSide;
     private boolean teammate;
@@ -241,6 +241,30 @@ public class Game {
         } else {
             return true;
         }
+    }
+
+    // Retrieves the Character instance by name
+    // name: Name of the Character to retrieve
+    // Returns: Matching Character instance
+    public Character getCharacterByString(String name) {
+        for (Character character : this.characters) {
+            if (character.getName().equals(name)) {
+                return character;
+            }
+        }
+        return null;
+    }
+
+    // Retrieves theh Map instance by name
+    // name: Name of the Map to retrieve
+    // Returns: Matching Map instance
+    public Map getMapByString(String name) {
+        for (Map map : this.maps) {
+            if (map.getName().equals(name)) {
+                return map;
+            }
+        }
+        return null;
     }
 
 }

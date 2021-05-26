@@ -271,58 +271,63 @@
                <children>
                   <HBox alignment="CENTER" prefHeight="260.0" prefWidth="200.0">
                      <children>
-                        <TextField prefWidth="200.0" promptText="Enter Teammates Name..." />
+                        <TextField fx:id="teammateSuggestionTextField" prefWidth="200.0" promptText="Enter Teammates Name..." />
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="240.0" spacing="25.0">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Player Character(s)" />
-                              <ChoiceBox prefWidth="150.0" />
-                              <ChoiceBox prefWidth="150.0" />
-                              <ChoiceBox prefWidth="150.0" />
+                              <ChoiceBox fx:id="playerCharSuggestionChoice1" prefWidth="150.0" />
+                              <ChoiceBox fx:id="playerCharSuggestionChoice2" prefWidth="150.0" />
+                              <ChoiceBox fx:id="playerCharSuggestionChoice3" prefWidth="150.0" />
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="240.0" spacing="25.0">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Map" />
-                              <ChoiceBox prefWidth="200.0" />
+                              <ChoiceBox fx:id="mapSuggestionChoice" prefWidth="200.0" />
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="240.0" spacing="25.0">
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Opponent Character(s)" />
-                              <ChoiceBox prefWidth="150.0" />
-                              <ChoiceBox prefWidth="150.0" />
-                              <ChoiceBox prefWidth="150.0" />
+                              <ChoiceBox fx:id="opponentCharSuggestionChoice1" prefWidth="150.0" />
+                              <ChoiceBox fx:id="opponentCharSuggestionChoice2" prefWidth="150.0" />
+                              <ChoiceBox fx:id="opponentCharSuggestionChoice3" prefWidth="150.0" />
                            </children>
                         </VBox>
-                        <TextField prefWidth="200.0" promptText="Enter Opponent's Name" />
+                        <TextField fx:id="opponentSuggestionTextField" prefWidth="200.0" promptText="Enter Opponent's Name" />
                      </children>
                   </HBox>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="CALCULATE" />
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#calculateSuggestions" prefHeight="30.0" prefWidth="100.0" text="CALCULATE" />
+                        <Button mnemonicParsing="false" onAction="#clearSuggestions" prefHeight="30.0" prefWidth="100.0" text="CLEAR" />
+                     </children>
+                  </HBox>
                   <HBox alignment="CENTER" prefHeight="260.0" prefWidth="200.0">
                      <children>
                         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="240.0">
                            <children>
-                              <ListView maxWidth="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="195.0" />
+                              <ListView fx:id="suggestTeammateList" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="195.0" />
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="240.0">
                            <children>
-                              <ListView maxWidth="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="195.0" />
+                              <ListView fx:id="suggestPlayerCharList" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="195.0" />
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="240.0">
                            <children>
-                              <ListView maxWidth="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="195.0" />
+                              <ListView fx:id="suggestMapList" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="195.0" />
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="240.0">
                            <children>
-                              <ListView maxWidth="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="195.0" />
+                              <ListView fx:id="suggestOpponentCharList" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="195.0" />
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="240.0">
                            <children>
-                              <ListView maxWidth="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="195.0" />
+                              <ListView fx:id="suggestOpponentList" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="175.0" prefWidth="195.0" />
                            </children>
                         </VBox>
                      </children>
